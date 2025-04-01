@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+    <!-- 对应字段的映射 -->
+    <resultMap id="UserResultMap" type="com.example.model.User">
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role"/>
+        <result property="companyName" column="company_name"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 获取所有用户 -->
+    <select id="selectAllUsers" resultMap="UserResultMap">
+        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        FROM users
+    </select>
+
+    <!-- 插入 ROOT 用户 -->
+    <insert id="insertRootUser" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
+        VALUES (NEXT VALUE FOR root_seq, #{username}, #{password}, 'ROOT', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 插入 ADMIN 用户 -->
+    <insert id="insertAdminUser" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
+        VALUES (NEXT VALUE FOR admin_seq, #{username}, #{password}, 'ADMIN', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 插入 STAFF 用户 -->
+    <insert id="insertStaffUser" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
+        VALUES (NEXT VALUE FOR staff_seq, #{username}, #{password}, 'STAFF', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 插入 CLIENT 用户 -->
+    <insert id="insertClientUser" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
+        VALUES (NEXT VALUE FOR client_seq, #{username}, #{password}, 'CLIENT', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+    </insert>
+</mapper>
