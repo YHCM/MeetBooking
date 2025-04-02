@@ -1,5 +1,6 @@
 package com.example.mapper;
 
+import com.example.model.Role;
 import com.example.model.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,15 +11,15 @@ public interface UserMapper {
     // 获取所有用户
     List<User> selectAllUsers();
 
-    // 插入 ROOT 用户
-    void insertRootUser(User user);
+    // 获取指定类型的用户
+    List<User> selectUsersByRole(Role role);
 
-    // 插入 ADMIN 用户
-    void insertAdminUser(User user);
+    // 通过用户名获取用户
+    User selectUserByUsername(String userName);
 
-    // 插入 STAFF 用户
-    void insertStaffUser(User user);
-
-    // 插入 CLIENT 用户
-    void insertClientUser(User user);
+    // 通过 ID 获取用户
+    User selectUserByUserId(Long userId);
+    
+    // 插入用户
+    void insertUser(User user);
 }

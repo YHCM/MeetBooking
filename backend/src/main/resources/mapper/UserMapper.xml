@@ -18,27 +18,39 @@
         FROM users
     </select>
 
-    <!-- 插入 ROOT 用户 -->
-    <insert id="insertRootUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
-        VALUES (NEXT VALUE FOR root_seq, #{username}, #{password}, 'ROOT', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
-    </insert>
+    <!-- 根据角色获取用户 -->
+    <select id="selectUsersByRole" resultMap="UserResultMap">
+        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        FROM users
+        WHERE role = #{role}
+    </select>
 
-    <!-- 插入 ADMIN 用户 -->
-    <insert id="insertAdminUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
-        VALUES (NEXT VALUE FOR admin_seq, #{username}, #{password}, 'ADMIN', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
-    </insert>
+    <!-- 根据用户名获取用户 -->
+    <select id="selectUserByUsername" resultMap="UserResultMap">
+        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        FROM users
+        WHERE username = #{username}
+    </select>
 
-    <!-- 插入 STAFF 用户 -->
-    <insert id="insertStaffUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
-        VALUES (NEXT VALUE FOR staff_seq, #{username}, #{password}, 'STAFF', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
-    </insert>
+    <!-- 根据用户ID获取用户 -->
+    <select id="selectUserByUserId" resultMap="UserResultMap">
+        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
 
-    <!-- 插入 CLIENT 用户 -->
-    <insert id="insertClientUser" useGeneratedKeys="true" keyProperty="userId">
+    <!-- 插入用户 -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
-        VALUES (NEXT VALUE FOR client_seq, #{username}, #{password}, 'CLIENT', #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+        VALUES (
+            NEXT VALUE FOR
+            <choose>
+                <when test="role.name() == 'ROOT'">root_seq</when>
+                <when test="role.name() == 'ADMIN'">admin_seq</when>
+                <when test="role.name() == 'STAFF'">staff_seq</when>
+                <when test="role.name() == 'CLIENT'">client_seq</when>
+            </choose>,
+            #{username}, #{password}, #{role}, #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP
+        )
     </insert>
 </mapper>
