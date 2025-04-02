@@ -56,16 +56,16 @@ public class UserService {
 
     // 添加 Admin 用户
     public void addAdminUser(User user) {
-        addUserByRole(user, Role.ROOT);
+        addUserByRole(user, Role.ADMIN);
     }
 
     // 添加 Staff 用户
     public void addStaffUser(User user) {
-        addUserByRole(user, Role.ROOT);
+        addUserByRole(user, Role.STAFF);
     }
 
     // 添加 Client 用户
     public void addClientUser(User user) {
-        addUserByRole(user, Role.ROOT);
+        addUserByRole(user, Role.CLIENT);
     }
 }

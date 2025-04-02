@@ -1,0 +1,28 @@
+@base_url = http://localhost:8080/users
+
+### 获取所有用户
+GET {{base_url}} HTTP/1.1
+
+
+### 获取 root 用户列表
+GET {{base_url}}/role/root HTTP/1.1
+
+
+### 获取 id == 20001 的用户
+GET {{base_url}}/20001 HTTP/1.1
+
+
+### 获取 username == staff 的用户
+GET {{base_url}}/username/staff HTTP/1.1
+
+
+### 添加 client 用户
+POST {{base_url}}/client HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "client1",
+    "password": "client1",
+    "companyName": "company1",
+    "phoneNumber": "12345678901"
+}
