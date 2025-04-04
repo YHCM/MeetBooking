@@ -39,31 +39,11 @@ public class UserService {
         return userMapper.selectUserByUserId(userId);
     }
 
-    // 添加用户
-    private void addUserByRole(User user, Role role) {
+    // 根据角色类型添加用户
+    public void addUserByRole(User user, Role role) {
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(role);
         userMapper.insertUser(user);
-    }
-
-    // 添加 Root 用户
-    public void addRootUser(User user) {
-        addUserByRole(user, Role.ROOT);
-    }
-
-    // 添加 Admin 用户
-    public void addAdminUser(User user) {
-        addUserByRole(user, Role.ADMIN);
-    }
-
-    // 添加 Staff 用户
-    public void addStaffUser(User user) {
-        addUserByRole(user, Role.STAFF);
-    }
-
-    // 添加 Client 用户
-    public void addClientUser(User user) {
-        addUserByRole(user, Role.CLIENT);
     }
 }

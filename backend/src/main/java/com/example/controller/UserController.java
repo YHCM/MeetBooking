@@ -4,7 +4,6 @@ import com.example.model.Role;
 import com.example.model.User;
 import com.example.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -43,31 +41,10 @@ public class UserController {
         return userService.getUserByUserId(userId);
     }
 
-    // 添加 ROOT 用户
-    @PostMapping("/root")
-    public String addRootUser(@RequestBody User user) {
-        userService.addRootUser(user);
-        return "Root user inserted successfully.";
-    }
-
-    // 添加 ADMIN 用户
-    @PostMapping("/admin")
-    public String addAdminUser(@RequestBody User user) {
-        userService.addAdminUser(user);
-        return "Admin user inserted successfully.";
-    }
-
-    // 添加 STAFF 用户
-    @PostMapping("/staff")
-    public String addStaffUser(@RequestBody User user) {
-        userService.addStaffUser(user);
-        return "Staff user inserted successfully.";
-    }
-
-    // 添加 CLIENT 用户
-    @PostMapping("/client")
-    public String addClientUser(@RequestBody User user) {
-        userService.addClientUser(user);
-        return "Client user inserted successfully.";
+    // 根据角色类型添加用户
+    @PostMapping("/{role}")
+    public String addUser(@PathVariable Role role, @RequestBody User user) {
+        userService.addUserByRole(user, role);
+        return role.name().toLowerCase() + " user inserted successfully";
     }
 }
