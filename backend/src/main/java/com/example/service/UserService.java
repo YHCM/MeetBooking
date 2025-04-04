@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.mapper.UserMapper;
-import com.example.model.Role;
-import com.example.model.User;
+import com.example.entity.Role;
+import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -22,7 +22,7 @@ public class UserService {
     // 获取所有用户
     public List<User> getAllUsers() {
         return userMapper.selectAllUsers();
-    };
+    }
 
     // 获取指定类型的用户
     public List<User> getUsersByRole(Role role) {

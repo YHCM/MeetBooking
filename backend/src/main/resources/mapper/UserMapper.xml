@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.UserMapper">
     <!-- 对应字段的映射 -->
-    <resultMap id="UserResultMap" type="com.example.model.User">
+    <resultMap id="UserResultMap" type="com.example.entity.User">
         <result property="userId" column="user_id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>

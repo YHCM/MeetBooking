@@ -2,7 +2,7 @@ package com.example.service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.model.User;
+import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
 @Service
