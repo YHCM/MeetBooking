@@ -2,11 +2,9 @@ package com.example.mapper;
 
 import com.example.model.Role;
 import com.example.model.User;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper
 public interface UserMapper {
     // 获取所有用户
     List<User> selectAllUsers();

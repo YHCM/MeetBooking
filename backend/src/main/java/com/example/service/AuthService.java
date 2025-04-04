@@ -1,17 +1,15 @@
 package com.example.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.model.User;
+import com.example.util.security.crypto.password.PasswordEncoder;
 
 @Service
 public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public AuthService(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;

@@ -27,9 +27,8 @@ public class UserController {
 
     // 获取指定类型的用户
     @GetMapping("/role/{role}")
-    public List<User> getUsersByRole(@PathVariable String role) {
-        Role enumRole = Role.valueOf(role.toUpperCase());
-        return userService.getUsersByRole(enumRole);
+    public List<User> getUsersByRole(@PathVariable Role role) {
+        return userService.getUsersByRole(role);
     }
 
     // 通过用户名获取用户
