@@ -2,6 +2,8 @@ package com.example.service;
 
 import java.util.List;
 
+import com.example.model.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.mapper.UserMapper;
@@ -20,30 +22,36 @@ public class UserService {
     }
 
     // 获取所有用户
-    public List<User> getAllUsers() {
-        return userMapper.selectAllUsers();
+    public Result<List<User>> getAllUsers() {
+        List<User> userList = userMapper.selectAllUsers();
+        return Result.ok("所有用户列表", userList);
     }
 
     // 获取指定类型的用户
-    public List<User> getUsersByRole(Role role) {
-        return userMapper.selectUsersByRole(role);
+    public Result<List<User>> getUsersByRole(Role role) {
+        List<User> userList = userMapper.selectUsersByRole(role);
+        return Result.ok(role + " 用户列表", userList);
     }
 
     // 通过用户名获取用户
-    public User getUserByUsername(String username) {
-        return userMapper.selectUserByUsername(username);
+    public Result<User> getUserByUsername(String username) {
+        User user = userMapper.selectUserByUsername(username);
+        return Result.ok(username + " 用户信息", user);
     }
 
     // 通过 ID 获取用户
-    public User getUserByUserId(Long userId) {
-        return userMapper.selectUserByUserId(userId);
+    public Result<User> getUserByUserId(Long userId) {
+        User user = userMapper.selectUserByUserId(userId);
+        return Result.ok("用户信息", user);
     }
 
     // 根据角色类型添加用户
-    public void addUserByRole(User user, Role role) {
+    public Result<Boolean> addUserByRole(User user, Role role) {
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(role);
         userMapper.insertUser(user);
+
+        return Result.ok("添加 " + role + " 用户成功", Boolean.TRUE);
     }
 }

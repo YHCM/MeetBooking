@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody LoginRequest loginRequest) {
+    public Result<Boolean> login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest.getUsername(), loginRequest.getPassword());
     }
 }
