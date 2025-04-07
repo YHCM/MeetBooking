@@ -19,5 +19,5 @@ public interface UserMapper {
     User selectUserByUserId(Long userId);
     
     // 插入用户
-    void insertUser(User user);
+    int insertUser(User user);
 }
