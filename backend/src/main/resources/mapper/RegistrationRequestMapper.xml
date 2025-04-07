@@ -15,7 +15,7 @@
 
     <!-- 获取所有注册请求 -->
     <select id="selectAllRegistrationRequests" resultMap="RegistrationRequestMap">
-        SELECT request_id, username, password, company_name, phone_number, request_status, request_status, updated_at
+        SELECT request_id, username, password, company_name, phone_number, request_status, request_status, created_at, updated_at
         FROM registration_requests;
     </select>
 </mapper>
