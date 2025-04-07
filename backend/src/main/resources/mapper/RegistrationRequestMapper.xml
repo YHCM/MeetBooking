@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RegistrationRequestMapper">
+    <!-- 对应字段的映射 -->
+    <resultMap id="RegistrationRequestMap" type="com.example.entity.RegistrationRequest">
+        <result property="requestId" column="request_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="companyName" column="company_name"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="requestStatus" column="request_status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 获取所有注册请求 -->
+    <select id="selectAllRegistrationRequests" resultMap="RegistrationRequestMap">
+        SELECT request_id, username, password, company_name, phone_number, request_status, request_status, updated_at
+        FROM registration_requests;
+    </select>
+</mapper>

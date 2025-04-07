@@ -1,5 +1,5 @@
 DELETE FROM users;
-DELETE FROM client_registration_requests;
+DELETE FROM registration_requests;
 
 -- 插入 ROOT 用户（使用 root_seq）
 INSERT INTO users (user_id, username, password, role)
@@ -19,7 +19,7 @@ VALUES (NEXT VALUE FOR client_seq, 'client', '$2a$10$EnTQaiXERPXNHdDMz9.B1ueWSN1
 
 
 -- 插入客户注册申请信息（之后记得改密码）
-INSERT INTO client_registration_requests (request_id, username, password, company_name, phone_number) VALUES
+INSERT INTO registration_requests (request_id, username, password, company_name, phone_number) VALUES
 (NEXT VALUE FOR request_seq, 'client_request1', '123456', '1号公司', '11111'),
 (NEXT VALUE FOR request_seq, 'client_request2', '123456', '2号公司', '22222'),
 (NEXT VALUE FOR request_seq, 'client_request3', '123456', '3号公司', '33333'),
