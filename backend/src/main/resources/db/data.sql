@@ -19,9 +19,9 @@ VALUES (NEXT VALUE FOR client_seq, 'client', '$2a$10$EnTQaiXERPXNHdDMz9.B1ueWSN1
 
 
 -- 插入客户注册申请信息（之后记得改密码）
-INSERT INTO client_registration_requests (request_id, username, password, commpany_name, phone_number) VALUES
-(1, 'client_request1', '123456', '1号公司', '11111'),
-(2, 'client_request2', '123456', '2号公司', '22222'),
-(3, 'client_request3', '123456', '3号公司', '33333'),
-(4, 'client_request4', '123456', '4号公司', '44444'),
-(5, 'client_request5', '123456', '5号公司', '55555');
+INSERT INTO client_registration_requests (request_id, username, password, company_name, phone_number) VALUES
+(NEXT VALUE FOR request_seq, 'client_request1', '123456', '1号公司', '11111'),
+(NEXT VALUE FOR request_seq, 'client_request2', '123456', '2号公司', '22222'),
+(NEXT VALUE FOR request_seq, 'client_request3', '123456', '3号公司', '33333'),
+(NEXT VALUE FOR request_seq, 'client_request4', '123456', '4号公司', '44444'),
+(NEXT VALUE FOR request_seq, 'client_request5', '123456', '5号公司', '55555');
