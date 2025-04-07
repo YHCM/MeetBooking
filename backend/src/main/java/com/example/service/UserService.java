@@ -41,10 +41,22 @@ public class UserService {
 
     // 根据角色类型添加用户
     public boolean addUserByRole(User user, Role role) {
+        // 判断用户名是否存在
+        if (isUserExisted(user.getUsername())) {
+            return false;   // 用户名已经存在
+        }
+
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(role);
 
         return userMapper.insertUser(user) > 0;
+    }
+
+    // 查看用户是否存在
+    private boolean isUserExisted(String username) {
+        User user = getUserByUsername(username);
+
+        return user != null;
     }
 }

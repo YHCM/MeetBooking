@@ -69,7 +69,7 @@ public class UserController {
         if (addStatus) {
             return Result.create(HttpStatus.CREATED, role + " 类型用户创建成功", Boolean.TRUE);
         } else {
-            return Result.create(HttpStatus.INTERNAL_SERVER_ERROR, "用户创建失败", Boolean.FALSE);
+            return Result.create(HttpStatus.CONFLICT, "用户创建失败", Boolean.FALSE);
         }
     }
 }
