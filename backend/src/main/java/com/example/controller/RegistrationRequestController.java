@@ -65,9 +65,8 @@ public class RegistrationRequestController {
     }
 
     @Operation(summary = "处理一个请求")
-    @PutMapping("/{requestId}/status")
-    // 这里 adminId 应该要通过会话获取，先暂时这样，之后改
-    public Result<Boolean> processRegistrationRequest(@PathVariable Long requestId, @RequestBody RequestStatus requestStatus, HttpSession session) {
+    @PutMapping("/{requestId}/{requestStatus}")
+    public Result<Boolean> processRegistrationRequest(@PathVariable Long requestId, @PathVariable RequestStatus requestStatus, HttpSession session) {
         HttpStatus processStatus = registrationRequestService.processRegistrationRequest(requestId, requestStatus, session);
 
         Map<HttpStatus, String> statusMessages = new HashMap<>();
@@ -75,6 +74,7 @@ public class RegistrationRequestController {
         statusMessages.put(HttpStatus.BAD_REQUEST, "错误的状态修改");
         statusMessages.put(HttpStatus.FORBIDDEN, "权限不足");
         statusMessages.put(HttpStatus.NOT_FOUND, "管理员或请求不存在");
+        statusMessages.put(HttpStatus.CONFLICT, "这个请求不允许被修改");
         statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "处理失败");
         
         // 获取消息

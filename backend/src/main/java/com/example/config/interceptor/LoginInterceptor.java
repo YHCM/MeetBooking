@@ -1,4 +1,4 @@
-package com.example.util.interceptor;
+package com.example.config.interceptor;
 
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;

@@ -44,6 +44,7 @@ public class UserService {
             return false;   // 用户名已经存在
         }
 
+        // 加密密码
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(role);

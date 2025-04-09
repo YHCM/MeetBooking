@@ -4,8 +4,8 @@
 GET {{base_url}} HTTP/1.1
 
 
-### 获取 root 用户列表
-GET {{base_url}}/role/root HTTP/1.1
+### 获取 client 用户列表
+GET {{base_url}}/role/client HTTP/1.1
 
 
 ### 获取 id == 20001 的用户

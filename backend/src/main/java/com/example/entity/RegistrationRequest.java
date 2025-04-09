@@ -15,4 +15,16 @@ public class RegistrationRequest {
     private LocalDateTime createdAt;        // 请求创建时间
     private LocalDateTime processedAt;      // 请求被处理的时间
     private Long processedBy;               // 处理请求的管理员 ID
+
+    // 转换为 user 的方法
+    public User toUser() {
+        User user = new User();
+        user.setUsername(this.username);
+        user.setPassword(this.password);
+        user.setRole(Role.CLIENT);
+        user.setCompanyName(this.companyName);
+        user.setPhoneNumber(this.phoneNumber);
+
+        return user;
+    }
 }

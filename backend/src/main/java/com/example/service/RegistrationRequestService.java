@@ -72,6 +72,12 @@ public class RegistrationRequestService {
             return HttpStatus.NOT_FOUND;
         }
 
+        // 检查请求是否是 待处理 状态，只有 待处理 状态才可以被处理
+        if (!registrationRequest.getRequestStatus().equals(RequestStatus.PENDING)) {
+            // 请求不允许被修改
+            return HttpStatus.CONFLICT;
+        }
+
         // 检查修改后的状态是否还是 待处理
         if (requestStatus.equals(RequestStatus.PENDING)) {
             // 还是改为 待处理，不行
@@ -80,7 +86,19 @@ public class RegistrationRequestService {
 
         int rowsAffected = registrationRequestMapper.updateRequestStatus(requestId, requestStatus, userId);
         if (rowsAffected > 0) {
-            return HttpStatus.OK;
+            if (requestStatus.equals(RequestStatus.APPROVED)) {
+                // 同意之后，把注册请求添加到 users 表中
+                User newUser = registrationRequest.toUser();
+                boolean addStatus = userService.addUserByRole(newUser, Role.CLIENT);
+
+                if (addStatus) {
+                    return HttpStatus.OK;
+                } else {
+                    return HttpStatus.INTERNAL_SERVER_ERROR;
+                }
+            } else {
+                return HttpStatus.OK;
+            }
         } else {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }

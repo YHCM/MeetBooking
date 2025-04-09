@@ -6,9 +6,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.example.util.converter.RequestStatusConverter;
-import com.example.util.converter.RoleConverter;
-import com.example.util.interceptor.LoginInterceptor;
+import com.example.config.converter.RequestStatusConverter;
+import com.example.config.converter.RoleConverter;
+import com.example.config.interceptor.LoginInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
