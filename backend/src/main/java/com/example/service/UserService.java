@@ -42,7 +42,7 @@ public class UserService {
     // 根据角色类型添加用户
     public boolean addUserByRole(User user, Role role) {
         // 判断用户名是否存在
-        if (isUserExisted(user.getUsername())) {
+        if (isUsernameExisted(user.getUsername())) {
             return false;   // 用户名已经存在
         }
 
@@ -54,7 +54,7 @@ public class UserService {
     }
 
     // 查看用户是否存在
-    private boolean isUserExisted(String username) {
+    public boolean isUsernameExisted(String username) {
         User user = getUserByUsername(username);
 
         return user != null;

@@ -10,12 +10,47 @@
         <result property="phoneNumber" column="phone_number"/>
         <result property="requestStatus" column="request_status"/>
         <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
+        <result property="processedAt" column="processed_at"/>
+        <result property="processedBy" column="processed_by"/>
     </resultMap>
 
     <!-- 获取所有注册请求 -->
     <select id="selectAllRegistrationRequests" resultMap="RegistrationRequestMap">
-        SELECT request_id, username, password, company_name, phone_number, request_status, request_status, created_at, updated_at
+        SELECT request_id, username, password, company_name, phone_number, request_status, created_at, processed_at, processed_by
         FROM registration_requests;
     </select>
+
+    <!-- 根据ID获取注册请求 -->
+    <select id="selectRegistrationRequestById" resultMap="RegistrationRequestMap">
+        SELECT request_id, username, password, company_name, phone_number, request_status, created_at, processed_at, processed_by
+        FROM registration_requests
+        WHERE request_id = #{requestId}
+    </select>
+
+    <!-- 根据 username 获取待处理的请求 -->
+    <select id="selectRegistrationRequestsByUserName" resultMap="RegistrationRequestMap">
+        SELECT request_id, username, password, company_name, phone_number, request_status, created_at, processed_at, processed_by
+        FROM registration_requests
+        WHERE username = #{username}
+    </select>
+
+    <!-- 根据请求状态获取请求 -->
+    <select id="selectRegistrationRequestsByStatus" resultMap="RegistrationRequestMap">
+        SELECT request_id, username, password, company_name, phone_number, request_status, created_at, processed_at, processed_by
+        FROM registration_requests
+        WHERE request_status = #{requestStatus}
+    </select>
+
+    <!-- 添加一个注册请求 -->
+    <insert id="insertRegistrationRequest" useGeneratedKeys="true" keyProperty="requestId">
+        INSERT INTO registration_requests (request_id, username, password, company_name, phone_number, created_at)
+        VALUE (NEXT VALUE FOR request_seq, #{username}, #{password}, #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 处理一个注册请求 -->
+    <update id="updateRequestStatus">
+        UPDATE registration_requests
+        SET request_status = #{requestStatus}, processed_at = CURRENT_TIMESTAMP, processed_by = #{adminId}
+        WHERE request_id = #{requestId}
+    </update>
 </mapper>
