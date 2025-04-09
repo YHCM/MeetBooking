@@ -2,10 +2,10 @@ package com.example.advice;
 
 import com.example.model.Result;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     // 处理所有异常
     @ExceptionHandler(Exception.class)

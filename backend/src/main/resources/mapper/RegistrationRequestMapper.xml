@@ -17,7 +17,7 @@
     <!-- 获取所有注册请求 -->
     <select id="selectAllRegistrationRequests" resultMap="RegistrationRequestMap">
         SELECT request_id, username, password, company_name, phone_number, request_status, created_at, processed_at, processed_by
-        FROM registration_requests;
+        FROM registration_requests
     </select>
 
     <!-- 根据ID获取注册请求 -->

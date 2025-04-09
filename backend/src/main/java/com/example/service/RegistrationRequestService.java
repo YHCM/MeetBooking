@@ -27,7 +27,7 @@ public class RegistrationRequestService {
 
     // 根据ID获取注册请求
     public RegistrationRequest getRegistrationRequestById(Long requestId) {
-        return registrationRequestMapper.selRegistrationRequestById(requestId);
+        return registrationRequestMapper.selectRegistrationRequestById(requestId);
     }
 
     // 根据请求状态获取请求
@@ -66,7 +66,7 @@ public class RegistrationRequestService {
         }
 
         // 检查请求是否存在
-        RegistrationRequest registrationRequest = registrationRequestMapper.selRegistrationRequestById(requestId);
+        RegistrationRequest registrationRequest = registrationRequestMapper.selectRegistrationRequestById(requestId);
         if (registrationRequest == null) {
             // 请求不存在
             return HttpStatus.NOT_FOUND;

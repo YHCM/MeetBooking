@@ -10,7 +10,7 @@ public interface RegistrationRequestMapper {
     List<RegistrationRequest> selectAllRegistrationRequests();
 
     // 根据ID获取注册请求
-    RegistrationRequest selRegistrationRequestById(Long requestId);
+    RegistrationRequest selectRegistrationRequestById(Long requestId);
 
     // 根据 username 获取待处理的请求
     List<RegistrationRequest> selectRegistrationRequestsByUserName(String username);

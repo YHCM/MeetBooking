@@ -1,4 +1,7 @@
 ### > {% client.cookies.set('JSESSIONID', response.cookies['JSESSIONID']) %}
+### 使用保存的 Cookie 发送请求
+### GET http://example.com/dashboard
+### Cookie: JSESSIONID={{client.cookies.get('JSESSIONID')}}
 
 @base_url = http://localhost:8080/auth
 

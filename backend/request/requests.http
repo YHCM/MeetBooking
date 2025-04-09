@@ -1,0 +1,12 @@
+@base_url = http://localhost:8080/requests
+
+### 获取所有的注册请求
+GET {{base_url}} HTTP/1.1
+
+
+### 通过 ID 获取请求
+GET {{base_url}}/10001 HTTP/1.1
+
+
+### 获取待审批的请求
+GET {{base_url}}/status/pending HTTP/1.1
