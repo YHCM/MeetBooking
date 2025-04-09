@@ -1,6 +1,10 @@
 package com.example.controller;
 
 import com.example.model.Result;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +18,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @Operation(
         summary = "用户登陆",
@@ -33,12 +36,17 @@ public class AuthController {
         }
     )
     @PostMapping("/login")
-    public Result<Boolean> login(@RequestBody LoginRequest loginRequest) {
-        boolean loginStatus = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-        if (loginStatus) {
-            return Result.ok("登陆成功", Boolean.TRUE);
-        } else {
-            return Result.create(HttpStatus.UNAUTHORIZED, "用户不存在或密码错误", Boolean.FALSE);
-        }
+    public Result<Boolean> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+        HttpStatus loginStatus = authService.login(loginRequest.getUsername(), loginRequest.getPassword(), session);
+
+        Map<HttpStatus, String> statusMessages = new HashMap<>();
+        statusMessages.put(HttpStatus.OK, "登陆成功");
+        statusMessages.put(HttpStatus.UNAUTHORIZED, "用户名或密码错误");
+        statusMessages.put(HttpStatus.NOT_FOUND, "用户不存在");
+
+        // 获取消息
+        String message = statusMessages.getOrDefault(loginStatus, "登陆失败");
+
+        return Result.create(loginStatus, message, loginStatus.equals(HttpStatus.OK));
     }
 }

@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.RegistrationRequest;
@@ -10,15 +11,14 @@ import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.mapper.RegistrationRequestMapper;
 
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class RegistrationRequestService {
     private final RegistrationRequestMapper registrationRequestMapper;
     private final UserService userService;
-
-    public RegistrationRequestService(RegistrationRequestMapper registrationRequestMapper, UserService userService) {
-        this.registrationRequestMapper = registrationRequestMapper;
-        this.userService = userService;
-    }
 
     // 获取所有的注册请求
     public List<RegistrationRequest> getAllRegistrationRequests() {
@@ -48,34 +48,42 @@ public class RegistrationRequestService {
     }
 
     // 处理一个请求
-    public boolean processRegistrationRequest(Long requestId, Long adminId, RequestStatus requestStatus) {
+    public HttpStatus processRegistrationRequest(Long requestId, RequestStatus requestStatus, HttpSession session) {
+        // 获取用户ID
+        Long userId = (Long) session.getAttribute("uid");
+
         // 获取管理员用户
-        User user = userService.getUserByUserId(adminId);
+        User user = userService.getUserByUserId(userId);
         if (user == null) {
             // 用户不存在
-            return false;
+            return HttpStatus.NOT_FOUND;
         }
 
         // 检查用户是否是管理员
         if (!user.getRole().equals(Role.ADMIN)) {
             // 用户不是管理员
-            return false;
+            return HttpStatus.FORBIDDEN;
         }
 
         // 检查请求是否存在
         RegistrationRequest registrationRequest = registrationRequestMapper.selRegistrationRequestById(requestId);
         if (registrationRequest == null) {
             // 请求不存在
-            return false;
+            return HttpStatus.NOT_FOUND;
         }
 
         // 检查修改后的状态是否还是 待处理
         if (requestStatus.equals(RequestStatus.PENDING)) {
             // 还是改为 待处理，不行
-            return false;
+            return HttpStatus.BAD_REQUEST;
         }
 
-        return registrationRequestMapper.updateRequestStatus(requestId, requestStatus, adminId) > 0;
+        int rowsAffected = registrationRequestMapper.updateRequestStatus(requestId, requestStatus, userId);
+        if (rowsAffected > 0) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 
     // 判断用户名是否在 待处理 请求中存在

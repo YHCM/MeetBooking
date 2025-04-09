@@ -9,15 +9,13 @@ import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     // 获取所有用户
     public List<User> getAllUsers() {

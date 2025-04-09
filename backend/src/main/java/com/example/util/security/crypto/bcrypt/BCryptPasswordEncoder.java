@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
- package com.example.util.security.crypto.bcrypt;
+package com.example.util.security.crypto.bcrypt;
 
- import java.security.SecureRandom;
- import java.util.regex.Matcher;
- import java.util.regex.Pattern;
+import java.security.SecureRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
  
- import org.apache.commons.logging.Log;
- import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import com.example.util.security.crypto.password.PasswordEncoder;

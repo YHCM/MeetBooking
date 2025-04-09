@@ -1,3 +1,5 @@
+### > {% client.cookies.set('JSESSIONID', response.cookies['JSESSIONID']) %}
+
 @base_url = http://localhost:8080/auth
 
 ### 登陆 root 用户
