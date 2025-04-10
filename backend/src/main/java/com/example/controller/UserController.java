@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.constants.messages.UserMessage;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.model.Result;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,18 +62,15 @@ public class UserController {
     }
 
     // 根据角色类型添加用户
-    @Operation(summary = "根据角色类型添加用户")
+    @Operation(summary = "根据角色类型创建用户")
     @PostMapping("/{role}")
     public Result<Boolean> createUser(@PathVariable Role role, @RequestBody User user) {
-        HttpStatus addStatus = userService.addUserByRole(user, role);
+        HttpStatus createStatus = userService.addUserByRole(user, role);
 
-        Map<HttpStatus, String> statusMessages = new HashMap<>();
-        statusMessages.put(HttpStatus.OK, "用户创建成功");
-        statusMessages.put(HttpStatus.CONFLICT, "用户名已存在");
-        statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "用户添加失败");
+        Map<HttpStatus, String> statusMessages = UserMessage.CREATE_MESSAGES;
 
-        String message = statusMessages.getOrDefault(addStatus, "用户创建失败");
+        String message = statusMessages.getOrDefault(createStatus, "用户创建失败");
 
-        return Result.create(addStatus, message, addStatus.is2xxSuccessful());
+        return Result.create(createStatus, message, createStatus.is2xxSuccessful());
     }
 }

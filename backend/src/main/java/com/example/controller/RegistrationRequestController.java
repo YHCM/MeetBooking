@@ -3,6 +3,7 @@ package com.example.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.constants.messages.RegistrationRequestMessage;
 import com.example.entity.RegistrationRequest;
 import com.example.entity.RequestStatus;
 import com.example.model.Result;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,19 +52,16 @@ public class RegistrationRequestController {
         return Result.ok(requestStatus + " 状态的所有请求", registrationRequestsList);
     }
     
-    @Operation(summary = "添加一个注册请求")
+    @Operation(summary = "创建一个注册请求")
     @PostMapping
-    public Result<Boolean> addRegistrationRequest(@RequestBody RegistrationRequest registrationRequest) {
-        HttpStatus addStatus = registrationRequestService.addRegistrationRequest(registrationRequest);
+    public Result<Boolean> createRegistrationRequest(@RequestBody RegistrationRequest registrationRequest) {
+        HttpStatus createStatus = registrationRequestService.addRegistrationRequest(registrationRequest);
 
-        Map<HttpStatus, String> statusMessages = new HashMap<>();
-        statusMessages.put(HttpStatus.OK, "注册请求添加成功");
-        statusMessages.put(HttpStatus.CONFLICT, "用户名已存在");
-        statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "注册请求添加失败");
+        Map<HttpStatus, String> statusMessages = RegistrationRequestMessage.CREATE_MESSAGES;
 
-        String message = statusMessages.getOrDefault(addStatus, "注册请求添加失败");
+        String message = statusMessages.getOrDefault(createStatus, "注册请求添加失败");
         
-        return Result.create(addStatus, message, addStatus.is2xxSuccessful());
+        return Result.create(createStatus, message, createStatus.is2xxSuccessful());
     }
 
     @Operation(summary = "处理一个请求")
@@ -72,13 +69,7 @@ public class RegistrationRequestController {
     public Result<Boolean> processRegistrationRequest(@PathVariable Long requestId, @PathVariable RequestStatus requestStatus, HttpSession session) {
         HttpStatus processStatus = registrationRequestService.processRegistrationRequest(requestId, requestStatus, session);
 
-        Map<HttpStatus, String> statusMessages = new HashMap<>();
-        statusMessages.put(HttpStatus.OK, "处理成功");
-        statusMessages.put(HttpStatus.BAD_REQUEST, "错误的状态修改");
-        statusMessages.put(HttpStatus.FORBIDDEN, "权限不足");
-        statusMessages.put(HttpStatus.NOT_FOUND, "管理员或请求不存在");
-        statusMessages.put(HttpStatus.CONFLICT, "这个请求不允许被修改");
-        statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "处理失败");
+        Map<HttpStatus, String> statusMessages = RegistrationRequestMessage.PROCESS_MESSAGES;
         
         // 获取消息
         String message = statusMessages.getOrDefault(processStatus, "处理失败");
