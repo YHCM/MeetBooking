@@ -23,4 +23,4 @@ GET {{base_url}}/status/pending HTTP/1.1
 
 
 ### 同意一条请求
-PUT {{base_url}}/10001/approved HTTP/1.1
+PUT {{base_url}}/10006/approved HTTP/1.1

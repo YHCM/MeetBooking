@@ -3,6 +3,7 @@ package com.example.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.example.entity.RegistrationRequest;
 import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RegistrationRequestService registrationRequestService;
 
     public HttpStatus login(String username, String password, HttpSession session) {
         // 通过用户名获取用户
@@ -33,5 +35,9 @@ public class AuthService {
         } else {
             return HttpStatus.UNAUTHORIZED;   // 密码错误
         }
+    }
+
+    public HttpStatus register(RegistrationRequest registrationRequest) {
+        return registrationRequestService.addRegistrationRequest(registrationRequest);
     }
 }

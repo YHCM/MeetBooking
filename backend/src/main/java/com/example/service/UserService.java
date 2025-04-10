@@ -2,9 +2,11 @@ package com.example.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.mapper.UserMapper;
+import com.example.entity.RegistrationRequest;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
@@ -38,16 +40,28 @@ public class UserService {
     }
 
     // 根据角色类型添加用户
-    public boolean addUserByRole(User user, Role role) {
+    public HttpStatus addUserByRole(User user, Role role) {
         // 判断用户名是否存在
         if (isUsernameExisted(user.getUsername())) {
-            return false;   // 用户名已经存在
+            return HttpStatus.CONFLICT;   // 用户名已经存在
         }
 
         // 加密密码
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(role);
+
+        int rowsAffected = userMapper.insertUser(user);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            return HttpStatus.OK;
+        }
+    }
+
+    // 将同意后的注册请求添加到 users 表
+    public boolean addUserFromRequest(RegistrationRequest registrationRequest) {
+        User user = registrationRequest.toUser();
 
         return userMapper.insertUser(user) > 0;
     }

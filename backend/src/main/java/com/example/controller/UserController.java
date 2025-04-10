@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -63,11 +65,15 @@ public class UserController {
     @Operation(summary = "根据角色类型添加用户")
     @PostMapping("/{role}")
     public Result<Boolean> createUser(@PathVariable Role role, @RequestBody User user) {
-        boolean addStatus = userService.addUserByRole(user, role);
-        if (addStatus) {
-            return Result.create(HttpStatus.CREATED, role + " 类型用户创建成功", Boolean.TRUE);
-        } else {
-            return Result.create(HttpStatus.CONFLICT, "用户创建失败", Boolean.FALSE);
-        }
+        HttpStatus addStatus = userService.addUserByRole(user, role);
+
+        Map<HttpStatus, String> statusMessages = new HashMap<>();
+        statusMessages.put(HttpStatus.OK, "用户创建成功");
+        statusMessages.put(HttpStatus.CONFLICT, "用户名已存在");
+        statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "用户添加失败");
+
+        String message = statusMessages.getOrDefault(addStatus, "用户创建失败");
+
+        return Result.create(addStatus, message, addStatus.is2xxSuccessful());
     }
 }

@@ -10,6 +10,7 @@ import com.example.entity.RequestStatus;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.mapper.RegistrationRequestMapper;
+import com.example.util.security.crypto.password.PasswordEncoder;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class RegistrationRequestService {
     private final RegistrationRequestMapper registrationRequestMapper;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     // 获取所有的注册请求
     public List<RegistrationRequest> getAllRegistrationRequests() {
@@ -36,15 +38,25 @@ public class RegistrationRequestService {
     }
 
     // 添加一个注册请求
-    public boolean addRegistrationRequest(RegistrationRequest registrationRequest) {
+    public HttpStatus addRegistrationRequest(RegistrationRequest registrationRequest) {
         String username = registrationRequest.getUsername();
 
         // 检查用户名是否存在
         if (userService.isUsernameExisted(username) || isUsernameExistedInPending(username)) {
-            return false;   // 用户名存在了
+            return HttpStatus.CONFLICT;   // 用户名存在了
         }
 
-        return registrationRequestMapper.insertRegistrationRequest(registrationRequest) > 0;
+        // 加密密码
+        String encrptyedPassword = passwordEncoder.encode(registrationRequest.getPassword());
+        registrationRequest.setPassword(encrptyedPassword);
+
+        int rowsAffected = registrationRequestMapper.insertRegistrationRequest(registrationRequest);
+
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            return HttpStatus.OK;
+        }
     }
 
     // 处理一个请求
@@ -85,20 +97,20 @@ public class RegistrationRequestService {
         }
 
         int rowsAffected = registrationRequestMapper.updateRequestStatus(requestId, requestStatus, userId);
-        if (rowsAffected > 0) {
-            if (requestStatus.equals(RequestStatus.APPROVED)) {
-                // 同意之后，把注册请求添加到 users 表中
-                User newUser = registrationRequest.toUser();
-                boolean addStatus = userService.addUserByRole(newUser, Role.CLIENT);
+        if (rowsAffected <= 0) {
+            // 插入异常
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
 
-                if (addStatus) {
-                    return HttpStatus.OK;
-                } else {
-                    return HttpStatus.INTERNAL_SERVER_ERROR;
-                }
-            } else {
-                return HttpStatus.OK;
-            }
+        if (!requestStatus.equals(RequestStatus.APPROVED)) {
+            // 如果是拒绝，不进行任何操作
+            return HttpStatus.OK;
+        }
+
+        // 同意之后，把注册请求添加到 users 表中
+        boolean addStatus = userService.addUserFromRequest(registrationRequest);
+        if (addStatus) {
+            return HttpStatus.OK;
         } else {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -108,6 +120,7 @@ public class RegistrationRequestService {
     public boolean isUsernameExistedInPending(String username) {
         List<RegistrationRequest> registrationRequestList = registrationRequestMapper.selectRegistrationRequestsByUserName(username);
 
-        return registrationRequestList != null;
+        // 如果不为空，那么就是存在
+        return !registrationRequestList.isEmpty();
     }
 }

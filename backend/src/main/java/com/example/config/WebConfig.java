@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/swagger-ui/index.html", "/v3/api-docs", "/auth/login");
+                .excludePathPatterns("/", "/swagger-ui/**", "/v3/**", "/auth/login", "/auth/register");
     }
 
     // 添加枚举类型的转换器

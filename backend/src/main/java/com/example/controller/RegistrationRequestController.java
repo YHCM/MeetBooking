@@ -55,13 +55,16 @@ public class RegistrationRequestController {
     @Operation(summary = "添加一个注册请求")
     @PostMapping
     public Result<Boolean> addRegistrationRequest(@RequestBody RegistrationRequest registrationRequest) {
-        boolean addStatus = registrationRequestService.addRegistrationRequest(registrationRequest);
+        HttpStatus addStatus = registrationRequestService.addRegistrationRequest(registrationRequest);
+
+        Map<HttpStatus, String> statusMessages = new HashMap<>();
+        statusMessages.put(HttpStatus.OK, "注册请求添加成功");
+        statusMessages.put(HttpStatus.CONFLICT, "用户名已存在");
+        statusMessages.put(HttpStatus.INTERNAL_SERVER_ERROR, "注册请求添加失败");
+
+        String message = statusMessages.getOrDefault(addStatus, "注册请求添加失败");
         
-        if (addStatus) {
-            return Result.create(HttpStatus.CREATED, "注册请求添加成功", Boolean.TRUE);
-        } else {
-            return Result.create(HttpStatus.CONFLICT, "注册请求添加失败", Boolean.FALSE);
-        }
+        return Result.create(addStatus, message, addStatus.is2xxSuccessful());
     }
 
     @Operation(summary = "处理一个请求")
@@ -80,6 +83,6 @@ public class RegistrationRequestController {
         // 获取消息
         String message = statusMessages.getOrDefault(processStatus, "处理失败");
 
-        return Result.create(processStatus, message, processStatus.equals(HttpStatus.OK));
+        return Result.create(processStatus, message, processStatus.is2xxSuccessful());
     }
 }

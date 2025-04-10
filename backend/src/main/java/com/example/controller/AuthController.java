@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.RegistrationRequest;
 import com.example.model.LoginRequest;
 import com.example.service.AuthService;
 
@@ -47,6 +48,21 @@ public class AuthController {
         // 获取消息
         String message = statusMessages.getOrDefault(loginStatus, "登陆失败");
 
-        return Result.create(loginStatus, message, loginStatus.equals(HttpStatus.OK));
+        return Result.create(loginStatus, message, loginStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "用户注册，添加注册请求")
+    @PostMapping("/register")
+    public Result<Boolean> register(@RequestBody RegistrationRequest registrationRequest) {
+        HttpStatus registerStatus = authService.register(registrationRequest);
+
+        Map<HttpStatus, String> statusMessages = new HashMap<>();
+        statusMessages.put(HttpStatus.OK, "注册请求成功");
+        statusMessages.put(HttpStatus.CONFLICT, "用户名已存在");
+        statusMessages.put(HttpStatus.SERVICE_UNAVAILABLE, "注册失败");
+
+        String message = statusMessages.getOrDefault(registerStatus, "注册失败");
+
+        return Result.create(registerStatus, message, registerStatus.is2xxSuccessful());
     }
 }
