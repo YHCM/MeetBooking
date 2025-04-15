@@ -21,7 +21,11 @@ mvn spring-boot:run
 
 ```bash
 cd frontend
+pnpm install
 pnpm dev
+
+# 格式化
+pnpm format
 ```
 
 ### 4. 访问前端页面
