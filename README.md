@@ -13,7 +13,7 @@ git clone https://github.com/YHCM/MeetBooking.git
 ### 2. 运行后端服务
 
 ```bash
-cd MeetBooking
+cd backend
 mvn spring-boot:run
 ```
 
