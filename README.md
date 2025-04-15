@@ -4,9 +4,7 @@
 
 ## 运行项目
 
-### 1. 克隆仓库
-
-首先，克隆这个项目到你的本地机器：
+### 1. 克隆项目
 
 ```bash
 git clone https://github.com/YHCM/MeetBooking.git
@@ -14,16 +12,12 @@ git clone https://github.com/YHCM/MeetBooking.git
 
 ### 2. 运行后端服务
 
-进入项目目录并启动后端服务：
-
 ```bash
 cd MeetBooking
 mvn spring-boot:run
 ```
 
 ### 3. 运行前端服务
-
-进入前端目录并启动前端开发服务器：
 
 ```bash
 cd frontend
