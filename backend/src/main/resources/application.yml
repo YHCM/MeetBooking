@@ -1,5 +1,11 @@
 # 数据源配置
 spring:
+  web:
+    cors:
+      allowed-origins: "http://localhost:5173"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allowed-credentials: true
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:db
@@ -13,15 +19,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
-  security:
-    user:
-      name: hh
-      password: hh123456
 
 # mybatis 配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  # type-aliases-package: com.example.model
 
 # springdoc 配置
 springdoc:
