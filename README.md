@@ -60,7 +60,7 @@ nginx -c "$PWD\nginx.config"
 
 ### 3. 修改前端请求路径
 
-把 /meetBooking/frontend/src/main.js 中的 `axios.defaults.baseURL` 值替换为 `/api`
+把 /meetBooking/frontend/src/utils/useApi.js 中的 `baseURL` 值替换为 `/api`
 
 ### 4. 启动项目
 
