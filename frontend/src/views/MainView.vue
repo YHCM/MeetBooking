@@ -18,9 +18,14 @@
                 <RouterLink to="/about">关于</RouterLink>
               </el-menu-item>
             </el-menu>
-            
+
             <!-- 点击头像，弹出卡片 -->
-            <el-popover placement="bottom-end" :width="200" popper-class="user-card-popover" :show-arrow="false">
+            <el-popover
+              placement="bottom-end"
+              :width="200"
+              popper-class="user-card-popover"
+              :show-arrow="false"
+            >
               <template #reference>
                 <el-avatar :size="48" :src="avatar" class="cursor-pointer avatar-hover" />
               </template>
@@ -49,12 +54,8 @@
                   <el-divider />
 
                   <div class="user-actions">
-                    <el-button type="info" @click="goToProfile">
-                      个人中心
-                    </el-button>
-                    <el-button type="primary" @click="logout">
-                      退出登陆
-                    </el-button>
+                    <el-button type="info" @click="goToProfile"> 个人中心 </el-button>
+                    <el-button type="primary" @click="logout"> 退出登陆 </el-button>
                   </div>
                 </div>
               </div>
@@ -71,42 +72,19 @@
 
 <script setup>
 import avatar from '@/assets/images/avatar.svg'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
-const http = useApi()
+const userStore = useUserStore()
 
 // 默认选择首页
 const activeIndex = ref('1')
 // 登陆状态
-const isLoggedIn = ref(false)
+const isLoggedIn = computed(() => userStore.isLoggedIn)
 // 用户信息
-const userInfo = ref({
-  username: '',
-  companyName: '',
-  phoneNumber: ''
-})
-
-// 获取用户信息
-const getuserInfo = async () => {
-  try {
-    const response = await http.get('/users/current')
-    isLoggedIn.value = response.data !== null
-    console.log(isLoggedIn.value)
-    if (isLoggedIn.value) {
-      userInfo.value = {
-        // ...userInfo.value,
-        // ...response.data
-        username: response.data.username,
-        companyName: response.data.companyName || '未知',
-        phoneNumber: response.data.phoneNumber || '未知'
-      }
-    }
-  } catch (error) {
-    console.error('服务器异常：', error)
-  }
-}
+const userInfo = computed(() => userStore.userInfo)
 
 // 导航方法
 const goToLogin = () => {
@@ -121,22 +99,12 @@ const goToProfile = () => {
 
 // 退出登陆
 const logout = async () => {
-  try {
-    await http.delete('/auth/logout')
-    isLoggedIn.value = false
-    userInfo.value = {
-      username: '',
-      companyName: '',
-      phoneNumber: ''
-    }
-  } catch (error){
-    console.error('服务器异常：', error)
-  }
+  await userStore.logout()
 }
 
 // 挂载登陆检查
 onMounted(() => {
-  getuserInfo()
+  userStore.getUserInfo()
 })
 </script>
 

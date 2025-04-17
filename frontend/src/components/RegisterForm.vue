@@ -72,9 +72,9 @@ const register = async () => {
   }
 
   try {
-    const result = await http.post('/auth/register', registerRequest.value)
-    console.log(result.message)
-    handleResponse(result)
+    const response = await http.post('/auth/register', registerRequest.value)
+    console.log(response.message)
+    handleResponse(response)
   } catch (error) {
     console.error('服务器异常：', error)
     emit('register-failure', error)

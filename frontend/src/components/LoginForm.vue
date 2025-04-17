@@ -27,8 +27,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
 
 const http = useApi()
+const userStore = useUserStore()
 
 const props = defineProps({
   // 是否显示注册链接
@@ -55,9 +57,13 @@ const loginRequest = ref({
 // 登录
 const login = async () => {
   try {
-    const result = await http.post('/auth/login', loginRequest.value)
-    console.log(result.message)
-    handleResponse(result)
+    const response = await http.post('/auth/login', loginRequest.value)
+    console.log(response.message)
+    // 如果登陆成功，保存用户信息
+    if (response.data) {
+      await userStore.getUserInfo()
+    }
+    handleResponse(response)
   } catch (error) {
     console.error('服务器异常：', error)
     emit('login-failure', error)
