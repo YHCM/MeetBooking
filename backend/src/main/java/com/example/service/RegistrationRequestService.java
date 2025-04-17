@@ -71,14 +71,14 @@ public class RegistrationRequestService {
         Long userId = (Long) session.getAttribute("uid");
 
         // 获取管理员用户
-        UserInfo user = userService.getUserInfoByUserId(userId);
-        if (user == null) {
+        UserInfo userInfo = userService.getUserInfoByUserId(userId);
+        if (userInfo == null) {
             // 用户不存在
             return HttpStatus.NOT_FOUND;
         }
 
         // 检查用户是否是管理员
-        if (!user.getRole().equals(Role.ADMIN)) {
+        if (!userInfo.getRole().equals(Role.ADMIN)) {
             // 用户不是管理员
             return HttpStatus.FORBIDDEN;
         }

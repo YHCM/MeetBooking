@@ -18,7 +18,7 @@ public final class RegistrationRequestMessage {
         HttpStatus.BAD_REQUEST, "错误的状态修改",
         HttpStatus.FORBIDDEN, "权限不足",
         HttpStatus.NOT_FOUND, "管理员或请求不存在",
-        HttpStatus.CONFLICT, "这个请求不允许被修改",
+        HttpStatus.CONFLICT, "该请求不允许被修改",
         HttpStatus.INTERNAL_SERVER_ERROR, "处理失败"
     );
 }

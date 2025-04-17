@@ -10,7 +10,6 @@ import lombok.Data;
 public class RegistrationRequestInfo {
     private Long requestId;     // 请求 ID
     private String username;    // 用户名，非空
-    private String password;    // 用户密码
     private String companyName; // 公司名称
     private String phoneNumber; // 电话号码
     private RequestStatus requestStatus;    // 申请请求状态
