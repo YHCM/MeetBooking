@@ -9,6 +9,7 @@ import com.example.entity.RegistrationRequest;
 import com.example.entity.RequestStatus;
 import com.example.entity.Role;
 import com.example.mapper.RegistrationRequestMapper;
+import com.example.model.RegistrationRequestInfo;
 import com.example.model.UserInfo;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
@@ -23,8 +24,8 @@ public class RegistrationRequestService {
     private final PasswordEncoder passwordEncoder;
 
     // 获取所有的注册请求
-    public List<RegistrationRequest> getAllRegistrationRequests() {
-        return registrationRequestMapper.selectAllRegistrationRequests();
+    public List<RegistrationRequestInfo> getAllRegistrationRequestsInfo() {
+        return registrationRequestMapper.selectAllRegistrationRequestsInfo();
     }
 
     // 根据ID获取注册请求
@@ -32,9 +33,14 @@ public class RegistrationRequestService {
         return registrationRequestMapper.selectRegistrationRequestById(requestId);
     }
 
+    // 根据ID获取注册请求信息
+    public RegistrationRequestInfo getRegistrationRequestInfoById(Long requestId) {
+        return registrationRequestMapper.selectRegistrationRequestInfoById(requestId);
+    }
+
     // 根据请求状态获取请求
-    public List<RegistrationRequest> getRegistrationRequestsByStatus(RequestStatus requestStatus) {
-        return registrationRequestMapper.selectRegistrationRequestsByStatus(requestStatus);
+    public List<RegistrationRequestInfo> getRegistrationRequestsInfoByStatus(RequestStatus requestStatus) {
+        return registrationRequestMapper.selectRegistrationRequestsInfoByStatus(requestStatus);
     }
 
     // 添加一个注册请求
@@ -118,9 +124,9 @@ public class RegistrationRequestService {
 
     // 判断用户名是否在 待处理 请求中存在
     public boolean isUsernameExistedInPending(String username) {
-        List<RegistrationRequest> registrationRequestList = registrationRequestMapper.selectRegistrationRequestsByUserName(username);
+        List<RegistrationRequestInfo> registrationRequestInfoList = registrationRequestMapper.selectRegistrationRequestsInfoByUserName(username);
 
         // 如果不为空，那么就是存在
-        return !registrationRequestList.isEmpty();
+        return !registrationRequestInfoList.isEmpty();
     }
 }

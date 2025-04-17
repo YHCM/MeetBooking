@@ -80,9 +80,9 @@ public class UserService {
 
     // 查看用户是否存在
     public boolean isUsernameExisted(String username) {
-        UserInfo user = getUserInfoByUsername(username);
+        UserInfo userInfo = getUserInfoByUsername(username);
 
-        return user != null;
+        return userInfo != null;
     }
 
     // 检查用户是否登陆

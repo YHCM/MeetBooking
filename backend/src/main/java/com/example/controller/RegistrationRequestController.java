@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.constants.messages.RegistrationRequestMessage;
 import com.example.entity.RegistrationRequest;
 import com.example.entity.RequestStatus;
+import com.example.model.RegistrationRequestInfo;
 import com.example.model.Result;
 import com.example.service.RegistrationRequestService;
 
@@ -29,27 +30,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RegistrationRequestController {
     private final RegistrationRequestService registrationRequestService;
 
-    @Operation(summary = "获取所有注册请求")
+    @Operation(summary = "获取所有注册请求信息")
     @GetMapping
-    public Result<List<RegistrationRequest>> getAllRegistrationRequests() {
-        List<RegistrationRequest> registrationRequestList = registrationRequestService.getAllRegistrationRequests();
-        return Result.ok("所有注册请求", registrationRequestList);
+    public Result<List<RegistrationRequestInfo>> getAllRegistrationRequests() {
+        List<RegistrationRequestInfo> registrationRequestInfoList = registrationRequestService.getAllRegistrationRequestsInfo();
+        return Result.ok("所有注册请求", registrationRequestInfoList);
     }
 
     @Operation(summary = "根据 ID 获取请求")
     @GetMapping("/{requestId}")
-    public Result<RegistrationRequest> getRegistrationRequestById(@PathVariable Long requestId) {
-        RegistrationRequest registrationRequest = registrationRequestService.getRegistrationRequestById(requestId);
+    public Result<RegistrationRequestInfo> getRegistrationRequestById(@PathVariable Long requestId) {
+        RegistrationRequestInfo registrationRequestInfo = registrationRequestService.getRegistrationRequestInfoById(requestId);
 
-        return Result.ok("注册请求信息", registrationRequest);
+        return Result.ok("注册请求信息", registrationRequestInfo);
     }
 
-    @Operation(summary = "根据请求状态获取请求")
+    @Operation(summary = "根据请求状态获取请求信息")
     @GetMapping("/status/{requestStatus}")
-    public Result<List<RegistrationRequest>> getRegistrationRequestsByStatus(@PathVariable RequestStatus requestStatus) {
-        List<RegistrationRequest> registrationRequestsList = registrationRequestService.getRegistrationRequestsByStatus(requestStatus);
+    public Result<List<RegistrationRequestInfo>> getRegistrationRequestsByStatus(@PathVariable RequestStatus requestStatus) {
+        List<RegistrationRequestInfo> registrationRequestsInfoList = registrationRequestService.getRegistrationRequestsInfoByStatus(requestStatus);
 
-        return Result.ok(requestStatus + " 状态的所有请求", registrationRequestsList);
+        return Result.ok(requestStatus + " 状态的所有请求", registrationRequestsInfoList);
     }
     
     @Operation(summary = "创建一个注册请求")
