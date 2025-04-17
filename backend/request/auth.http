@@ -25,3 +25,7 @@ Content-Type: application/json
   "companyName": "Test Company",
   "phoneNumber": "1234567890"
 }
+
+
+### 登出账号
+DELETE {{base_url}}/logout HTTP/1.1

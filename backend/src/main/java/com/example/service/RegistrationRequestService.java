@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.entity.RegistrationRequest;
 import com.example.entity.RequestStatus;
 import com.example.entity.Role;
-import com.example.entity.User;
 import com.example.mapper.RegistrationRequestMapper;
+import com.example.model.UserInfo;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
 import jakarta.servlet.http.HttpSession;
@@ -65,7 +65,7 @@ public class RegistrationRequestService {
         Long userId = (Long) session.getAttribute("uid");
 
         // 获取管理员用户
-        User user = userService.getUserByUserId(userId);
+        UserInfo user = userService.getUserInfoByUserId(userId);
         if (user == null) {
             // 用户不存在
             return HttpStatus.NOT_FOUND;

@@ -4,6 +4,7 @@ import com.example.constants.messages.UserMessage;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.model.Result;
+import com.example.model.UserInfo;
 import com.example.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,24 +23,24 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "获取所有用户")
+    @Operation(summary = "获取所有用户信息")
     @GetMapping
-    public Result<List<User>> getAllUsers() {
-        List<User> userList = userService.getAllUsers();
+    public Result<List<UserInfo>> getAllUsers() {
+        List<UserInfo> userList = userService.getAllUsersInfo();
         return Result.ok("所有用户信息", userList);
     }
 
-    @Operation(summary = "获取指定角色的用户")
+    @Operation(summary = "获取指定角色的用户信息")
     @GetMapping("/role/{role}")
-    public Result<List<User>> getUsersByRole(@PathVariable Role role) {
-        List<User> userList = userService.getUsersByRole(role);
+    public Result<List<UserInfo>> getUsersByRole(@PathVariable Role role) {
+        List<UserInfo> userList = userService.getUsersInfoByRole(role);
         return Result.ok(role + " 用户信息", userList);
     }
 
-    @Operation(summary = "通过用户名获取用户")
+    @Operation(summary = "通过用户名获取用户信息")
     @GetMapping("/username/{username}")
-    public Result<User> getUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
+    public Result<UserInfo> getUserByUsername(@PathVariable String username) {
+        UserInfo user = userService.getUserInfoByUsername(username);
         if (user == null) {
             return Result.create(HttpStatus.NOT_FOUND, "用户不存在", null);
         } else {
@@ -47,10 +48,10 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "通过ID获取用户")
+    @Operation(summary = "通过ID获取用户信息")
     @GetMapping("/{userId}")
-    public Result<User> getUserByUserId(@PathVariable Long userId) {
-        User user = userService.getUserByUserId(userId);
+    public Result<UserInfo> getUserByUserId(@PathVariable Long userId) {
+        UserInfo user = userService.getUserInfoByUserId(userId);
         if (user == null) {
             return Result.create(HttpStatus.NOT_FOUND, "用户不存在", null);
         } else {
@@ -84,8 +85,8 @@ public class UserController {
 
     @Operation(summary = "通过 session 获取当前用户信息")
     @GetMapping("/current")
-    public Result<User> getUserBySession(HttpSession session) {
-        User currentUser = userService.getUserBySession(session);
+    public Result<UserInfo> getUserBySession(HttpSession session) {
+        UserInfo currentUser = userService.getUserInfoBySession(session);
 
         if (currentUser == null) {
             return Result.create(HttpStatus.UNAUTHORIZED, "用户未登录", null);

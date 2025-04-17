@@ -12,15 +12,24 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <!-- 获取所有用户 -->
-    <select id="selectAllUsers" resultMap="UserResultMap">
-        SELECT user_id, username, password, role, company_name, phone_number, created_at
+    <resultMap id="UserInfoResultMap" type="com.example.model.UserInfo">
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="role" column="role"/>
+        <result property="companyName" column="company_name"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 获取所有用户信息 -->
+    <select id="selectAllUsersInfo" resultMap="UserInfoResultMap">
+        SELECT user_id, username, role, company_name, phone_number, created_at
         FROM users
     </select>
 
-    <!-- 根据角色获取用户 -->
-    <select id="selectUsersByRole" resultMap="UserResultMap">
-        SELECT user_id, username, password, role, company_name, phone_number, created_at
+    <!-- 根据角色获取用户信息 -->
+    <select id="selectUsersInfoByRole" resultMap="UserInfoResultMap">
+        SELECT user_id, username, role, company_name, phone_number, created_at
         FROM users
         WHERE role = #{role}
     </select>
@@ -32,9 +41,23 @@
         WHERE username = #{username}
     </select>
 
+    <!-- 根据用户名获取用户信息 -->
+    <select id="selectUserInfoByUsername" resultMap="UserInfoResultMap">
+        SELECT user_id, username, role, company_name, phone_number, created_at
+        FROM users
+        WHERE username = #{username}
+    </select>
+
     <!-- 根据用户ID获取用户 -->
     <select id="selectUserByUserId" resultMap="UserResultMap">
         SELECT user_id, username, password, role, company_name, phone_number, created_at
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据用户ID获取用户信息 -->
+    <select id="selectUserInfoByUserId" resultMap="UserInfoResultMap">
+        SELECT user_id, username, role, company_name, phone_number, created_at
         FROM users
         WHERE user_id = #{userId}
     </select>

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.mapper.UserMapper;
+import com.example.model.UserInfo;
 import com.example.entity.RegistrationRequest;
 import com.example.entity.Role;
 import com.example.entity.User;
@@ -20,14 +21,14 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    // 获取所有用户
-    public List<User> getAllUsers() {
-        return userMapper.selectAllUsers();
+    // 获取所有用户信息
+    public List<UserInfo> getAllUsersInfo() {
+        return userMapper.selectAllUsersInfo();
     }
 
-    // 获取指定类型的用户
-    public List<User> getUsersByRole(Role role) {
-        return userMapper.selectUsersByRole(role);
+    // 获取指定类型的用户信息
+    public List<UserInfo> getUsersInfoByRole(Role role) {
+        return userMapper.selectUsersInfoByRole(role);
     }
 
     // 通过用户名获取用户
@@ -35,9 +36,19 @@ public class UserService {
         return userMapper.selectUserByUsername(username);
     }
 
+    // 通过用户名获取用户信息
+    public UserInfo getUserInfoByUsername(String username) {
+        return userMapper.selectUserInfoByUsername(username);
+    }
+
     // 通过 ID 获取用户
     public User getUserByUserId(Long userId) {
         return userMapper.selectUserByUserId(userId);
+    }
+
+    // 通过 ID 获取用户信息
+    public UserInfo getUserInfoByUserId(Long userId) {
+        return userMapper.selectUserInfoByUserId(userId);
     }
 
     // 根据角色类型添加用户
@@ -69,7 +80,7 @@ public class UserService {
 
     // 查看用户是否存在
     public boolean isUsernameExisted(String username) {
-        User user = getUserByUsername(username);
+        UserInfo user = getUserInfoByUsername(username);
 
         return user != null;
     }
@@ -80,7 +91,7 @@ public class UserService {
         Long userId = (Long) session.getAttribute("uid");
 
         // 如果没有或者 id 对应的用户不存在，那么不算登陆
-        return userId != null && getUserByUserId(userId) != null;
+        return userId != null && getUserInfoByUserId(userId) != null;
     }
 
     // 通过 session 获取 user
@@ -88,5 +99,12 @@ public class UserService {
         Long userId = (Long) session.getAttribute("uid");
 
         return getUserByUserId(userId);
+    }
+
+    // 通过 session 获取 user info
+    public UserInfo getUserInfoBySession(HttpSession session) {
+        Long userId = (Long) session.getAttribute("uid");
+
+        return getUserInfoByUserId(userId);
     }
 }

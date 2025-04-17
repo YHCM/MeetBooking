@@ -26,3 +26,11 @@ Content-Type: application/json
     "companyName": "company1",
     "phoneNumber": "12345678901"
 }
+
+
+### 查看当前用户是否登陆
+GET {{base_url}}/status HTTP/1.1
+
+
+### 查看当前用户信息
+GET {{base_url}}/current HTTP/1.1
