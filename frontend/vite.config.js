@@ -17,7 +17,6 @@ export default defineConfig({
     AutoImport({
       resolvers: [ElementPlusResolver()],
       imports: [
-        'vue', // 自动导入 Vue 的 ref, reactive, computed 等
         {
           '@/utils/useApi': ['useApi'], // 自动导入 useApi
         },

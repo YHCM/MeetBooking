@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/swagger-ui/**", "/v3/**", "/auth/login", "/auth/register");
+                .excludePathPatterns("/", "/swagger-ui/**", "/v3/**", "/auth/**", "/users/current");
     }
 
     // 配置跨域请求

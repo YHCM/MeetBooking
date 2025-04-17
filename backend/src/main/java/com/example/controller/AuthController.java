@@ -5,6 +5,7 @@ import com.example.model.Result;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +59,13 @@ public class AuthController {
         String message = statusMessages.getOrDefault(registerStatus, "注册失败");
 
         return Result.create(registerStatus, message, registerStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "登出账号")
+    @DeleteMapping("/logout")
+    public Result<Boolean> logout(HttpSession session) {
+        authService.logout(session);
+
+        return Result.ok("退出成功", Boolean.TRUE);
     }
 }

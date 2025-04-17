@@ -1,7 +1,7 @@
 <template>
   <div class="register-form">
     <div class="form-header">
-      <span v-if="showLoginLink"> <RouterLink to="/login">❮去登陆</RouterLink> 已有账号？ </span>
+      <span v-if="showLoginLink"> <RouterLink to="/login">❮ 去登陆</RouterLink> 已有账号？ </span>
       <h3>注册新用户</h3>
     </div>
     <el-form :model="registerRequest" @keyup.enter.native="register">
@@ -33,6 +33,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const http = useApi()
+
 const props = defineProps({
   showLoginLink: {
     type: Boolean,
@@ -41,8 +45,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['register-success', 'register-failure'])
-
-const http = useApi()
 
 // 登录的请求体
 const registerRequest = ref({

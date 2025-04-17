@@ -17,6 +17,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RegistrationRequestService registrationRequestService;
 
+    // 登陆
     public HttpStatus login(String username, String password, HttpSession session) {
         // 通过用户名获取用户
         User user = userService.getUserByUsername(username);
@@ -37,7 +38,14 @@ public class AuthService {
         }
     }
 
+    // 注册
     public HttpStatus register(RegistrationRequest registrationRequest) {
         return registrationRequestService.addRegistrationRequest(registrationRequest);
+    }
+
+    // 登出
+    public void logout(HttpSession session) {
+        // 清除会话
+        session.invalidate();
     }
 }

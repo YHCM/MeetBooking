@@ -3,7 +3,7 @@
     <div class="form-header">
       <h3>登录会议室</h3>
       <span v-if="showRegisterLink">
-        没有账号？<RouterLink to="/register">去注册❯</RouterLink>
+        没有账号？ <RouterLink to="/register">去注册 ❯</RouterLink>
       </span>
     </div>
     <el-form :model="loginRequest" @keyup.enter.native="login">
@@ -26,6 +26,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const http = useApi()
+
 const props = defineProps({
   // 是否显示注册链接
   // <LoginForm :show-register-link="false" />
@@ -41,8 +45,6 @@ const props = defineProps({
 //   @login-failure="handleLoginFailure"
 // />
 const emit = defineEmits(['login-success', 'login-failure'])
-
-const http = useApi()
 
 // 登录的请求体
 const loginRequest = ref({

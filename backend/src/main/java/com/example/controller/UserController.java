@@ -7,6 +7,7 @@ import com.example.model.Result;
 import com.example.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,6 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    // 获取所有用户
     @Operation(summary = "获取所有用户")
     @GetMapping
     public Result<List<User>> getAllUsers() {
@@ -29,7 +29,6 @@ public class UserController {
         return Result.ok("所有用户信息", userList);
     }
 
-    // 获取指定类型的用户
     @Operation(summary = "获取指定角色的用户")
     @GetMapping("/role/{role}")
     public Result<List<User>> getUsersByRole(@PathVariable Role role) {
@@ -37,7 +36,6 @@ public class UserController {
         return Result.ok(role + " 用户信息", userList);
     }
 
-    // 通过用户名获取用户
     @Operation(summary = "通过用户名获取用户")
     @GetMapping("/username/{username}")
     public Result<User> getUserByUsername(@PathVariable String username) {
@@ -49,7 +47,6 @@ public class UserController {
         }
     }
 
-    // 通过 ID 获取用户名
     @Operation(summary = "通过ID获取用户")
     @GetMapping("/{userId}")
     public Result<User> getUserByUserId(@PathVariable Long userId) {
@@ -61,7 +58,6 @@ public class UserController {
         }
     }
 
-    // 根据角色类型添加用户
     @Operation(summary = "根据角色类型创建用户")
     @PostMapping("/{role}")
     public Result<Boolean> createUser(@PathVariable Role role, @RequestBody User user) {
@@ -72,5 +68,29 @@ public class UserController {
         String message = statusMessages.getOrDefault(createStatus, "用户创建失败");
 
         return Result.create(createStatus, message, createStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "查看用户状态，是否登陆")
+    @GetMapping("/status")
+    public Result<Boolean> getUserStatus(HttpSession session) {
+        boolean isLoggedIn = userService.isUserLoggedIn(session);
+
+        if (isLoggedIn) {
+            return Result.ok("用户已登陆", Boolean.TRUE);
+        } else {
+            return Result.create(HttpStatus.UNAUTHORIZED, "用户未登录", Boolean.FALSE);
+        }
+    }
+
+    @Operation(summary = "通过 session 获取当前用户信息")
+    @GetMapping("/current")
+    public Result<User> getUserBySession(HttpSession session) {
+        User currentUser = userService.getUserBySession(session);
+
+        if (currentUser == null) {
+            return Result.create(HttpStatus.UNAUTHORIZED, "用户未登录", null);
+        } else {
+            return Result.ok("当前用户信息", currentUser);
+        }
     }
 }

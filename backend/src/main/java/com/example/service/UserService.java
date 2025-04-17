@@ -11,6 +11,7 @@ import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.util.security.crypto.password.PasswordEncoder;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -71,5 +72,21 @@ public class UserService {
         User user = getUserByUsername(username);
 
         return user != null;
+    }
+
+    // 检查用户是否登陆
+    public boolean isUserLoggedIn(HttpSession session) {
+        // 从 session 获取 id
+        Long userId = (Long) session.getAttribute("uid");
+
+        // 如果没有或者 id 对应的用户不存在，那么不算登陆
+        return userId != null && getUserByUserId(userId) != null;
+    }
+
+    // 通过 session 获取 user
+    public User getUserBySession(HttpSession session) {
+        Long userId = (Long) session.getAttribute("uid");
+
+        return getUserByUserId(userId);
     }
 }
