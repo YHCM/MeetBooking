@@ -4,12 +4,16 @@ import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import UserManagementView from '@/views/UserManagementView.vue'
+import RegistrationRequestsView from '@/views/RegistrationRequestsView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
   { path: '/about', component: AboutView },
   { path: '/login', component: LoginView },
   { path: '/register', component: RegisterView },
+  { path: '/users', component: UserManagementView },
+  { path: '/requests', component: RegistrationRequestsView },
 ]
 
 const router = createRouter({

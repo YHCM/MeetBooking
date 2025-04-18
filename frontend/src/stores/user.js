@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref({
     userId: 0,
     username: '未登录用户',
-    role: 'client',
+    role: 'CLIENT',
     companyName: '未设置',
     phoneNumber: '未设置',
     createdAt: new Date(),
@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', () => {
       userInfo.value = {
         userId: 0,
         username: '未登录用户',
-        role: 'client',
+        role: 'CLIENT',
         companyName: '未设置',
         phoneNumber: '未设置',
         createdAt: new Date(),

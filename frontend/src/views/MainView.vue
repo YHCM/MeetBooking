@@ -17,6 +17,18 @@
               <el-menu-item index="2">
                 <RouterLink to="/about">关于</RouterLink>
               </el-menu-item>
+              <el-sub-menu v-if="isAdmin" index="3" popper-class="manage-submenu">
+                <template #title>管理</template>
+                <el-menu-item index="3-1">
+                  <RouterLink to="/users">用户管理</RouterLink>
+                </el-menu-item>
+                <el-menu-item index="3-2">
+                  <RouterLink to="/requests">注册处理</RouterLink>
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item index="4">
+                <RouterLink to="/">其他</RouterLink>
+              </el-menu-item>
             </el-menu>
 
             <!-- 点击头像，弹出卡片 -->
@@ -85,6 +97,8 @@ const activeIndex = ref('1')
 const isLoggedIn = computed(() => userStore.isLoggedIn)
 // 用户信息
 const userInfo = computed(() => userStore.userInfo)
+// 是否是管理员
+const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
 
 // 导航方法
 const goToLogin = () => {
