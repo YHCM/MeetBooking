@@ -3,10 +3,14 @@ import { ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const isLoggedIn = ref(false)
+  // 用户数据，为了方便显示，有默认值
   const userInfo = ref({
-    username: '',
-    companyName: '',
-    phoneNumber: '',
+    userId: 0,
+    username: '未登录用户',
+    role: 'guest',
+    companyName: '未设置',
+    phoneNumber: '未设置',
+    createdAt: new Date(),
   })
 
   const http = useApi()
@@ -19,9 +23,12 @@ export const useUserStore = defineStore('user', () => {
         userInfo.value = {
           // ...userInfo.value,
           // ...response.data
-          username: response.data.username,
-          companyName: response.data.companyName || '未知',
-          phoneNumber: response.data.phoneNumber || '未知',
+          userId: response.data.userId || 0,
+          username: response.data.username || '未命名',
+          role: response.data.role || 'client',
+          companyName: response.data.companyName || '未设置',
+          phoneNumber: response.data.phoneNumber || '未设置',
+          createdAt: response.data.createdAt ? new Date(response.data.createdAt) : new Date(),
         }
       }
     } catch (error) {
@@ -34,9 +41,12 @@ export const useUserStore = defineStore('user', () => {
       await http.delete('/auth/logout')
       isLoggedIn.value = false
       userInfo.value = {
-        username: '',
-        companyName: '',
-        phoneNumber: '',
+        userId: 0,
+        username: '未登录用户',
+        role: 'guest',
+        companyName: '未设置',
+        phoneNumber: '未设置',
+        createdAt: new Date(),
       }
     } catch (error) {
       console.log('服务器异常：', error)
