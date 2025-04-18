@@ -66,6 +66,7 @@ const login = async () => {
     handleResponse(response)
   } catch (error) {
     console.error('服务器异常：', error)
+    ElMessage.error('服务器异常')
     emit('login-failure', error)
   }
 }
