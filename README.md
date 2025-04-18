@@ -69,8 +69,3 @@ nginx -c "$PWD\nginx.config"
 ### 5. 访问前端页面
 
 浏览器打开 [http://localhost:3000](http://localhost:3000)
-
-
-## 测试
-
-#### 随便测试一下
