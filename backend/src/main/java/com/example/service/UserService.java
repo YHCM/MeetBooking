@@ -107,4 +107,42 @@ public class UserService {
 
         return getUserInfoByUserId(userId);
     }
+
+    // 切换用户的状态（冻结/解冻）
+    public HttpStatus toggleUserStatus(Long userId, HttpSession session) {
+        // 获取要改变的用户信息
+        UserInfo userInfo = getUserInfoByUserId(userId);
+
+        if (userInfo == null) {
+            return HttpStatus.NOT_FOUND;    // 需要修改的用户不存在
+        }
+
+        // 检查用户类型，只有 员工 和 客户 可以被 冻结/解冻
+        if (userInfo.getRole().equals(Role.ROOT) || userInfo.getRole().equals(Role.ADMIN)) {
+            // 此用户类型不允许 冻结/解冻
+            return HttpStatus.CONFLICT;
+        }
+
+        // 获取管理员 ID
+        Long adminId = (Long) session.getAttribute("uid");
+        
+        // 获取管理员用户信息
+        UserInfo adminUserInfo = getUserInfoByUserId(adminId);
+        if (adminUserInfo == null) {
+            return HttpStatus.NOT_FOUND;    // 管理员不存在
+        }
+
+        // 检查管理员是否是管理员
+        if (!adminUserInfo.getRole().equals(Role.ADMIN)) {
+            return HttpStatus.FORBIDDEN;    // 不是管理员，权限不够
+        }
+
+        // 冻结/解冻 用户
+        int rowsAffected = userMapper.toggleUserStatus(userId, adminId);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;    // 服务器异常
+        } else {
+            return HttpStatus.OK;   // 处理成功
+        }
+    }
 }

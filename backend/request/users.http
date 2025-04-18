@@ -34,3 +34,7 @@ GET {{base_url}}/status HTTP/1.1
 
 ### 查看当前用户信息
 GET {{base_url}}/current HTTP/1.1
+
+
+### 冻结 / 解冻 30001
+PATCH {{base_url}}/30001/active HTTP/1.1

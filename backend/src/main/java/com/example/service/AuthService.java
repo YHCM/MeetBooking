@@ -26,6 +26,10 @@ public class AuthService {
             return HttpStatus.NOT_FOUND;   // 用户不存在
         }
 
+        if (!user.getIsActive()) {
+            return HttpStatus.FORBIDDEN;    // 用户被冻结，不可登陆
+        }
+
         // 获取数据库存储的密码
         String storedPassword = user.getPassword();
 

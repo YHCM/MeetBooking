@@ -7,10 +7,13 @@ export const useUserStore = defineStore('user', () => {
   const userInfo = ref({
     userId: 0,
     username: '未登录用户',
-    role: 'guest',
+    role: 'client',
     companyName: '未设置',
     phoneNumber: '未设置',
     createdAt: new Date(),
+    isActive: true,
+    processedAt: new Date(),
+    processedBy: 0,
   })
 
   const http = useApi()
@@ -20,15 +23,19 @@ export const useUserStore = defineStore('user', () => {
       const response = await http.get('/users/current')
       isLoggedIn.value = response.data !== null
       if (isLoggedIn.value) {
+        const data = response.data
         userInfo.value = {
           // ...userInfo.value,
           // ...response.data
-          userId: response.data.userId || 0,
-          username: response.data.username || '未命名',
-          role: response.data.role || 'client',
-          companyName: response.data.companyName || '未设置',
-          phoneNumber: response.data.phoneNumber || '未设置',
-          createdAt: response.data.createdAt ? new Date(response.data.createdAt) : new Date(),
+          userId: data.userId || 0,
+          username: data.username || '未命名',
+          role: data.role || 'client',
+          companyName: data.companyName || '未设置',
+          phoneNumber: data.phoneNumber || '未设置',
+          createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+          isActive: data.isActive,
+          processedAt: data.processedAt ? new Date(data.processedAt) : new Date(),
+          processedBy: data.processedBy || 0,
         }
       }
     } catch (error) {
@@ -43,10 +50,13 @@ export const useUserStore = defineStore('user', () => {
       userInfo.value = {
         userId: 0,
         username: '未登录用户',
-        role: 'guest',
+        role: 'client',
         companyName: '未设置',
         phoneNumber: '未设置',
         createdAt: new Date(),
+        isActive: true,
+        processedAt: new Date(),
+        processedBy: 0,
       }
     } catch (error) {
       console.log('服务器异常：', error)

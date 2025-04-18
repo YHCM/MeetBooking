@@ -10,6 +10,9 @@
         <result property="companyName" column="company_name"/>
         <result property="phoneNumber" column="phone_number"/>
         <result property="createdAt" column="created_at"/>
+        <result property="isActive" column="is_active"/>
+        <result property="processedAt" column="processed_at"/>
+        <result property="processedBy" column="processed_by"/>
     </resultMap>
 
     <resultMap id="UserInfoResultMap" type="com.example.model.UserInfo">
@@ -19,52 +22,55 @@
         <result property="companyName" column="company_name"/>
         <result property="phoneNumber" column="phone_number"/>
         <result property="createdAt" column="created_at"/>
+        <result property="isActive" column="is_active"/>
+        <result property="processedAt" column="processed_at"/>
+        <result property="processedBy" column="processed_by"/>
     </resultMap>
 
     <!-- 获取所有用户信息 -->
     <select id="selectAllUsersInfo" resultMap="UserInfoResultMap">
-        SELECT user_id, username, role, company_name, phone_number, created_at
+        SELECT user_id, username, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
     </select>
 
     <!-- 根据角色获取用户信息 -->
     <select id="selectUsersInfoByRole" resultMap="UserInfoResultMap">
-        SELECT user_id, username, role, company_name, phone_number, created_at
+        SELECT user_id, username, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
         WHERE role = #{role}
     </select>
 
     <!-- 根据用户名获取用户 -->
     <select id="selectUserByUsername" resultMap="UserResultMap">
-        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        SELECT user_id, username, password, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
         WHERE username = #{username}
     </select>
 
     <!-- 根据用户名获取用户信息 -->
     <select id="selectUserInfoByUsername" resultMap="UserInfoResultMap">
-        SELECT user_id, username, role, company_name, phone_number, created_at
+        SELECT user_id, username, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
         WHERE username = #{username}
     </select>
 
     <!-- 根据用户ID获取用户 -->
     <select id="selectUserByUserId" resultMap="UserResultMap">
-        SELECT user_id, username, password, role, company_name, phone_number, created_at
+        SELECT user_id, username, password, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
         WHERE user_id = #{userId}
     </select>
 
     <!-- 根据用户ID获取用户信息 -->
     <select id="selectUserInfoByUserId" resultMap="UserInfoResultMap">
-        SELECT user_id, username, role, company_name, phone_number, created_at
+        SELECT user_id, username, role, company_name, phone_number, created_at, is_active, processed_at, processed_by
         FROM users
         WHERE user_id = #{userId}
     </select>
 
     <!-- 插入用户 -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (user_id, username, password, role, company_name, phone_number, created_at)
+        INSERT INTO users (user_id, username, password, role, company_name, phone_number)
         VALUES (
             NEXT VALUE FOR
             <choose>
@@ -73,7 +79,14 @@
                 <when test="role.name() == 'STAFF'">staff_seq</when>
                 <when test="role.name() == 'CLIENT'">client_seq</when>
             </choose>,
-            #{username}, #{password}, #{role}, #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP
+            #{username}, #{password}, #{role}, #{companyName}, #{phoneNumber}
         )
     </insert>
+
+    <!-- 冻结 / 解冻 用户 -->
+    <update id="toggleUserStatus">
+        UPDATE users
+        SET is_active = NOT is_active, processed_at = CURRENT_TIMESTAMP, processed_by = #{adminId}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

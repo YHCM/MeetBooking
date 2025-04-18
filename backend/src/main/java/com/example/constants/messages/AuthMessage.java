@@ -10,6 +10,7 @@ public final class AuthMessage {
     public static final Map<HttpStatus, String> LOGIN_MESSAGES = Map.of(
         HttpStatus.OK, "登陆成功",
         HttpStatus.UNAUTHORIZED, "用户名或密码错误",
+        HttpStatus.FORBIDDEN, "用户被冻结，不可登陆",
         HttpStatus.NOT_FOUND, "用户不存在"
     );
 

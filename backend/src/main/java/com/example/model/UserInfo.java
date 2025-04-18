@@ -14,4 +14,7 @@ public class UserInfo {
     private String companyName;
     private String phoneNumber;
     private LocalDateTime createdAt;
+    private Boolean isActive;
+    private LocalDateTime processedAt;
+    private Long processedBy;
 }

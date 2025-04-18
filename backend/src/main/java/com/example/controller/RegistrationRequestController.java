@@ -19,9 +19,9 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -66,7 +66,7 @@ public class RegistrationRequestController {
     }
 
     @Operation(summary = "处理一个请求")
-    @PutMapping("/{requestId}/{requestStatus}")
+    @PatchMapping("/{requestId}/{requestStatus}")
     public Result<Boolean> processRegistrationRequest(@PathVariable Long requestId, @PathVariable RequestStatus requestStatus, HttpSession session) {
         HttpStatus processStatus = registrationRequestService.processRegistrationRequest(requestId, requestStatus, session);
 

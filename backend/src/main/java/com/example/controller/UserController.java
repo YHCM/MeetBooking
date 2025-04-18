@@ -94,4 +94,17 @@ public class UserController {
             return Result.ok("当前用户信息", currentUserInfo);
         }
     }
+
+    @Operation(summary = "冻结 / 解冻用户")
+    @PatchMapping("/{userId}/active")
+    public Result<Boolean> toggleUserStatus(@PathVariable Long userId, HttpSession session) {
+        HttpStatus toggleStatus = userService.toggleUserStatus(userId, session);
+
+        Map<HttpStatus, String> statusMessages = UserMessage.TOGGLE_MESSAGES;
+
+        // 获取消息
+        String message = statusMessages.getOrDefault(toggleStatus, "处理失败");
+
+        return Result.create(toggleStatus, message, toggleStatus.is2xxSuccessful());
+    }
 }

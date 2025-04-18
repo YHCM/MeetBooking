@@ -27,4 +27,7 @@ public interface UserMapper {
 
     // 插入用户
     int insertUser(User user);
+
+    // 解冻 / 冻结 用户
+    int toggleUserStatus(Long userId, Long adminId);
 }
