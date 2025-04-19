@@ -28,6 +28,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { handleResponse } from '@/utils/responseHandler'
 
 const http = useApi()
 const userStore = useUserStore()
@@ -63,41 +64,19 @@ const login = async () => {
     if (response.data) {
       await userStore.getUserInfo()
     }
-    handleResponse(response)
+    handleResponse(response, {
+      onSuccess: (message) => {
+        emit('login-success', message)
+      },
+      onError: (message) => {
+        emit('login-failure', message)
+      },
+    })
   } catch (error) {
     console.error('服务器异常：', error)
     ElMessage.error('服务器异常')
     emit('login-failure', error)
   }
-}
-
-const RESPONSE_HANDLERS = {
-  200: (message) => {
-    showMessage(message, 'success')
-    emit('login-success', message)
-  },
-  500: (message) => {
-    showMessage(message, 'error')
-    emit('login-failure', message)
-  },
-  default: (message) => {
-    showMessage(message, 'warning')
-    emit('login-failure', message)
-  },
-}
-
-const showMessage = (message, type) => {
-  ElMessage({
-    message,
-    type,
-    plain: true,
-  })
-}
-
-// 处理响应
-const handleResponse = (response) => {
-  const handler = RESPONSE_HANDLERS[response.code] || RESPONSE_HANDLERS.default
-  handler(response.message)
 }
 </script>
 

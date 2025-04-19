@@ -34,6 +34,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { handleResponse } from '@/utils/responseHandler'
 
 const http = useApi()
 
@@ -74,7 +75,14 @@ const register = async () => {
   try {
     const response = await http.post('/auth/register', registerRequest.value)
     console.log(response.message)
-    handleResponse(response)
+    handleResponse(response, {
+      onSuccess: (message) => {
+        emit('register-success', message)
+      },
+      onError: (message) => {
+        emit('register-failure', message)
+      },
+    })
   } catch (error) {
     console.error('服务器异常：', error)
     ElMessage.error('服务器异常')
@@ -87,35 +95,6 @@ const validatePasswordStrength = (password) => {
   // 至少 8 位，包括字母和数字，不区分大小写
   const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
   return regex.test(password)
-}
-
-const RESPONSE_HANDLERS = {
-  200: (message) => {
-    showMessage(message, 'success')
-    emit('register-success', message)
-  },
-  500: (message) => {
-    showMessage(message, 'error')
-    emit('register-failure', message)
-  },
-  default: (message) => {
-    showMessage(message, 'warning')
-    emit('register-failure', message)
-  },
-}
-
-const showMessage = (message, type) => {
-  ElMessage({
-    message,
-    type,
-    plain: true,
-  })
-}
-
-// 处理响应
-const handleResponse = (response) => {
-  const handler = RESPONSE_HANDLERS[response.code] || RESPONSE_HANDLERS.default
-  handler(response.message)
 }
 </script>
 

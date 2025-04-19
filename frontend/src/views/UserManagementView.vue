@@ -63,6 +63,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { useUserStore } from '@/stores/user'
+import { handleResponse } from '@/utils/responseHandler'
 
 const http = useApi()
 const router = useRouter()
@@ -135,32 +136,6 @@ const toggleUserStatus = async (user) => {
   } finally {
     user.loading = false
   }
-}
-
-const RESPONSE_HANDLERS = {
-  200: (message) => {
-    showMessage(message, 'success')
-  },
-  500: (message) => {
-    showMessage(message, 'error')
-  },
-  default: (message) => {
-    showMessage(message, 'warning')
-  },
-}
-
-const showMessage = (message, type) => {
-  ElMessage({
-    message,
-    type,
-    plain: true,
-  })
-}
-
-// 处理响应
-const handleResponse = (response) => {
-  const handler = RESPONSE_HANDLERS[response.code] || RESPONSE_HANDLERS.default
-  handler(response.message)
 }
 
 // 计算当前页面数据
