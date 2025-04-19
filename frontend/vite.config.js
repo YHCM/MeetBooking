@@ -18,7 +18,7 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
       imports: [
         {
-          '@/utils/useApi': ['useApi'], // 自动导入 useApi
+          '@/composables/useApi': ['useApi'], // 自动导入 useApi
         },
       ],
     }),

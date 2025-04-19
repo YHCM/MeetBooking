@@ -13,7 +13,7 @@
           {{ formatDate(row.createdAt) }}
         </template>
       </el-table-column>
-      <el-table-column prop="requestStatus" label="创建时间">
+      <el-table-column prop="requestStatus" label="状态">
         <template #default="{ row }">
           {{ statusMap[row.requestStatus] || row.requestStatus }}
         </template>
@@ -55,6 +55,7 @@ import { useRouter } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { useUserStore } from '@/stores/user'
 import { handleResponse } from '@/utils/responseHandler'
+import { usePagination } from '@/composables/usePagination'
 
 const http = useApi()
 const router = useRouter()
@@ -67,12 +68,10 @@ const userInfo = computed(() => userStore.userInfo)
 // 是否是管理员
 const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
 
-// 分页参数
-const pagination = ref({
-  currentPage: 1,
-  pageSize: 15,
-  total: 0,
-})
+const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } =
+  usePagination()
+
+const currentPageData = computed(() => getCurrentPageData(requestList.value))
 
 // 获取注册请求
 const getRequestList = async () => {
@@ -83,7 +82,7 @@ const getRequestList = async () => {
   try {
     const response = await http.get('/requests')
     requestList.value = response.data
-    pagination.value.total = requestList.value.length
+    updateTotal(requestList.value.length)
   } catch (error) {
     console.error('服务器异常：', error)
     ElMessage.error('服务器异常')
@@ -157,23 +156,6 @@ const rejectRequest = async (request) => {
   }
 }
 
-// 计算当前页面数据
-const currentPageData = computed(() => {
-  const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
-  const end = start + pagination.value.pageSize
-  return requestList.value.slice(start, end)
-})
-
-// 处理分页改变
-const handleCurrentChange = (val) => {
-  pagination.value.currentPage = val
-}
-
-const handleSizeChange = (val) => {
-  pagination.value.pageSize = val
-  pagination.value.currentPage = 1 // 回到第一页
-}
-
 // 检查权限并重定向
 const checkPermission = () => {
   if (!isAdmin.value) {
@@ -189,3 +171,9 @@ onMounted(() => {
   getRequestList()
 })
 </script>
+
+<style scoped>
+.el-table {
+  margin-top: 20px;
+}
+</style>

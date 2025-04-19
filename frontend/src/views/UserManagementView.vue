@@ -64,6 +64,7 @@ import { useRouter } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { useUserStore } from '@/stores/user'
 import { handleResponse } from '@/utils/responseHandler'
+import { usePagination } from '@/composables/usePagination'
 
 const http = useApi()
 const router = useRouter()
@@ -76,12 +77,10 @@ const userInfo = computed(() => userStore.userInfo)
 // 是否是管理员
 const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
 
-// 分页参数
-const pagination = ref({
-  currentPage: 1,
-  pageSize: 15,
-  total: 0,
-})
+const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } =
+  usePagination()
+
+const currentPageData = computed(() => getCurrentPageData(userList.value))
 
 // 获取用户数据
 const getUserList = async () => {
@@ -92,7 +91,7 @@ const getUserList = async () => {
   try {
     const response = await http.get('/users')
     userList.value = response.data
-    pagination.value.total = userList.value.length
+    updateTotal(userList.value.length)
   } catch (error) {
     console.error('服务器异常：', error)
     ElMessage.error('服务器异常')
@@ -136,23 +135,6 @@ const toggleUserStatus = async (user) => {
   } finally {
     user.loading = false
   }
-}
-
-// 计算当前页面数据
-const currentPageData = computed(() => {
-  const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
-  const end = start + pagination.value.pageSize
-  return userList.value.slice(start, end)
-})
-
-// 处理分页改变
-const handleCurrentChange = (val) => {
-  pagination.value.currentPage = val
-}
-
-const handleSizeChange = (val) => {
-  pagination.value.pageSize = val
-  pagination.value.currentPage = 1 // 回到第一页
 }
 
 // 检查权限并重定向
