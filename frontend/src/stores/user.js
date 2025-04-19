@@ -54,6 +54,7 @@ export const useUserStore = defineStore(
       } catch (error) {
         console.log('服务器异常：', error)
       } finally {
+        // 无论实际是否退出成功，清空前端的用户数据，返回首页
         isLoggedIn.value = false
         userInfo.value = {
           userId: 0,
@@ -66,6 +67,7 @@ export const useUserStore = defineStore(
           processedAt: new Date(),
           processedBy: 0,
         }
+        // 返回首页
         router.push('/')
       }
     }
