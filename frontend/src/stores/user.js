@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export const useUserStore = defineStore(
   'user',
   () => {
+    const router = useRouter()
+
     const isLoggedIn = ref(false)
     // 用户数据，为了方便显示，有默认值
     const userInfo = ref({
@@ -48,6 +51,9 @@ export const useUserStore = defineStore(
     const logout = async () => {
       try {
         await http.delete('/auth/logout')
+      } catch (error) {
+        console.log('服务器异常：', error)
+      } finally {
         isLoggedIn.value = false
         userInfo.value = {
           userId: 0,
@@ -60,8 +66,7 @@ export const useUserStore = defineStore(
           processedAt: new Date(),
           processedBy: 0,
         }
-      } catch (error) {
-        console.log('服务器异常：', error)
+        router.push('/')
       }
     }
 
