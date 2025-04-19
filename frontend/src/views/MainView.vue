@@ -125,11 +125,21 @@ onMounted(() => {
 <style scoped>
 @import url('@/assets/style.css');
 
+.main-content {
+  width: 100%;
+  overflow: hidden;
+}
 .el-container {
-  height: 98vh;
+  min-height: 98vh;
 }
 .header-container {
-  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .header-wrapper {
   width: 100%;
@@ -146,7 +156,7 @@ onMounted(() => {
   gap: 30px;
 }
 .main-wrapper {
-  padding: 0 20px;
+  padding: 80px 20px;
   width: 75%;
   min-width: 1200px;
   margin: 0 auto;
