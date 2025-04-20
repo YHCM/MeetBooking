@@ -9,7 +9,7 @@ RUNSCRIPT FROM 'classpath:/db/data/02_registration_requests.sql';
 RUNSCRIPT FROM 'classpath:/db/data/03_meeting_rooms.sql';
 
 -- 设备类型数据
-RUNSCRIPT FROM 'classpath:/db/data/04_equipment_types.sql';
+RUNSCRIPT FROM 'classpath:/db/data/04_equipment.sql';
 
 -- 会议室设备关系数据
 RUNSCRIPT FROM 'classpath:/db/data/05_room_equipment.sql';

@@ -1,6 +1,7 @@
-DROP TABLE IF EXISTS equipment_types;
+DROP TABLE IF EXISTS equipment;
 
-CREATE TABLE equipment_types (
+-- 设备类型表，会议室用
+CREATE TABLE equipment (
     equipment_id BIGINT COMMENT '主键，设备类型 ID',
     equipment_name VARCHAR(127) NOT NULL COMMENT '设备名称',
     additional_price NUMERIC(10, 2) NOT NULL COMMENT '每小时额外租用价格',

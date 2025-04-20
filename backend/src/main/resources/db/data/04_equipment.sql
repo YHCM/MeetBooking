@@ -1,7 +1,7 @@
-DELETE FROM equipment_types;
+DELETE FROM equipment;
 
 -- 插入设备类型数据
-INSERT INTO equipment_types (equipment_id, equipment_name, additional_price, description) VALUES 
+INSERT INTO equipment (equipment_id, equipment_name, additional_price, description) VALUES 
 (NEXT VALUE FOR equipment_seq, '激光笔', 10.00, '演示用激光指示器'),
 (NEXT VALUE FOR equipment_seq, '茶水服务', 80.00, '包含茶水和点心'),
 (NEXT VALUE FOR equipment_seq, '同声传译设备', 150.00, '多语言同声传译系统'),

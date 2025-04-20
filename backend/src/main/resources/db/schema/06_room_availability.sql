@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS room_availability;
 
+-- 会议室可用状态表
 CREATE TABLE room_availability (
     room_id BIGINT NOT NULL COMMENT '会议室 ID',
     schedule_date DATE NOT NULL COMMENT '日期',

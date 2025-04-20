@@ -12,7 +12,7 @@ RUNSCRIPT FROM 'classpath:/db/schema/02_registration_requests.sql';
 RUNSCRIPT FROM 'classpath:/db/schema/03_meeting_rooms.sql';
 
 -- 设备类型表
-RUNSCRIPT FROM 'classpath:/db/schema/04_equipment_types.sql';
+RUNSCRIPT FROM 'classpath:/db/schema/04_equipment.sql';
 
 -- 会议室设备关系表
 RUNSCRIPT FROM 'classpath:/db/schema/05_room_equipment.sql';

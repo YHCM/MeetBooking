@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RoomEquipmentMapper">
+    <!-- 对应字段映射 -->
+    <resultMap id="RoomEquipmentResultMap" type="com.example.entity.RoomEquipment">
+        <result property="roomId" column="room_id" />
+        <result property="equipmentId" column="equipment_id" />
+    </resultMap>
+
+    <resultMap id="MeetingRoomResultMap" type="com.example.entity.MeetingRoom">
+        <result property="roomID" column="room_id" />
+        <result property="roomName" column="room_name" />
+        <result property="roomType" column="room_type" />
+        <result property="capacity" column="capacity" />
+        <result property="basePrice" column="base_price" />
+        <result property="roomStatus" column="room_status" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <resultMap id="EquipmentResultMap" type="com.example.entity.Equipment">
+        <result property="equipmentId" column="equipment_id" />
+        <result property="equipmentName" column="equipment_name" />
+        <result property="additionalPrice" column="additional_price" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <!-- 获取所有的关联 -->
+    <select id="selectAllRoomEquipments" resultMap="RoomEquipmentResultMap">
+        SELECT room_id, equipment_id
+        FROM room_equipment
+    </select>
+
+    <!-- 增加一个关联 -->
+    <insert id="insertRoomEquipment">
+        INSERT INTO room_equipment (room_id, equipment_id)
+        VALUES (#{roomId}, #{equipmentId})
+    </insert>
+
+    <!-- 删除一个关联 -->
+    <delete id="deleteRoomEquipment">
+        DELETE FROM room_equipment
+        WHERE room_id = #{roomId} AND equipment_id = #{equipmentId}
+    </delete>
+
+    <!-- 根据设备 ID 获取所有拥有此设备的会议室 ID -->
+    <select id="selectRoomIdsByEquipmentId">
+        SELECT room_id
+        FROM room_equipment
+        WHERE equipment_id = #{equipmentId}
+    </select>
+
+    <!-- 根据会议室 ID 获取此会议室拥有的所有设备 ID -->
+    <select id="selecEquipmentIdsByRoomId">
+        SELECT equipment_id
+        FROM room_equipment
+        WHERE equipment_id = #{roomId}
+    </select>
+
+    <!-- 根据设备 ID 获取所有拥有此设备的会议室 -->
+    <select id="selecRoomsByEquipmentId" resultMap="MeetingRoomResultMap">
+        SELECT mr.*
+        FROM meeting_rooms mr
+        JOIN room_equipment re ON mr.room_id = re.room_id
+        WHERE re.equipment_id = #{equipmentId}
+    </select>
+
+    <!-- 根据会议室 ID 获取此会议室拥有的所有设备 -->
+    <select id="selecEquipmentByRoomId" resultMap="EquipmentResultMap">
+        SELECT e.*
+        FROM equipment e
+        JOIN room_equipment re ON e.equipment_id = re.equipment_id
+        WHERE re.room_id = #{roomId}
+    </select>
+</mapper>
