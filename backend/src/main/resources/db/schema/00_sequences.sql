@@ -3,6 +3,8 @@ DROP SEQUENCE IF EXISTS admin_seq;
 DROP SEQUENCE IF EXISTS staff_seq;
 DROP SEQUENCE IF EXISTS client_seq;
 DROP SEQUENCE IF EXISTS request_seq;
+DROP SEQUENCE IF EXISTS room_seq;
+DROP SEQUENCE IF EXISTS equipment_seq;
 
 -- 用户 ID 序列
 CREATE SEQUENCE root_seq START WITH 10001;      -- ROOT 用户的 ID，从 10001 开始
@@ -12,3 +14,9 @@ CREATE SEQUENCE client_seq START WITH 40001;    -- CLIENT 用户的 ID，从 400
 
 -- 注册请求 ID 序列
 CREATE SEQUENCE request_seq START WITH 10001;   -- 客户注册的申请 ID 序列，从 10001 开始
+
+-- 会议室 ID 序列
+CREATE SEQUENCE room_seq START WITH 10001;      -- 会议室 ID 序列，从 10001 开始
+
+-- 设备类型 ID 序列
+CREATE SEQUENCE equipment_seq START WITH 10001; -- 设备类型 ID 序列，从 10001 开始
