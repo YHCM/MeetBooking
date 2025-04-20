@@ -16,3 +16,6 @@ RUNSCRIPT FROM 'classpath:/db/schema/04_equipment_types.sql';
 
 -- 会议室设备关系表
 RUNSCRIPT FROM 'classpath:/db/schema/05_room_equipment.sql';
+
+-- 会议室对应日期使用情况表
+RUNSCRIPT FROM 'classpath:/db/schema/06_room_availability.sql';
