@@ -32,7 +32,7 @@ const handleRegisterSuccess = () => {
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  height: calc(100% - 80px);
+  height: calc(80vh - 80px);
 }
 
 .register-card {
