@@ -8,7 +8,7 @@ import com.example.entity.RoomEquipment;
 
 public interface RoomEquipmentMapper {
     // 获取所有关联
-    List<RoomEquipment> selectAllRoomEquipments();
+    List<RoomEquipment> selectAllRoomEquipment();
 
     // 增加一个关联
     int insertRoomEquipment(RoomEquipment roomEquipment);

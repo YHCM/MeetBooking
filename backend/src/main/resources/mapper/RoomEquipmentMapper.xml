@@ -25,7 +25,7 @@
     </resultMap>
 
     <!-- 获取所有的关联 -->
-    <select id="selectAllRoomEquipments" resultMap="RoomEquipmentResultMap">
+    <select id="selectAllRoomEquipment" resultMap="RoomEquipmentResultMap">
         SELECT room_id, equipment_id
         FROM room_equipment
     </select>

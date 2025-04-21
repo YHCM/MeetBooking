@@ -6,5 +6,5 @@ CREATE TABLE room_equipment (
     equipment_id BIGINT COMMENT '设备类型 ID',
     PRIMARY KEY (room_id, equipment_id),
     FOREIGN KEY (room_id) REFERENCES meeting_rooms(room_id),
-    FOREIGN KEY (equipment_id) REFERENCES equipment_types(equipment_id)
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
 );
