@@ -71,4 +71,11 @@
         JOIN room_equipment re ON e.equipment_id = re.equipment_id
         WHERE re.room_id = #{roomId}
     </select>
+
+    <!-- 查看关联是否存在 -->
+    <select id="isRoomEquipmentExisted">
+        SELECT COUNT(*) > 0
+        FROM room_equipment
+        WHERE room_id = #{roomId} AND equipment_id = #{equipmentId}
+    </select>
 </mapper>

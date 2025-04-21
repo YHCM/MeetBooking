@@ -27,4 +27,7 @@ public interface RoomEquipmentMapper {
 
     // 根据会议室 ID 获取此会议室拥有的所有设备
     List<Equipment> selecEquipmentByRoomId(Long roomId);
+
+    // 查看关联是否存在
+    boolean isRoomEquipmentExisted(Long roomId, Long equipmentId);
 }

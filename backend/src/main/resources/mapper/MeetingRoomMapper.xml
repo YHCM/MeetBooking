@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.MeetingRoomMapper">
+    <!-- 对应字段映射 -->
+    <resultMap id="MeetingRoomResultMap" type="com.example.entity.MeetingRoom">
+        <result property="roomID" column="room_id" />
+        <result property="roomName" column="room_name" />
+        <result property="roomType" column="room_type" />
+        <result property="capacity" column="capacity" />
+        <result property="basePrice" column="base_price" />
+        <result property="roomStatus" column="room_status" />
+        <result property="createdAt" column="created_at" />
+    </resultMap>
+
+    <!-- 获取所有会议室 -->
+    <select id="selectAllMeetingRooms" resultMap="MeetingRoomResultMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+    </select>
+
+    <!-- 根据 ID 获取会议室 -->
+    <select id="selectMeetingRoomById" resultMap="MeetingRoomResultMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+        WHERE room_id = #{roomId}
+    </select>
+
+    <!-- 根据会议室名称获取会议室 -->
+    <select id="selectMeetingRoomByName" resultMap="MeetingRoomResultMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+        WHERE room_name = #{roomName}
+    </select>
+
+    <!-- 添加一个会议室 -->
+    <insert id="insertMeetingRoom" useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO meeting_rooms (room_id, room_name, room_type, capacity, base_price, room_status)
+        VALUES (NEXT VALUE FOR room_seq, #{roomName}, #{roomType}, #{capacity}, #{basePrice}, #{roomStatus})
+    </insert>
+
+    <!-- 更新一个会议室 -->
+    <update id="updateMeetingRoom">
+        UPDATE meeting_rooms
+        SET room_name = #{roomName}, room_type = #{roomType}, capacity = #{capacity}, base_price = #{basePrice}, room_status = #{roomStatus}
+        WHERE room_id = #{roomId}
+    </update>
+
+    <!-- 改变会议室状态 -->
+    <update id="updateMeetingRoomStatus">
+        UPDATE meeting_rooms
+        SET room_status = NOT room_status
+        WHERE room_id = #{roomId}
+    </update>
+
+    <!-- 删除一个会议室 -->
+    <delete id="deleteMeetingRoom">
+        DELETE FORM meeting_rooms
+        WHERE room_id = #{roomId}
+    </delete>
+</mapper>

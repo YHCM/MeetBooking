@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public final class RegistrationRequestMessage {
     // 添加请求的信息
     public static final Map<HttpStatus, String> CREATE_MESSAGES = Map.of(
-        HttpStatus.OK, "注册请求添加成功",
+        HttpStatus.CREATED, "注册请求添加成功",
         HttpStatus.CONFLICT, "用户名已存在",
         HttpStatus.INTERNAL_SERVER_ERROR, "注册请求添加失败"
     );

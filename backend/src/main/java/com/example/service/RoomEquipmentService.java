@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Equipment;
@@ -22,13 +23,39 @@ public class RoomEquipmentService {
     }
 
     // 增加一个关联
-    public boolean addRoomEquipment(RoomEquipment roomEquipment) {
-        return roomEquipmentMapper.insertRoomEquipment(roomEquipment) > 0;
+    public HttpStatus addRoomEquipment(RoomEquipment roomEquipment) {
+        // 检查关联是否存在
+        boolean isExisted = roomEquipmentMapper.isRoomEquipmentExisted(roomEquipment.getRoomId(), roomEquipment.getEquipmentId());
+
+        if (isExisted) {
+            // 如果存在，返回冲突
+            return HttpStatus.CONFLICT;
+        }
+
+        int rowsAffected = roomEquipmentMapper.insertRoomEquipment(roomEquipment);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            return HttpStatus.CREATED;
+        }
     }
 
     // 删除一个关联
-    public boolean deleteRoomEquipment(RoomEquipment roomEquipment) {
-        return roomEquipmentMapper.deleteRoomEquipment(roomEquipment) > 0;
+    public HttpStatus deleteRoomEquipment(RoomEquipment roomEquipment) {
+        boolean isExisted = roomEquipmentMapper.isRoomEquipmentExisted(roomEquipment.getRoomId(), roomEquipment.getEquipmentId());
+
+        if (!isExisted) {
+            // 如果不存在，返回未找到
+            return HttpStatus.NOT_FOUND;
+        }
+
+
+        int rowsAffected = roomEquipmentMapper.deleteRoomEquipment(roomEquipment);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            return HttpStatus.OK;
+        }
     }
 
     // 根据设备 ID 获取所有拥有此设备的会议室 ID

@@ -61,7 +61,7 @@ public class RegistrationRequestService {
         if (rowsAffected <= 0) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         } else {
-            return HttpStatus.OK;
+            return HttpStatus.CREATED;
         }
     }
 
