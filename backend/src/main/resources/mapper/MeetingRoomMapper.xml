@@ -3,7 +3,7 @@
 <mapper namespace="com.example.mapper.MeetingRoomMapper">
     <!-- 对应字段映射 -->
     <resultMap id="MeetingRoomResultMap" type="com.example.entity.MeetingRoom">
-        <result property="roomID" column="room_id" />
+        <result property="roomId" column="room_id" />
         <result property="roomName" column="room_name" />
         <result property="roomType" column="room_type" />
         <result property="capacity" column="capacity" />
@@ -16,6 +16,12 @@
     <select id="selectAllMeetingRooms" resultMap="MeetingRoomResultMap">
         SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
         FROM meeting_rooms
+    </select>
+
+    <select id="selectAvailableMeetingRooms" resultMap="MeetingRoomResultMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+        WHERE room_status = TRUE
     </select>
 
     <!-- 根据 ID 获取会议室 -->
@@ -34,14 +40,14 @@
 
     <!-- 添加一个会议室 -->
     <insert id="insertMeetingRoom" useGeneratedKeys="true" keyProperty="roomId">
-        INSERT INTO meeting_rooms (room_id, room_name, room_type, capacity, base_price, room_status)
-        VALUES (NEXT VALUE FOR room_seq, #{roomName}, #{roomType}, #{capacity}, #{basePrice}, #{roomStatus})
+        INSERT INTO meeting_rooms (room_id, room_name, room_type, capacity, base_price)
+        VALUES (NEXT VALUE FOR room_seq, #{roomName}, #{roomType}, #{capacity}, #{basePrice})
     </insert>
 
     <!-- 更新一个会议室 -->
     <update id="updateMeetingRoom">
         UPDATE meeting_rooms
-        SET room_name = #{roomName}, room_type = #{roomType}, capacity = #{capacity}, base_price = #{basePrice}, room_status = #{roomStatus}
+        SET room_name = #{roomName}, room_type = #{roomType}, capacity = #{capacity}, base_price = #{basePrice}
         WHERE room_id = #{roomId}
     </update>
 
@@ -51,12 +57,6 @@
         SET room_status = NOT room_status
         WHERE room_id = #{roomId}
     </update>
-
-    <!-- 删除一个会议室 -->
-    <delete id="deleteMeetingRoom">
-        DELETE FROM meeting_rooms
-        WHERE room_id = #{roomId}
-    </delete>
 
     <!-- 获取会议室价格 -->
     <select id="getTotalPriceById" resultType="bigdecimal">

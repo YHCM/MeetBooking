@@ -18,5 +18,5 @@ public interface EquipmentMapper {
     int deleteEquipment(Long equipmentId);
 
     // 更改一个设备
-    int updateEquipment(Long equipmentId, Equipment equipment);
+    int updateEquipment(Equipment equipment);
 }

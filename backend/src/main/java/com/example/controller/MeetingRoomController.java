@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.constants.messages.MeetingRoomMessage;
+import com.example.entity.Equipment;
 import com.example.entity.MeetingRoom;
 import com.example.model.Result;
 import com.example.service.MeetingRoomService;
@@ -35,6 +35,14 @@ public class MeetingRoomController {
         List<MeetingRoom> meetingRoomList = meetingRoomService.getAllMeetingRooms();
 
         return Result.ok("所有会议室信息", meetingRoomList);
+    }
+
+    @Operation(summary = "获取所有可用会议室")
+    @GetMapping("/available")
+    public Result<List<MeetingRoom>> getAvailableMeetingRooms() {
+        List<MeetingRoom> availableMeetingRoomList = meetingRoomService.getAvailableMeetingRooms();
+
+        return Result.ok("所有可用", availableMeetingRoomList);
     }
 
     @Operation(summary = "根据 ID 获取会议室信息")
@@ -60,18 +68,6 @@ public class MeetingRoomController {
         return Result.create(createStatus, message, createStatus.is2xxSuccessful());
     }
 
-    @Operation(summary = "删除一个会议室")
-    @DeleteMapping("/{roomId}")
-    public Result<Boolean> deleteMeetingRoom(@PathVariable Long roomId) {
-        HttpStatus deleteStatus = meetingRoomService.deleteMeetingRoom(roomId);
-
-        Map<HttpStatus, String> statusMessages = MeetingRoomMessage.CREATE_MESSAGES;
-
-        String message = statusMessages.getOrDefault(deleteStatus, "会议室添加失败");
-
-        return Result.create(deleteStatus, message, deleteStatus.is2xxSuccessful());
-    }
-
     @Operation(summary = "更新一个会议室")
     @PutMapping("{roomId}")
     public Result<Boolean> updateMeetingRoom(@PathVariable Long roomId, @RequestBody MeetingRoom meetingRoom) {
@@ -85,7 +81,7 @@ public class MeetingRoomController {
     }
 
     @Operation(summary = "改变会议室状态（可用/不可用）")
-    @PatchMapping("{roomId}")
+    @PatchMapping("{roomId}/status")
     public Result<Boolean> changeMeetingRoomStatus(@PathVariable Long roomId) {
         HttpStatus changeStatus = meetingRoomService.changeMeetingRoomStatus(roomId);
 
@@ -106,5 +102,13 @@ public class MeetingRoomController {
         }
 
         return Result.ok("会议室总价格", price);
+    }
+
+    @Operation(summary = "根据会议室 ID 获取拥有的设备")
+    @GetMapping("/{roomId}/equipment")
+    public Result<List<Equipment>> getEquipment(@PathVariable Long roomId) {
+        List<Equipment> equipmentList = meetingRoomService.getEquipmentByRoomId(roomId);
+
+        return Result.ok("会议室拥有的设备", equipmentList);
     }
 }

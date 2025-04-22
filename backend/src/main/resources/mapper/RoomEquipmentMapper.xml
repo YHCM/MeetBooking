@@ -8,7 +8,7 @@
     </resultMap>
 
     <resultMap id="MeetingRoomResultMap" type="com.example.entity.MeetingRoom">
-        <result property="roomID" column="room_id" />
+        <result property="roomId" column="room_id" />
         <result property="roomName" column="room_name" />
         <result property="roomType" column="room_type" />
         <result property="capacity" column="capacity" />

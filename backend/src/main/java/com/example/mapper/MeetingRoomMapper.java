@@ -9,6 +9,9 @@ public interface MeetingRoomMapper {
     // 获取所有的会议室
     List<MeetingRoom> selectAllMeetingRooms();
 
+    // 获取所有可用的会议室
+    List<MeetingRoom> selectAvailableMeetingRooms();
+
     // 根据 ID 获取会议室
     MeetingRoom selectMeetingRoomById(Long roomId);
 
@@ -19,13 +22,10 @@ public interface MeetingRoomMapper {
     int insertMeetingRoom(MeetingRoom meetingRoom);
 
     // 更新会议室信息
-    int updateMeetingRoom(Long roomId, MeetingRoom meetingRoom);
+    int updateMeetingRoom(MeetingRoom meetingRoom);
 
     // 修改会议室状态
     int changeMeetingRoomStatus(Long roomId);
-
-    // 删除会议室
-    int deleteMeetingRoom(Long roomId);
 
     // 获取会议室价格
     BigDecimal getTotalPriceById(Long roomId);
