@@ -20,3 +20,6 @@ CREATE SEQUENCE room_seq START WITH 10001;      -- 会议室 ID 序列，从 100
 
 -- 设备类型 ID 序列
 CREATE SEQUENCE equipment_seq START WITH 10001; -- 设备类型 ID 序列，从 10001 开始
+
+-- 订单 ID 序列
+CREATE SEQUENCE order_seq START WITH 10001; -- 设备类型 ID 序列，从 10001 开始
