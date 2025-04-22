@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS room_availability;
+DROP TABLE IF EXISTS orders;
 
 -- 订单表
-CREATE TABLE `order` (
+CREATE TABLE orders (
     order_id BIGINT NOT NULL COMMENT '订单 ID',
     user_id BIGINT NOT NULL COMMENT '用户 ID',
     room_id BIGINT NOT NULL COMMENT '会议室 ID',

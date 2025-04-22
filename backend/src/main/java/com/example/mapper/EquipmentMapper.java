@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EquipmentMapper {
     // 获取所有设备
-    List<Equipment> selectAllEquipments();
+    List<Equipment> selectAllEquipment();
 
     // 根据ID获取设备
     Equipment selectEquipmentById(Long equipmentId);
@@ -18,5 +18,5 @@ public interface EquipmentMapper {
     int deleteEquipment(Long equipmentId);
 
     // 更改一个设备
-    int updateEquipment(Equipment equipment);
+    int updateEquipment(Long equipmentId, Equipment equipment);
 }

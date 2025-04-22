@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.EquipmentMapper">
-    <select id="selectAllEquipments">
-        SELECT *
+    <!-- 对应字段映射 -->
+    <resultMap id="EquipmentResultMap" type="com.example.entity.Equipment">
+        <result property="equipmentId" column="equipment_id" />
+        <result property="equipmentName" column="equipment_name" />
+        <result property="additionalPrice" column="additional_price" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="selectAllEquipments" resultMap="EquipmentResultMap">
+        SELECT equipment_id, equipment_name, additional_price, description
         FROM equipment
     </select>
 
-    <select id="selectEquipmentById">
-        SELECT *
+    <select id="selectEquipmentById" resultMap="EquipmentResultMap">
+        SELECT equipment_id, equipment_name, additional_price, description
         FROM equipment
         WHERE equipment_id = #{equipmentId}
     </select>
 
     <!-- 添加一个设备 -->
-    <insert id="insertEquipments" useGeneratedKeys="true" keyProperty="roomId">
+    <insert id="insertEquipments" useGeneratedKeys="true" keyProperty="equipmentId">
         INSERT INTO equipment (equipment_id, equipment_name, additional_price, description)
         VALUES (NEXT VALUE FOR equipment_seq, #{equipmentId}, #{equipmentName}, #{additionalPrice}, #{description})
     </insert>
@@ -25,7 +33,7 @@
         WHERE equipment_id = #{equipmentId}
     </update>
 
-    <!-- 删除一个会议室 -->
+    <!-- 删除一个设备 -->
     <delete id="deleteEquipment">
         DELETE FORM equipment
         WHERE equipment_id = #{equipmentId}
