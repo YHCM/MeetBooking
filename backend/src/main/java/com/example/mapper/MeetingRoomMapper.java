@@ -1,5 +1,6 @@
 package com.example.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.example.entity.MeetingRoom;
@@ -21,8 +22,11 @@ public interface MeetingRoomMapper {
     int updateMeetingRoom(Long roomId, MeetingRoom meetingRoom);
 
     // 修改会议室状态
-    int updateMeetingRoomStatus(Long roomId);
+    int changeMeetingRoomStatus(Long roomId);
 
     // 删除会议室
     int deleteMeetingRoom(Long roomId);
+
+    // 获取会议室价格
+    BigDecimal getTotalPriceById(Long roomId);
 }

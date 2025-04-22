@@ -46,7 +46,7 @@
     </update>
 
     <!-- 改变会议室状态 -->
-    <update id="updateMeetingRoomStatus">
+    <update id="changeMeetingRoomStatus">
         UPDATE meeting_rooms
         SET room_status = NOT room_status
         WHERE room_id = #{roomId}
@@ -57,4 +57,16 @@
         DELETE FROM meeting_rooms
         WHERE room_id = #{roomId}
     </delete>
+
+    <!-- 获取会议室价格 -->
+    <select id="getTotalPriceById" resultType="bigdecimal">
+        SELECT mr.base_price + COALESCE(SUM(e.additional_price), 0) AS total_price
+        FROM meeting_rooms mr
+        LEFT JOIN room_equipment re ON mr.room_id = re.room_id
+        LEFT JOIN equipment e ON re.equipment_id = e.equipment_id
+        WHERE mr.room_id = #{roomId}
+        GROUP BY mr.room_id, mr.base_price
+    </select>
+
+    <!-- 根据日期和时间段，查看会议室是否可用 -->
 </mapper>
