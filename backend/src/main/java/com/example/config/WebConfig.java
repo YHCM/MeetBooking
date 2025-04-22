@@ -33,10 +33,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
                 // .allowedOrigins("http://localhost:*")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("*")
-                .allowedHeaders("*");
-                // .allowCredentials(true);
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 
     // 添加枚举类型的转换器
