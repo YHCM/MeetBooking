@@ -35,7 +35,7 @@
 
     <!-- 删除一个设备 -->
     <delete id="deleteEquipment">
-        DELETE FORM equipment
+        DELETE FROM equipment
         WHERE equipment_id = #{equipmentId}
     </delete>
 </mapper>

@@ -54,7 +54,7 @@
 
     <!-- 删除一个会议室 -->
     <delete id="deleteMeetingRoom">
-        DELETE FORM meeting_rooms
+        DELETE FROM meeting_rooms
         WHERE room_id = #{roomId}
     </delete>
 </mapper>
