@@ -114,6 +114,8 @@ const goToProfile = () => {
 // 退出登陆
 const logout = async () => {
   await userStore.logout()
+  // 返回首页
+  router.push('/')
 }
 
 // 挂载登陆检查

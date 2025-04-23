@@ -44,6 +44,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 
+const http = useApi()
 const userStore = useUserStore()
 const userInfo = ref({ ...userStore.userInfo }) // 获取当前用户信息
 const oldPassword = ref('') // 原密码
@@ -58,11 +59,7 @@ const updateProfile = async () => {
   }
 
   try {
-    const response = await userStore.updateUserInfo(
-      userInfo.value,
-      oldPassword.value,
-      newPassword.value,
-    )
+    const response = await updateUserInfo(userInfo.value, oldPassword.value, newPassword.value)
     if (response.code === 200) {
       ElMessage.success('信息更新成功')
     } else {
@@ -70,6 +67,33 @@ const updateProfile = async () => {
     }
   } catch (error) {
     ElMessage.error('更新失败')
+  }
+}
+
+// 更新用户信息
+const updateUserInfo = async (updatedUserInfo, oldPassword, newPassword) => {
+  try {
+    // 先验证原密码是否正确
+    const passwordCheckResponse = await http.post('/', { oldPassword })
+    if (passwordCheckResponse.code !== 200) {
+      throw new Error('原密码错误')
+    }
+
+    // 如果原密码正确，更新用户信息
+    const response = await http.put('/users/update', {
+      userInfo: updatedUserInfo,
+      newPassword, // 新密码
+    })
+    if (response.code === 200) {
+      // 更新本地存储的用户信息
+      userInfo.value = { ...userInfo.value, ...updatedUserInfo }
+      return response
+    } else {
+      throw new Error(response.message || '更新失败')
+    }
+  } catch (error) {
+    console.error('更新用户信息失败：', error)
+    return { code: 500, message: error.message || '更新失败' }
   }
 }
 </script>
