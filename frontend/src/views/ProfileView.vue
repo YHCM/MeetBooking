@@ -1,166 +1,223 @@
 <template>
   <div class="profile-container">
-    <h2>个人中心</h2>
-    <el-form :model="userInfo" label-width="120px" class="profile-form">
-      <!-- 用户名 -->
-      <el-form-item label="用户名">
-        <el-input v-model="userInfo.username" disabled />
-      </el-form-item>
+    <el-card class="profile-card">
+      <template #header>
+        <div class="card-header">
+          <span>个人信息</span>
+          <el-button type="primary" @click="showEditDialog">编辑信息</el-button>
+        </div>
+      </template>
 
-      <!-- 公司名称 -->
-      <el-form-item label="公司名称">
-        <el-input v-model="userInfo.companyName" />
-      </el-form-item>
+      <el-descriptions :column="1" border>
+        <el-descriptions-item label="用户名">{{ userInfo.username }}</el-descriptions-item>
+        <el-descriptions-item label="用户ID">{{ userInfo.userId }}</el-descriptions-item>
+        <el-descriptions-item label="角色">{{ roleMap[userInfo.role] }}</el-descriptions-item>
+        <el-descriptions-item label="公司名称">{{ userInfo.companyName }}</el-descriptions-item>
+        <el-descriptions-item label="手机号码">{{ userInfo.phoneNumber }}</el-descriptions-item>
+        <el-descriptions-item label="注册时间">{{
+          formatDate(userInfo.createdAt)
+        }}</el-descriptions-item>
+      </el-descriptions>
 
-      <!-- 电话号码 -->
-      <el-form-item label="电话号码">
-        <el-input v-model="userInfo.phoneNumber" />
-      </el-form-item>
+      <div class="change-password-btn">
+        <el-button type="warning" @click="showChangePasswordDialog">修改密码</el-button>
+      </div>
+    </el-card>
 
-      <!-- 原密码 -->
-      <el-form-item label="原密码">
-        <el-input v-model="oldPassword" type="password" placeholder="请输入原密码" />
-      </el-form-item>
+    <!-- 编辑信息对话框 -->
+    <el-dialog v-model="editDialogVisible" title="编辑个人信息" width="500px">
+      <el-form :model="editForm" label-width="100px">
+        <el-form-item>
+          <el-input placeholder="用户名" v-model="editForm.username" />
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="公司名称" v-model="editForm.companyName" />
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="电话号码" v-model="editForm.phoneNumber" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editDialogVisible = false">取消</el-button>
+          <el-button @click="updateUserInfo">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
 
-      <!-- 新密码 -->
-      <el-form-item label="新密码">
-        <el-input v-model="newPassword" type="password" placeholder="请输入新密码" />
-      </el-form-item>
-
-      <!-- 确认密码 -->
-      <el-form-item label="确认密码">
-        <el-input v-model="confirmPassword" type="password" placeholder="请确认新密码" />
-      </el-form-item>
-
-      <!-- 保存按钮 -->
-      <el-form-item>
-        <el-button type="primary" @click="updateProfile">保存修改</el-button>
-      </el-form-item>
-    </el-form>
+    <!-- 修改密码对话框 -->
+    <el-dialog v-model="passwordDialogVisible" title="修改密码" width="500px">
+      <el-form :model="passwordForm" label-width="120px">
+        <el-form-item>
+          <el-input
+            placeholder="旧密码"
+            type="password"
+            show-password
+            v-model="passwordForm.oldPassword"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-input
+            placeholder="新密码"
+            type="password"
+            show-password
+            v-model="passwordForm.newPassword"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="确认密码" v-model="confirmPassword" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="passwordDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="changePassword">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { formatDate } from '@/utils/date'
+import { handleResponse } from '@/utils/responseHandler'
 
 const http = useApi()
 const userStore = useUserStore()
-const userInfo = ref({ ...userStore.userInfo }) // 获取当前用户信息
-const oldPassword = ref('') // 原密码
-const newPassword = ref('') // 新密码
-const confirmPassword = ref('') // 确认密码
 
-// 更新用户信息
-const updateProfile = async () => {
-  if (newPassword.value !== confirmPassword.value) {
-    ElMessage.error('新密码和确认密码不一致')
+// 获取用户信息
+onMounted(() => {
+  userStore.getUserInfo()
+})
+
+const userInfo = computed(() => userStore.userInfo)
+
+// 修改信息的对话框相关
+const editDialogVisible = ref(false)
+const editForm = ref({
+  username: '',
+  companyName: '',
+  phoneNumber: '',
+})
+
+// 初始化对话框信息
+const showEditDialog = () => {
+  editForm.value = {
+    username: userInfo.value.username,
+    companyName: userInfo.value.companyName,
+    phoneNumber: userInfo.value.phoneNumber,
+  }
+  editDialogVisible.value = true
+}
+
+// 修改用户信息
+const updateUserInfo = async () => {
+  try {
+    const response = await http.put('/users', {
+      userId: userInfo.value.userId,
+      ...editForm.value,
+    })
+    console.log(response.data)
+
+    // 处理响应
+    handleResponse(response)
+
+    if (response.data) {
+      // 修改成功，更新 userInfo
+      userStore.getUserInfo()
+      // 关闭弹窗
+      editDialogVisible.value = false
+    }
+  } catch (error) {
+    console.error('服务器异常：', error)
+    ElMessage.error('服务器异常')
+  }
+}
+
+// 修改密码相关
+const passwordDialogVisible = ref(false)
+const passwordForm = ref({
+  oldPassword: '',
+  newPassword: '',
+})
+
+// 确认密码
+const confirmPassword = ref('')
+
+// 密码强度检验
+const validatePasswordStrength = (password) => {
+  // 至少 8 位，包括字母和数字，不区分大小写
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+  return regex.test(password)
+}
+
+const showChangePasswordDialog = () => {
+  passwordForm.value = {
+    oldPassword: '',
+    newPassword: '',
+  }
+  confirmPassword.value = ''
+  passwordDialogVisible.value = true
+}
+
+// 修改密码
+const changePassword = async () => {
+  // 检查密码是否一致
+  if (passwordForm.value.newPassword !== confirmPassword.value) {
+    ElMessage.error('两次输入的密码不一致，请重新输入')
+    return
+  }
+
+  // 检查密码强度
+  if (!validatePasswordStrength(passwordForm.value.newPassword)) {
+    ElMessage.error('密码强度不足，请使用至少8位的字母数字组合')
     return
   }
 
   try {
-    const response = await updateUserInfo(userInfo.value, oldPassword.value, newPassword.value)
-    if (response.code === 200) {
-      ElMessage.success('信息更新成功')
-    } else {
-      ElMessage.error(response.message || '更新失败')
+    const response = await http.patch('/users/password', {
+      userId: userInfo.value.userId,
+      ...passwordForm.value,
+    })
+    handleResponse(response)
+    if (response.data) {
+      passwordDialogVisible.value = false
     }
   } catch (error) {
-    ElMessage.error('更新失败')
+    console.error('服务器异常：', error)
+    ElMessage.error('服务器异常')
   }
 }
 
-// 更新用户信息
-const updateUserInfo = async (updatedUserInfo, oldPassword, newPassword) => {
-  try {
-    // 先验证原密码是否正确
-    const passwordCheckResponse = await http.post('/', { oldPassword })
-    if (passwordCheckResponse.code !== 200) {
-      throw new Error('原密码错误')
-    }
-
-    // 如果原密码正确，更新用户信息
-    const response = await http.put('/users/update', {
-      userInfo: updatedUserInfo,
-      newPassword, // 新密码
-    })
-    if (response.code === 200) {
-      // 更新本地存储的用户信息
-      userInfo.value = { ...userInfo.value, ...updatedUserInfo }
-      return response
-    } else {
-      throw new Error(response.message || '更新失败')
-    }
-  } catch (error) {
-    console.error('更新用户信息失败：', error)
-    return { code: 500, message: error.message || '更新失败' }
-  }
+// 角色映射
+const roleMap = {
+  ROOT: '超级管理员',
+  ADMIN: '管理员',
+  STAFF: '员工',
+  CLIENT: '客户',
 }
 </script>
 
 <style scoped>
 .profile-container {
-  width: 60%;
+  max-width: 800px;
   margin: 20px auto;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.change-password-btn {
+  margin-top: 20px;
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
 }
 
-.profile-form {
-  max-width: 600px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-}
-
-.el-form-item {
-  margin-bottom: 20px;
-}
-
-.el-input {
-  background-color: #f6f6f6;
-  border-radius: 5px;
-  border: 1px solid #dcdfe6;
-}
-
-.el-input:hover {
-  border-color: #409eff;
-}
-
-.el-input[type='password'] {
-  width: 100%;
-}
-
-.el-button {
-  width: 100%;
-  background-color: #409eff;
-  color: white;
-  border-radius: 5px;
-}
-
-.el-button:hover {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
-}
-
-.el-button.primary {
-  background-color: #409eff;
-  border-color: #409eff;
-  transition: background-color 0.3s ease;
-}
-
-.el-button.primary:hover {
-  background-color: #66b1ff;
-  border-color: #66b1ff;
+.el-descriptions {
+  margin-top: 20px;
 }
 </style>
