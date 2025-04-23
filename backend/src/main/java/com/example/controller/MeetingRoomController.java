@@ -69,9 +69,9 @@ public class MeetingRoomController {
     }
 
     @Operation(summary = "更新一个会议室")
-    @PutMapping("{roomId}")
-    public Result<Boolean> updateMeetingRoom(@PathVariable Long roomId, @RequestBody MeetingRoom meetingRoom) {
-        HttpStatus updateStatus = meetingRoomService.updateMeetingRoom(roomId, meetingRoom);
+    @PutMapping
+    public Result<Boolean> updateMeetingRoom(@RequestBody MeetingRoom meetingRoom) {
+        HttpStatus updateStatus = meetingRoomService.updateMeetingRoom(meetingRoom);
 
         Map<HttpStatus, String> statusMessages = MeetingRoomMessage.UPDATE_MESSAGES;
 

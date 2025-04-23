@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-//import { useApi } from '@/api/useApi'
 
 export const useUserStore = defineStore(
   'user',
@@ -100,7 +99,7 @@ export const useUserStore = defineStore(
       }
     }
 
-    return { isLoggedIn, userInfo, getUserInfo, logout,updateUserInfo }
+    return { isLoggedIn, userInfo, getUserInfo, logout, updateUserInfo }
   },
   {
     persist: true,

@@ -1,5 +1,5 @@
 export function handleResponse(response, options = {}) {
-  const { code, message, data } = response
+  const { code, message } = response
   const { onSuccess, onError } = options
 
   // 通过状态码，确定消息的类型

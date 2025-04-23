@@ -56,15 +56,12 @@ public class MeetingRoomService {
     }
 
     // 更新一个会议室
-    public HttpStatus updateMeetingRoom(Long roomId, MeetingRoom meetingRoom) {
-        boolean isExisted = isMeetingRoomExistedById(roomId);
+    public HttpStatus updateMeetingRoom(MeetingRoom meetingRoom) {
+        boolean isExisted = isMeetingRoomExistedById(meetingRoom.getRoomId());
 
         if (!isExisted) {
             return HttpStatus.NOT_FOUND;
         }
-
-        // 确保 ID 是传入 ID
-        meetingRoom.setRoomId(roomId);
 
         int rowsAffected = meetingRoomMapper.updateMeetingRoom(meetingRoom);
         if (rowsAffected <= 0) {

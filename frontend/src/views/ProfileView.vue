@@ -19,29 +19,17 @@
 
       <!-- 原密码 -->
       <el-form-item label="原密码">
-        <el-input
-            v-model="oldPassword"
-            type="password"
-            placeholder="请输入原密码"
-        />
+        <el-input v-model="oldPassword" type="password" placeholder="请输入原密码" />
       </el-form-item>
 
       <!-- 新密码 -->
       <el-form-item label="新密码">
-        <el-input
-            v-model="newPassword"
-            type="password"
-            placeholder="请输入新密码"
-        />
+        <el-input v-model="newPassword" type="password" placeholder="请输入新密码" />
       </el-form-item>
 
       <!-- 确认密码 -->
       <el-form-item label="确认密码">
-        <el-input
-            v-model="confirmPassword"
-            type="password"
-            placeholder="请确认新密码"
-        />
+        <el-input v-model="confirmPassword" type="password" placeholder="请确认新密码" />
       </el-form-item>
 
       <!-- 保存按钮 -->
@@ -55,7 +43,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { ElMessage } from 'element-plus'
 
 const userStore = useUserStore()
 const userInfo = ref({ ...userStore.userInfo }) // 获取当前用户信息
@@ -71,7 +58,11 @@ const updateProfile = async () => {
   }
 
   try {
-    const response = await userStore.updateUserInfo(userInfo.value, oldPassword.value, newPassword.value)
+    const response = await userStore.updateUserInfo(
+      userInfo.value,
+      oldPassword.value,
+      newPassword.value,
+    )
     if (response.code === 200) {
       ElMessage.success('信息更新成功')
     } else {
@@ -119,16 +110,16 @@ h2 {
 }
 
 .el-input:hover {
-  border-color: #409EFF;
+  border-color: #409eff;
 }
 
-.el-input[type="password"] {
+.el-input[type='password'] {
   width: 100%;
 }
 
 .el-button {
   width: 100%;
-  background-color: #409EFF;
+  background-color: #409eff;
   color: white;
   border-radius: 5px;
 }
@@ -139,8 +130,8 @@ h2 {
 }
 
 .el-button.primary {
-  background-color: #409EFF;
-  border-color: #409EFF;
+  background-color: #409eff;
+  border-color: #409eff;
   transition: background-color 0.3s ease;
 }
 

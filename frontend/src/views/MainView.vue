@@ -108,7 +108,7 @@ const goToRegister = () => {
   router.push('/register')
 }
 const goToProfile = () => {
-   router.push('/profile')
+  router.push('/profile')
 }
 
 // 退出登陆
