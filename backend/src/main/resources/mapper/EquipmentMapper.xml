@@ -9,21 +9,30 @@
         <result property="description" column="description" />
     </resultMap>
 
+    <!-- 获取所有设备 -->
     <select id="selectAllEquipment" resultMap="EquipmentResultMap">
         SELECT equipment_id, equipment_name, additional_price, description
         FROM equipment
     </select>
 
+    <!-- 通过 ID 获取是设备 -->
     <select id="selectEquipmentById" resultMap="EquipmentResultMap">
         SELECT equipment_id, equipment_name, additional_price, description
         FROM equipment
         WHERE equipment_id = #{equipmentId}
     </select>
 
+    <!-- 通过名称获取是设备 -->
+    <select id="selectEquipmentByName" resultMap="EquipmentResultMap">
+        SELECT equipment_id, equipment_name, additional_price, description
+        FROM equipment
+        WHERE equipment_name = #{equipmentName}
+    </select>
+
     <!-- 添加一个设备 -->
     <insert id="insertEquipment" useGeneratedKeys="true" keyProperty="equipmentId">
         INSERT INTO equipment (equipment_id, equipment_name, additional_price, description)
-        VALUES (NEXT VALUE FOR equipment_seq, #{equipmentId}, #{equipmentName}, #{additionalPrice}, #{description})
+        VALUES (NEXT VALUE FOR equipment_seq, #{equipmentName}, #{additionalPrice}, #{description})
     </insert>
 
     <!-- 更新一个设备 -->

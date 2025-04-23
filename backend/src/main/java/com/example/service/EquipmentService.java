@@ -14,17 +14,21 @@ public class EquipmentService {
     private final EquipmentMapper equipmentMapper;
 
     // 获取所有设备
-    public List<Equipment> selectAllEquipment() {
+    public List<Equipment> getAllEquipment() {
         return equipmentMapper.selectAllEquipment();
     }
 
     // 根据ID获取设备
-    public Equipment selectEquipmentById(Long equipmentId) {
+    public Equipment getEquipmentById(Long equipmentId) {
         return equipmentMapper.selectEquipmentById(equipmentId);
     }
 
     // 添加一个设备
     public HttpStatus insertEquipment(Equipment equipment) {
+        if (isEquipmentExistedByName(equipment.getEquipmentName())) {
+            return HttpStatus.CONFLICT;
+        }
+
         int rowAffected = equipmentMapper.insertEquipment(equipment);
         if (rowAffected > 0) {
             return HttpStatus.CREATED;
@@ -35,25 +39,11 @@ public class EquipmentService {
 
     // 删除一个设备
     public HttpStatus deleteEquipment(Long equipmentId) {
-        boolean exist = selectEquipmentById(equipmentId) != null;
+        boolean exist = getEquipmentById(equipmentId) != null;
         if (!exist)
             return HttpStatus.NOT_FOUND;
 
         int rowAffected = equipmentMapper.deleteEquipment(equipmentId);
-        if (rowAffected > 0) {
-            return HttpStatus.CREATED;
-        } else {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-    }
-
-    // 修改设备信息
-    public HttpStatus updateEquipment(Equipment equipment) {
-        boolean exist = selectEquipmentById(equipment.getEquipmentId()) != null;
-        if (!exist)
-            return HttpStatus.NOT_FOUND;
-
-        int rowAffected = equipmentMapper.updateEquipment(equipment);
         if (rowAffected > 0) {
             return HttpStatus.NO_CONTENT;
         } else {
@@ -61,4 +51,28 @@ public class EquipmentService {
         }
     }
 
+    // 修改设备信息
+    public HttpStatus updateEquipment(Equipment equipment) {
+        boolean exist = getEquipmentById(equipment.getEquipmentId()) != null;
+        if (!exist)
+            return HttpStatus.NOT_FOUND;
+        
+        if (!isEquipmentExistedByName(equipment.getEquipmentName())) {
+            return HttpStatus.CONFLICT;
+        }
+
+        int rowAffected = equipmentMapper.updateEquipment(equipment);
+        if (rowAffected > 0) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    // 根据设备名称查看设备是否存在
+    public boolean isEquipmentExistedByName(String equipmentName) {
+        Equipment equipment = equipmentMapper.selectEquipmentByName(equipmentName);
+
+        return equipment != null;
+    }
 }

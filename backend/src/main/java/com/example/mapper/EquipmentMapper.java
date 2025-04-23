@@ -11,6 +11,9 @@ public interface EquipmentMapper {
     // 根据ID获取设备
     Equipment selectEquipmentById(Long equipmentId);
 
+    // 根据名称获取设备
+    Equipment selectEquipmentByName(String equipmentName);
+
     // 添加一个设备
     int insertEquipment(Equipment equipment);
 

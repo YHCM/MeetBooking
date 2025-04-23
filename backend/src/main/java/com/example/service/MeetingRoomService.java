@@ -101,6 +101,8 @@ public class MeetingRoomService {
         return totalPrice;
     }
 
+    // 筛选会议室
+
     // 查看会议室是否存在，通过 ID
     public boolean isMeetingRoomExistedById(Long roomId) {
         return getMeetingRoomById(roomId) != null;
