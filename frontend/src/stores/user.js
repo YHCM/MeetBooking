@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+//import { useApi } from '@/api/useApi'
 
 export const useUserStore = defineStore(
   'user',
@@ -72,7 +73,34 @@ export const useUserStore = defineStore(
       }
     }
 
-    return { isLoggedIn, userInfo, getUserInfo, logout }
+    // 更新用户信息
+    const updateUserInfo = async (updatedUserInfo, oldPassword, newPassword) => {
+      try {
+        // 先验证原密码是否正确
+        const passwordCheckResponse = await http.post('/', { oldPassword })
+        if (passwordCheckResponse.code !== 200) {
+          throw new Error('原密码错误')
+        }
+
+        // 如果原密码正确，更新用户信息
+        const response = await http.put('/users/update', {
+          userInfo: updatedUserInfo,
+          newPassword, // 新密码
+        })
+        if (response.code === 200) {
+          // 更新本地存储的用户信息
+          userInfo.value = { ...userInfo.value, ...updatedUserInfo }
+          return response
+        } else {
+          throw new Error(response.message || '更新失败')
+        }
+      } catch (error) {
+        console.error('更新用户信息失败：', error)
+        return { code: 500, message: error.message || '更新失败' }
+      }
+    }
+
+    return { isLoggedIn, userInfo, getUserInfo, logout,updateUserInfo }
   },
   {
     persist: true,

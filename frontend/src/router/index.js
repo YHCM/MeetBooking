@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import LoginView from '@/views/LoginView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
 import RegistrationRequestsView from '@/views/RegistrationRequestsView.vue'
@@ -14,6 +15,7 @@ const routes = [
   { path: '/register', component: RegisterView },
   { path: '/users', component: UserManagementView },
   { path: '/requests', component: RegistrationRequestsView },
+  { path: '/profile', component: ProfileView },
 ]
 
 const router = createRouter({
