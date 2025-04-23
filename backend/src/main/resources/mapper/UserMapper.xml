@@ -89,4 +89,18 @@
         SET is_active = NOT is_active, processed_at = CURRENT_TIMESTAMP, processed_by = #{adminId}
         WHERE user_id = #{userId}
     </update>
+
+    <!-- 更新用户信息 -->
+    <update id="updateUerInfo">
+        UPDATE users
+        SET username = #{username}, company_name = #{companyName}, phone_number = #{phoneNumber}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 修改密码 -->
+    <update id="changeUserPassword">
+        UPDATE users
+        SET password = #{password}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

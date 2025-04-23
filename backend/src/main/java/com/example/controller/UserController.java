@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.constants.messages.UserMessage;
 import com.example.entity.Role;
 import com.example.entity.User;
+import com.example.model.ChangePasswordRequest;
 import com.example.model.Result;
 import com.example.model.UserInfo;
 import com.example.service.UserService;
@@ -106,5 +107,25 @@ public class UserController {
         String message = statusMessages.getOrDefault(toggleStatus, "处理失败");
 
         return Result.create(toggleStatus, message, toggleStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "更新用户信息，只能更改用户名，公司名称和电话号码")
+    @PutMapping
+    public Result<Boolean> updateUserInfo(@RequestBody UserInfo userInfo) {
+        HttpStatus updateStatus = userService.updateUserInfo(userInfo);
+        Map<HttpStatus, String> statusMessages = UserMessage.UPDATE_MESSAGES;
+        String message = statusMessages.getOrDefault(updateStatus, "更新用户信息失败");
+
+        return Result.create(updateStatus, message, updateStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "修改用户密码")
+    @PatchMapping("/password")
+    public Result<Boolean> changeUserPassword(@RequestBody ChangePasswordRequest request) {
+        HttpStatus changeStatus = userService.changeUserPassword(request);
+        Map<HttpStatus, String> statusMessages = UserMessage.CHANGE_PASSWORD_MESSAGES;
+        String message = statusMessages.getOrDefault(changeStatus, "修改密码失败");
+
+        return Result.create(changeStatus, message, changeStatus.is2xxSuccessful());
     }
 }

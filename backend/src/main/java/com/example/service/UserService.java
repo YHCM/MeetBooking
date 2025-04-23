@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.mapper.UserMapper;
+import com.example.model.ChangePasswordRequest;
 import com.example.model.UserInfo;
 import com.example.entity.RegistrationRequest;
 import com.example.entity.Role;
@@ -143,6 +144,65 @@ public class UserService {
             return HttpStatus.INTERNAL_SERVER_ERROR;    // 服务器异常
         } else {
             return HttpStatus.OK;   // 处理成功
+        }
+    }
+
+    // 更新用户信息
+    public HttpStatus updateUserInfo(UserInfo userInfo) {
+        if (userInfo.getUserId() == null) {
+            // 没有传入 ID
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        if (getUserByUserId(userInfo.getUserId()) == null) {
+            // 用户不存在
+            return HttpStatus.NOT_FOUND;
+        }
+
+        if (isUsernameExisted(userInfo.getUsername())) {
+            // 用户名已存在
+            return HttpStatus.CONFLICT;
+        }
+
+        // 更新用户信息
+        int rowsAffected = userMapper.updateUerInfo(userInfo);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;    // 服务器异常
+        } else {
+            return HttpStatus.OK;
+        }
+    }
+
+    // 修改用户密码
+    public HttpStatus changeUserPassword(ChangePasswordRequest request) {
+        Long userId = request.getUserId();
+        String oldPassword = request.getOldPassword();
+        String newPassword = request.getNewPassword();
+
+        User user = getUserByUserId(userId);
+
+        if (user == null) {
+            // 用户不存在
+            return HttpStatus.NOT_FOUND;
+        }
+
+        // 获取数据库存储的密码
+        String storedPassword = user.getPassword();
+
+        // 验证旧密码是否正确
+        if (!passwordEncoder.matches(oldPassword, storedPassword)) {
+            // 密码验证不通过
+            return HttpStatus.UNAUTHORIZED;
+        }
+
+        // 修改密码
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+
+        int rowsAffected = userMapper.changeUserPassword(userId, encryptedPassword);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;    // 服务器异常
+        } else {
+            return HttpStatus.OK;   // 修改密码成功
         }
     }
 }

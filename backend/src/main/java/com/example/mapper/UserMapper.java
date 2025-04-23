@@ -30,4 +30,10 @@ public interface UserMapper {
 
     // 解冻 / 冻结 用户
     int toggleUserStatus(Long userId, Long adminId);
+
+    // 更新用户信息
+    int updateUerInfo(UserInfo userInfo);
+
+    // 修改密码
+    int changeUserPassword(Long userId, String password);
 }

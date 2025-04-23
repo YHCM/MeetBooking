@@ -1,5 +1,14 @@
 @base_url = http://localhost:8080/users
 
+### admin 登陆
+POST http://localhost:8080/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
 ### 获取所有用户
 GET {{base_url}} HTTP/1.1
 
@@ -38,3 +47,26 @@ GET {{base_url}}/current HTTP/1.1
 
 ### 冻结 / 解冻 30001
 PATCH {{base_url}}/30001/active HTTP/1.1
+
+
+### 更新用户信息
+PUT {{base_url}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "userId": 40001,
+    "username": "clientest",
+    "companyName": "acaasdada",
+    "phoneNumber": "123413155678901"
+}
+
+
+### 修改用户密码
+PATCH {{base_url}}/password HTTP/1.1
+Content-Type: application/json
+
+{
+    "userId": 40001,
+    "oldPassword": "client",
+    "newPassword": "test"
+}
