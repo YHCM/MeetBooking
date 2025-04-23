@@ -9,7 +9,7 @@
         <result property="description" column="description" />
     </resultMap>
 
-    <select id="selectAllEquipments" resultMap="EquipmentResultMap">
+    <select id="selectAllEquipment" resultMap="EquipmentResultMap">
         SELECT equipment_id, equipment_name, additional_price, description
         FROM equipment
     </select>
@@ -21,7 +21,7 @@
     </select>
 
     <!-- 添加一个设备 -->
-    <insert id="insertEquipments" useGeneratedKeys="true" keyProperty="equipmentId">
+    <insert id="insertEquipment" useGeneratedKeys="true" keyProperty="equipmentId">
         INSERT INTO equipment (equipment_id, equipment_name, additional_price, description)
         VALUES (NEXT VALUE FOR equipment_seq, #{equipmentId}, #{equipmentName}, #{additionalPrice}, #{description})
     </insert>
