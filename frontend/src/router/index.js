@@ -8,8 +8,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import UserManagementView from '@/views/UserManagementView.vue'
 import RegistrationRequestsView from '@/views/RegistrationRequestsView.vue'
 import RoomManagementView from '@/views/RoomManagementView.vue'
-import EquipmentManagementView from "@/views/EquipmentManagementView.vue";
-
+import EquipmentManagementView from '@/views/EquipmentManagementView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -21,7 +20,6 @@ const routes = [
   { path: '/profile', component: ProfileView },
   { path: '/rooms/manage', component: RoomManagementView },
   { path: '/equipments', component: EquipmentManagementView },
-
 ]
 
 const router = createRouter({

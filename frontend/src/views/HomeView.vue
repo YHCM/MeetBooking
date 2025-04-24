@@ -3,8 +3,15 @@
   <div class="home-view">
     <!-- 轮播浮窗 -->
     <el-carousel trigger="click" :interval="5000" arrow="always" class="carousel-wrapper">
-      <el-carousel-item v-for="(item, index) in carouselItems" :key="index" @click="goToPage(item.link)">
-        <el-card class="carousel-card" :body-style="{ padding: '20px', width: '70%', height: '300px' }">
+      <el-carousel-item
+        v-for="(item, index) in carouselItems"
+        :key="index"
+        @click="goToPage(item.link)"
+      >
+        <el-card
+          class="carousel-card"
+          :body-style="{ padding: '20px', width: '70%', height: '300px' }"
+        >
           <div class="carousel-card-content">
             <!-- 标题居中显示 -->
             <div class="carousel-card-text">
@@ -20,7 +27,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -29,27 +35,26 @@ import authImage1 from '@/assets/images/auth-1.png'
 import authImage2 from '@/assets/images/auth-2.png'
 import authImage3 from '@/assets/images/auth-3.png'
 
-
 // 轮播项的数据
 const carouselItems = ref([
   {
-    title: "会议室预订",
-    subtitle: "",
+    title: '会议室预订',
+    subtitle: '',
     image: authImage1,
-    link: "/"
+    link: '/',
   },
   {
-    title: "会议室管理",
-    subtitle: "",
+    title: '会议室管理',
+    subtitle: '',
     image: authImage2,
-    link: "/"
+    link: '/',
   },
   {
-    title: "设备管理",
-    subtitle: "",
+    title: '设备管理',
+    subtitle: '',
     image: authImage3,
-    link: "/"
-  }
+    link: '/',
+  },
 ])
 
 const router = useRouter()

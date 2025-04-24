@@ -10,28 +10,48 @@
       <el-table-column prop="equipmentId" label="ID" />
       <el-table-column prop="equipmentName" label="设备名称">
         <template #default="{ row }">
-          <el-input v-if="row.equipmentId === editingEquipment.equipmentId" v-model="editingEquipment.equipmentName" />
+          <el-input
+            v-if="row.equipmentId === editingEquipment.equipmentId"
+            v-model="editingEquipment.equipmentName"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="description" label="描述">
         <template #default="{ row }">
-          <el-input v-if="row.equipmentId === editingEquipment.equipmentId" v-model="editingEquipment.description" />
+          <el-input
+            v-if="row.equipmentId === editingEquipment.equipmentId"
+            v-model="editingEquipment.description"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="additionalPrice" label="额外价格">
         <template #default="{ row }">
-          <el-input-number v-if="row.equipmentId === editingEquipment.equipmentId" v-model="editingEquipment.additionalPrice" :min="0" :precision="2" controls-position="right" />
+          <el-input-number
+            v-if="row.equipmentId === editingEquipment.equipmentId"
+            v-model="editingEquipment.additionalPrice"
+            :min="0"
+            :precision="2"
+            controls-position="right"
+          />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160">
         <template #default="{ row }">
           <span v-if="row.equipmentId === editingEquipment.equipmentId">
-            <el-button size="small" type="success" :loading="loading" @click="saveEquipment">保存</el-button>
+            <el-button size="small" type="success" :loading="loading" @click="saveEquipment"
+              >保存</el-button
+            >
             <el-button size="small" type="info" @click="resetEditingEquipment">取消</el-button>
           </span>
           <span v-else>
             <el-button size="small" type="warning" @click="editEquipment(row)">修改</el-button>
-            <el-button size="small" type="danger" @click="deleteEquipment(row.equipmentId)" :loading="loading">删除</el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="deleteEquipment(row.equipmentId)"
+              :loading="loading"
+              >删除</el-button
+            >
           </span>
         </template>
       </el-table-column>
@@ -39,26 +59,35 @@
 
     <!-- 分页 -->
     <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.currentPage"
-        :page-sizes="[10, 15, 20, 25]"
-        :page-size="pagination.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total"
-        style="margin-top: 20px; justify-content: flex-end"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="[10, 15, 20, 25]"
+      :page-size="pagination.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      style="margin-top: 20px; justify-content: flex-end"
     />
 
     <!-- 新增设备弹框 -->
     <el-dialog v-model="addDialogVisible" title="新增设备" @close="resetAddForm">
       <el-form :model="newEquipment" ref="addForm" label-width="120px">
-        <el-form-item label="设备名称" :rules="[{ required: true, message: '请输入设备名称', trigger: 'blur' }]">
+        <el-form-item
+          label="设备名称"
+          :rules="[{ required: true, message: '请输入设备名称', trigger: 'blur' }]"
+        >
           <el-input v-model="newEquipment.equipmentName" />
         </el-form-item>
-        <el-form-item label="描述" :rules="[{ required: true, message: '请输入设备描述', trigger: 'blur' }]">
+        <el-form-item
+          label="描述"
+          :rules="[{ required: flase, message: '请输入设备描述', trigger: 'blur' }]"
+        >
           <el-input v-model="newEquipment.description" />
         </el-form-item>
-        <el-form-item label="额外价格" :rules="[{ required: true, message: '请输入额外价格', trigger: 'blur' }]">
+        <el-form-item
+          label="额外价格"
+          :rules="[{ required: true, message: '请输入额外价格', trigger: 'blur' }]"
+        >
           <el-input v-model="newEquipment.additionalPrice" />
         </el-form-item>
       </el-form>
@@ -80,16 +109,22 @@ const http = useApi()
 // 设备数据
 const equipmentList = ref([]) // 设备列表
 const loading = ref(false) // 加载状态
-const editingEquipment = ref({ equipmentId: null, equipmentName: '', description: '', additionalPrice: 0 })
+const editingEquipment = ref({
+  equipmentId: null,
+  equipmentName: '',
+  description: '',
+  additionalPrice: 0,
+})
 const newEquipment = ref({
   equipmentName: '',
   description: '',
-  additionalPrice: null
+  additionalPrice: null,
 })
 const addDialogVisible = ref(false)
 
 // 分页设置
-const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } = usePagination()
+const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } =
+  usePagination()
 const currentPageData = computed(() => getCurrentPageData(equipmentList.value))
 
 // 获取设备数据
@@ -113,7 +148,7 @@ const deleteEquipment = async (equipmentId) => {
     await ElMessageBox.confirm('确认删除该设备吗?', '删除设备', {
       confirmButtonText: '删除',
       cancelButtonText: '取消',
-      type: 'warning'
+      type: 'warning',
     })
     const response = await http.delete(`/equipment/${equipmentId}`)
     if (response.code === 204) {
@@ -129,7 +164,7 @@ const deleteEquipment = async (equipmentId) => {
 
 // 编辑设备
 const editEquipment = (row) => {
-  editingEquipment.value = { ...row }  
+  editingEquipment.value = { ...row }
 }
 
 // 保存修改的设备
@@ -140,7 +175,7 @@ const saveEquipment = async () => {
     if (response.code === 200) {
       ElMessage.success('设备修改成功')
       resetEditingEquipment()
-      getEquipment()  // 刷新设备列表
+      getEquipment() // 刷新设备列表
     } else {
       ElMessage.error('设备修改失败')
     }
@@ -153,7 +188,12 @@ const saveEquipment = async () => {
 
 // 取消编辑
 const resetEditingEquipment = () => {
-  editingEquipment.value = { equipmentId: null, equipmentName: '', description: '', additionalPrice: 0 }
+  editingEquipment.value = {
+    equipmentId: null,
+    equipmentName: '',
+    description: '',
+    additionalPrice: 0,
+  }
 }
 
 // 打开新增设备弹窗
@@ -166,7 +206,7 @@ const resetAddForm = () => {
   newEquipment.value = {
     equipmentName: '',
     description: '',
-    additionalPrice: null
+    additionalPrice: null,
   }
 }
 
@@ -177,7 +217,7 @@ const addEquipment = async () => {
     if (response.code === 201) {
       ElMessage.success('设备添加成功')
       addDialogVisible.value = false
-      getEquipment()  // 刷新设备列表
+      getEquipment() // 刷新设备列表
     } else {
       ElMessage.error('设备添加失败')
     }

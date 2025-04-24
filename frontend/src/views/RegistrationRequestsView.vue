@@ -15,7 +15,9 @@
       </el-table-column>
       <el-table-column prop="requestStatus" label="状态">
         <template #default="{ row }">
-          {{ statusMap[row.requestStatus] || row.requestStatus }}
+          <el-tag :type="statusTagTypeMap[row.requestStatus]">
+            {{ statusMap[row.requestStatus] || row.requestStatus }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="processedAt" label="处理时间">
@@ -96,6 +98,13 @@ const statusMap = {
   PENDING: '待处理',
   APPROVED: '已同意',
   REJECTED: '已拒绝',
+}
+
+// 状态对应的 tag 类型
+const statusTagTypeMap = {
+  PENDING: 'info',
+  APPROVED: 'success',
+  REJECTED: 'danger',
 }
 
 // 同意用户注册请求

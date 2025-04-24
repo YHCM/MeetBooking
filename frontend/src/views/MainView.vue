@@ -7,19 +7,13 @@
           <div class="header-content">
             <el-menu :default-active="activeIndex" mode="horizontal" class="flex-grow">
               <el-menu-item index="0" @click="goToHome">
-                  <img class="logo" src="/logo.png" alt="logo" />
+                <img class="logo" src="/logo.png" alt="logo" />
               </el-menu-item>
-              <el-menu-item index="1" @click="goToHome">
-                首页
-              </el-menu-item>
-              <el-menu-item index="2" @click="router.push('/about')">
-                关于
-              </el-menu-item>
+              <el-menu-item index="1" @click="goToHome"> 首页 </el-menu-item>
+              <el-menu-item index="2" @click="router.push('/about')"> 关于 </el-menu-item>
               <el-sub-menu v-if="isAdmin" index="3" popper-class="manage-submenu">
                 <template #title>管理</template>
-                <el-menu-item index="3-1" @click="router.push('/users')">
-                  用户管理
-                </el-menu-item>
+                <el-menu-item index="3-1" @click="router.push('/users')"> 用户管理 </el-menu-item>
                 <el-menu-item index="3-2" @click="router.push('/requests')">
                   注册处理
                 </el-menu-item>
@@ -31,9 +25,7 @@
                 </el-menu-item>
               </el-sub-menu>
 
-              <el-menu-item index="4" @click="goToHome">
-                其他
-              </el-menu-item>
+              <el-menu-item index="4" @click="goToHome"> 其他 </el-menu-item>
             </el-menu>
 
             <!-- 点击头像，弹出卡片 -->

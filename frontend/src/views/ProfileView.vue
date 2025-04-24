@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <span>个人信息</span>
-          <el-button type="primary" @click="showEditDialog">编辑信息</el-button>
+          <el-button v-if="isClient" type="primary" @click="showEditDialog">编辑信息</el-button>
         </div>
       </template>
 
@@ -26,14 +26,14 @@
 
     <!-- 编辑信息对话框 -->
     <el-dialog v-model="editDialogVisible" title="编辑个人信息" width="500px">
-      <el-form :model="editForm" label-width="100px">
-        <el-form-item>
+      <el-form :model="editForm" ref="editFormRef" :rules="editRules" label-width="100px">
+        <el-form-item label="用户名称：" prop="username">
           <el-input placeholder="用户名" v-model="editForm.username" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="公司名称：" prop="companyName">
           <el-input placeholder="公司名称" v-model="editForm.companyName" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="电话号码：" prop="phoneNumber">
           <el-input placeholder="电话号码" v-model="editForm.phoneNumber" />
         </el-form-item>
       </el-form>
@@ -47,25 +47,35 @@
 
     <!-- 修改密码对话框 -->
     <el-dialog v-model="passwordDialogVisible" title="修改密码" width="500px">
-      <el-form :model="passwordForm" label-width="120px">
-        <el-form-item>
+      <el-form
+        :model="passwordForm"
+        ref="passwordFromRef"
+        :rules="passwordRules"
+        label-width="120px"
+      >
+        <el-form-item label="旧的密码：" prop="oldPassword">
           <el-input
-            placeholder="旧密码"
+            placeholder="旧的密码"
             type="password"
             show-password
             v-model="passwordForm.oldPassword"
           />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="新的密码：" prop="newPassword">
           <el-input
-            placeholder="新密码"
+            placeholder="新的密码"
             type="password"
             show-password
             v-model="passwordForm.newPassword"
           />
         </el-form-item>
-        <el-form-item>
-          <el-input placeholder="确认密码" v-model="confirmPassword" />
+        <el-form-item label="确认密码：" prop="confirmPassword">
+          <el-input
+            placeholder="确认密码"
+            type="password"
+            show-password
+            v-model="passwordForm.confirmPassword"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -93,14 +103,36 @@ onMounted(() => {
 })
 
 const userInfo = computed(() => userStore.userInfo)
+const isClient = computed(() => userStore.userInfo.role === 'CLIENT')
 
 // 修改信息的对话框相关
 const editDialogVisible = ref(false)
+const editFormRef = ref(null)
 const editForm = ref({
   username: '',
   companyName: '',
   phoneNumber: '',
 })
+
+// 编辑信息验证规则
+const editRules = {
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' },
+  ],
+  companyName: [
+    { required: true, message: '请输入公司名称', trigger: 'blur' },
+    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+  ],
+  phoneNumber: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: '请输入正确的手机号码格式',
+      trigger: 'blur',
+    },
+  ],
+}
 
 // 初始化对话框信息
 const showEditDialog = () => {
@@ -114,6 +146,9 @@ const showEditDialog = () => {
 
 // 修改用户信息
 const updateUserInfo = async () => {
+  // 表单验证
+  await editFormRef.value.validate()
+
   try {
     const response = await http.put('/users', {
       userId: userInfo.value.userId,
@@ -138,13 +173,12 @@ const updateUserInfo = async () => {
 
 // 修改密码相关
 const passwordDialogVisible = ref(false)
+const passwordFromRef = ref(null)
 const passwordForm = ref({
   oldPassword: '',
   newPassword: '',
+  confirmPassword: '',
 })
-
-// 确认密码
-const confirmPassword = ref('')
 
 // 密码强度检验
 const validatePasswordStrength = (password) => {
@@ -157,15 +191,35 @@ const showChangePasswordDialog = () => {
   passwordForm.value = {
     oldPassword: '',
     newPassword: '',
+    confirmPassword: '',
   }
-  confirmPassword.value = ''
   passwordDialogVisible.value = true
+}
+
+// 修改密码验证规则
+const passwordRules = {
+  oldPassword: [
+    { required: true, message: '请输入旧密码', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' },
+  ],
+  newPassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    {
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      message: '至少 8 位，包括字母和数字',
+      trigger: 'blur',
+    },
+  ],
+  confirmPassword: [{ required: true, message: '请确认密码', trigger: 'blur' }],
 }
 
 // 修改密码
 const changePassword = async () => {
+  // 表单验证
+  await passwordFromRef.value.validate()
+
   // 检查密码是否一致
-  if (passwordForm.value.newPassword !== confirmPassword.value) {
+  if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
     ElMessage.error('两次输入的密码不一致，请重新输入')
     return
   }
@@ -179,7 +233,8 @@ const changePassword = async () => {
   try {
     const response = await http.patch('/users/password', {
       userId: userInfo.value.userId,
-      ...passwordForm.value,
+      oldPassword: passwordForm.value.oldPassword,
+      newPassword: passwordForm.value.newPassword,
     })
     handleResponse(response)
     if (response.data) {
