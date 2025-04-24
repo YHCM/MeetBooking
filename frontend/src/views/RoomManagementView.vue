@@ -46,11 +46,31 @@
                         <el-button size="small" type="warning" @click="editingRoom = { ...row }">
                             修改
                         </el-button>
-                        <el-button size="small" type="danger" :loading="loading" @click="deleteRoom">
+                        <el-button size="small" type="danger" :loading="loading" @click="deleteRoom(row.roomId)">
                             删除
                         </el-button>
                     </span>
                 </template>
+            </el-table-column>
+        </el-table>
+
+        <el-table :data="[newRoom]" v-loading="loading" style="width: 100%" border stripe>
+            <el-table-column prop="roomName" label="会议室名称">
+                <el-input v-model="newRoom.roomName" placeholder="请输入新会议室的名称" />
+            </el-table-column>
+            <el-table-column prop="roomType" label="类型">
+                <el-select v-model="newRoom.roomType" filterable>
+                    <el-option v-for="t in types" :key="t.key" :label="t.label" :value="t.key" />
+                </el-select>
+            </el-table-column>
+            <el-table-column prop="capacity" label="座位数">
+                <el-input-number v-model="newRoom.capacity" :min="0" controls-position="right" />
+            </el-table-column>
+            <el-table-column prop="basePrice" label="基础价格">
+                <el-input-number v-model="newRoom.basePrice" :min="0" :precision="2" controls-position="right" />
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+                <el-button type="success" :loading="loading" @click="addRoom">添加</el-button>
             </el-table-column>
         </el-table>
 
@@ -73,13 +93,13 @@ const router = useRouter()
 const userStore = useUserStore()
 const rooms = ref([])
 const editingRoom = ref({ roomId: 0 })
-const newRoom = ref({
+const defaultNewRoom = {
     roomName: '',
-    roomType: '',
+    roomType: 'CLASSROOM',
     capacity: 0,
     basePrice: 0,
-    roomStatus: true,
-})
+}
+const newRoom = ref({ ...defaultNewRoom })
 const loading = ref(false)
 
 const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } = usePagination()
@@ -98,6 +118,7 @@ const typeMap = {
 const statusMap = (status) => {
     return status ? '可用' : '不可用'
 }
+const types = [{ key: 'CLASSROOM', label: '教室型' }, { key: 'ROUND_TABLE', label: '圆桌型' }]
 
 const getRooms = async () => {
     loading.value = true
@@ -133,6 +154,18 @@ const save = async () => {
 
 const resetEditingId = () => {
     editingRoom.value.roomId = null
+}
+
+const addRoom = async () => {
+    try {
+        const response = await http.post(`/rooms`, newRoom.value)
+        handleResponse(response, {
+            onSuccess: () => { getRooms() }
+        })
+    } catch (error) {
+        console.error('服务器异常：', error)
+        ElMessage.error('服务器异常')
+    }
 }
 
 const deleteRoom = (roomId) => {
