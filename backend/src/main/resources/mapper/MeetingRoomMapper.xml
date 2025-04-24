@@ -76,6 +76,7 @@
         WHERE
             mr.room_status = TRUE
             AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
+            AND (#{attendance} IS NULL OR mr.capacity >= #{attendance})
             AND (
                 ra.room_id IS NULL
                 OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)

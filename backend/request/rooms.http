@@ -66,6 +66,7 @@ Content-Type: application/json
 {
     "roomType": "CLASSROOM",
     "date": "2025-05-01",
+    "attendance": 50,
     "startTime": 10,
     "endTime": 16
 }

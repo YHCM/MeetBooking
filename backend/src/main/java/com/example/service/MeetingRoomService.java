@@ -92,7 +92,7 @@ public class MeetingRoomService {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         } else {
             return HttpStatus.OK;
-        }  
+        }
     }
 
     // 获取会议室价格，通过 ID
@@ -116,7 +116,7 @@ public class MeetingRoomService {
         }
 
         Integer timeMask = calculateTimeMask(request.getStartTime(), request.getEndTime());
-        return meetingRoomMapper.searchMeetingRoomIds(request.getRoomType(), request.getDate(), timeMask);
+        return meetingRoomMapper.searchMeetingRoomIds(request.getRoomType(), request.getDate(), request.getAttendance(), timeMask);
     }
 
     // 查看会议室是否存在，通过 ID
