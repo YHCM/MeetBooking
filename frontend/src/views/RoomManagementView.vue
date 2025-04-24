@@ -5,14 +5,28 @@
     <div>
         <el-table :data="currentPageData" v-loading="loading" style="width: 100%" border stripe>
             <el-table-column prop="roomId" label="ID" />
-            <el-table-column prop="roomName" label="会议室名称" />
+            <el-table-column prop="roomName" label="会议室名称">
+                <template #default="{ row }">
+                    <el-input v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.roomName" />
+                </template>
+            </el-table-column>
             <el-table-column prop="roomType" label="类型">
                 <template #default="{ row }">
                     {{ typeMap[row.roomType] || row.roomType }}
                 </template>
             </el-table-column>
-            <el-table-column prop="capacity" label="座位数" />
-            <el-table-column prop="basePrice" label="基础价格" />
+            <el-table-column prop="capacity" label="座位数">
+                <template #default="{ row }">
+                    <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.capacity" :min="0"
+                        controls-position="right" />
+                </template>
+            </el-table-column>
+            <el-table-column prop="basePrice" label="基础价格">
+                <template #default="{ row }">
+                    <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.basePrice" :min="0"
+                        :precision="2" controls-position="right" />
+                </template>
+            </el-table-column>
             <el-table-column prop="roomStatus" label="状态">
                 <template #default="{ row }">
                     {{ statusMap(row.roomStatus) || row.roomStatus }}
@@ -20,12 +34,22 @@
             </el-table-column>
             <el-table-column label="操作" width="160">
                 <template #default="{ row }">
-                    <el-button size="small" type="warning" :loading="loading">
-                        修改
-                    </el-button>
-                    <el-button size="small" type="danger" :loading="loading">
-                        删除
-                    </el-button>
+                    <span v-if="row.roomId === editingRoom.roomId">
+                        <el-button size="small" type="success" :loading="loading" @click="save">
+                            保存
+                        </el-button>
+                        <el-button size="small" type="info" @click="resetEditingId">
+                            取消
+                        </el-button>
+                    </span>
+                    <span v-else>
+                        <el-button size="small" type="warning" @click="editingRoom = { ...row }">
+                            修改
+                        </el-button>
+                        <el-button size="small" type="danger" :loading="loading" @click="deleteRoom">
+                            删除
+                        </el-button>
+                    </span>
                 </template>
             </el-table-column>
         </el-table>
@@ -40,7 +64,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { formatDate } from '@/utils/date'
 import { useUserStore } from '@/stores/user'
 import { handleResponse } from '@/utils/responseHandler'
 import { usePagination } from '@/composables/usePagination'
@@ -49,6 +72,14 @@ const http = useApi()
 const router = useRouter()
 const userStore = useUserStore()
 const rooms = ref([])
+const editingRoom = ref({ roomId: 0 })
+const newRoom = ref({
+    roomName: '',
+    roomType: '',
+    capacity: 0,
+    basePrice: 0,
+    roomStatus: true,
+})
 const loading = ref(false)
 
 const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } = usePagination()
@@ -80,6 +111,47 @@ const getRooms = async () => {
     } finally {
         loading.value = false
     }
+}
+
+const save = async () => {
+    loading.value = true
+    try {
+        const response = await http.put('/rooms', editingRoom.value)
+        handleResponse(response, {
+            onSuccess: () => {
+                resetEditingId()
+                getRooms()
+            }
+        })
+    } catch (error) {
+        console.error('服务器异常：', error)
+        ElMessage.error('服务器异常')
+    } finally {
+        loading.value = false
+    }
+}
+
+const resetEditingId = () => {
+    editingRoom.value.roomId = null
+}
+
+const deleteRoom = (roomId) => {
+    ElMessageBox.confirm('确定要删除该会议室吗？', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(async () => {
+        try {
+            const response = await http.delete(`/rooms/${roomId}`)
+            handleResponse(response, {
+                onSuccess: () => { getRooms() }
+            })
+        } catch (error) {
+            console.error('服务器异常：', error)
+            ElMessage.error('服务器异常')
+        }
+    }).catch(() => { })
+
 }
 
 const checkPermission = () => {
