@@ -23,6 +23,7 @@ public final class MeetingRoomMessage {
     public static final Map<HttpStatus, String> UPDATE_MESSAGES = Map.of(
         HttpStatus.OK, "会议室更新成功",
         HttpStatus.NOT_FOUND, "会议室不存在",
+        HttpStatus.CONFLICT, "会议室名称已存在",
         HttpStatus.INTERNAL_SERVER_ERROR, "会议室更新失败"
     );
 

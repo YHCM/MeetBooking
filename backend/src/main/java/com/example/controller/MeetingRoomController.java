@@ -18,6 +18,7 @@ import com.example.constants.messages.MeetingRoomMessage;
 import com.example.entity.Equipment;
 import com.example.entity.MeetingRoom;
 import com.example.model.Result;
+import com.example.model.SearchRoomRequest;
 import com.example.service.MeetingRoomService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,5 +111,12 @@ public class MeetingRoomController {
         List<Equipment> equipmentList = meetingRoomService.getEquipmentByRoomId(roomId);
 
         return Result.ok("会议室拥有的设备", equipmentList);
+    }
+
+    @Operation(summary = "搜索会议室，类型，日期，时间段")
+    @PostMapping("/search")
+    public Result<List<Long>> searchMeetingRoomIds(@RequestBody SearchRoomRequest request) {
+        List<Long> idList = meetingRoomService.searchAvailableRoomIds(request);
+        return Result.ok("符合要求的会议室ID列表", idList);
     }
 }

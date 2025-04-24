@@ -1,9 +1,11 @@
 package com.example.mapper;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.entity.MeetingRoom;
+import com.example.entity.RoomType;
 
 public interface MeetingRoomMapper {
     // 获取所有的会议室
@@ -29,4 +31,7 @@ public interface MeetingRoomMapper {
 
     // 获取会议室价格
     BigDecimal getTotalPriceById(Long roomId);
+
+    // 筛选出符合条件的会议室 ID
+    List<Long> searchMeetingRoomIds(RoomType roomType, LocalDate date, Integer timeMask);
 }
