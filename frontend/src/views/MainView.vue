@@ -23,6 +23,9 @@
                 <el-menu-item index="3-2" @click="router.push('/requests')">
                   注册处理
                 </el-menu-item>
+                <el-menu-item index="3-3" @click="router.push('/rooms/manage')">
+                  会议室管理
+                </el-menu-item>
               </el-sub-menu>
               <el-menu-item index="4" @click="goToHome">
                 其他
