@@ -6,28 +6,26 @@
         <div class="header-wrapper">
           <div class="header-content">
             <el-menu :default-active="activeIndex" mode="horizontal" class="flex-grow">
-              <el-menu-item index="0">
-                <RouterLink to="/">
+              <el-menu-item index="0" @click="goToHome">
                   <img class="logo" src="/logo.png" alt="logo" />
-                </RouterLink>
               </el-menu-item>
-              <el-menu-item index="1">
-                <RouterLink to="/">首页</RouterLink>
+              <el-menu-item index="1" @click="goToHome">
+                首页
               </el-menu-item>
-              <el-menu-item index="2">
-                <RouterLink to="/about">关于</RouterLink>
+              <el-menu-item index="2" @click="router.push('/about')">
+                关于
               </el-menu-item>
               <el-sub-menu v-if="isAdmin" index="3" popper-class="manage-submenu">
                 <template #title>管理</template>
-                <el-menu-item index="3-1">
-                  <RouterLink to="/users">用户管理</RouterLink>
+                <el-menu-item index="3-1" @click="router.push('/users')">
+                  用户管理
                 </el-menu-item>
-                <el-menu-item index="3-2">
-                  <RouterLink to="/requests">注册处理</RouterLink>
+                <el-menu-item index="3-2" @click="router.push('/requests')">
+                  注册处理
                 </el-menu-item>
               </el-sub-menu>
-              <el-menu-item index="4">
-                <RouterLink to="/">其他</RouterLink>
+              <el-menu-item index="4" @click="goToHome">
+                其他
               </el-menu-item>
             </el-menu>
 
@@ -101,6 +99,9 @@ const userInfo = computed(() => userStore.userInfo)
 const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
 
 // 导航方法
+const goToHome = () => {
+  router.push('/')
+}
 const goToLogin = () => {
   router.push('/login')
 }
