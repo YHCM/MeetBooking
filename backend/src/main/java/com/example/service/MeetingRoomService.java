@@ -64,6 +64,13 @@ public class MeetingRoomService {
             return HttpStatus.NOT_FOUND;
         }
 
+        // 查看会议室名称是否存在
+        boolean isNameExisted = isMeetingRoomExistedByName(meetingRoom.getRoomName());
+
+        if (isNameExisted) {
+            return HttpStatus.CONFLICT;
+        }
+
         int rowsAffected = meetingRoomMapper.updateMeetingRoom(meetingRoom);
         if (rowsAffected <= 0) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
