@@ -33,13 +33,13 @@ import authImage3 from '@/assets/images/auth-3.png'
 // 轮播项的数据
 const carouselItems = ref([
   {
-    title: "会议厅预订",
+    title: "会议室预订",
     subtitle: "",
     image: authImage1,
     link: "/"
   },
   {
-    title: "会议厅管理",
+    title: "会议室管理",
     subtitle: "",
     image: authImage2,
     link: "/"
@@ -109,7 +109,7 @@ const goToPage = (link) => {
 .carousel-card-image {
   width: 100%;
   max-width: 180px;
-  height: auto; 
+  height: auto;
   border-radius: 8px;
   margin-top: 10px;
 }
