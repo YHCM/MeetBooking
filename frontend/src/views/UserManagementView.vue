@@ -148,8 +148,7 @@ const checkPermission = () => {
 }
 
 onMounted(() => {
-  checkPermission()
-  getUserList()
+  if (checkPermission()) getUserList()
 })
 </script>
 

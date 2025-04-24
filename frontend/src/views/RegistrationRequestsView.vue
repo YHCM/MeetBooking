@@ -176,8 +176,7 @@ const checkPermission = () => {
 }
 
 onMounted(() => {
-  checkPermission()
-  getRequestList()
+  if (checkPermission()) getRequestList()
 })
 </script>
 

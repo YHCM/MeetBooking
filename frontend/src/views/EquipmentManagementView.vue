@@ -101,10 +101,19 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useApi } from '@/composables/useApi'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { handleResponse } from '@/utils/responseHandler'
 import { usePagination } from '@/composables/usePagination'
 
 const http = useApi()
+const router = useRouter()
+const userStore = useUserStore()
+
+// 用户信息
+const userInfo = computed(() => userStore.userInfo)
+// 是否是管理员
+const isAdmin = computed(() => userInfo.value.role === 'ADMIN')
 
 // 设备数据
 const equipmentList = ref([]) // 设备列表
@@ -151,11 +160,10 @@ const deleteEquipment = async (equipmentId) => {
       type: 'warning',
     })
     const response = await http.delete(`/equipment/${equipmentId}`)
-    if (response.code === 204) {
-      ElMessage.success('设备删除成功')
-      getEquipment()
-    } else {
-      ElMessage.error('设备删除失败')
+    handleResponse(response)
+
+    if (response.data) {
+      getEquipment() // 刷新设备列表
     }
   } catch (error) {
     ElMessage.info('取消删除设备')
@@ -172,15 +180,15 @@ const saveEquipment = async () => {
   loading.value = true
   try {
     const response = await http.put('/equipment', editingEquipment.value)
-    if (response.code === 200) {
-      ElMessage.success('设备修改成功')
+    handleResponse(response)
+
+    if (response.data) {
       resetEditingEquipment()
       getEquipment() // 刷新设备列表
-    } else {
-      ElMessage.error('设备修改失败')
     }
   } catch (error) {
-    ElMessage.error('设备修改失败')
+    console.error('设备添加失败', error)
+    ElMessage.error('设备添加失败')
   } finally {
     loading.value = false
   }
@@ -214,21 +222,32 @@ const resetAddForm = () => {
 const addEquipment = async () => {
   try {
     const response = await http.post('/equipment', newEquipment.value)
-    if (response.code === 201) {
-      ElMessage.success('设备添加成功')
+    handleResponse(response)
+
+    // 添加成功
+    if (response.data) {
       addDialogVisible.value = false
       getEquipment() // 刷新设备列表
-    } else {
-      ElMessage.error('设备添加失败')
     }
   } catch (error) {
+    console.error('设备添加失败', error)
     ElMessage.error('设备添加失败')
   }
 }
 
+// 检查权限并重定向
+const checkPermission = () => {
+  if (!isAdmin.value) {
+    ElMessage.warning('您没有权限访问此页面')
+    router.replace('/') // 重定向到首页或其他有权限的页面
+    return false
+  }
+  return true
+}
+
 // 初始化数据
 onMounted(() => {
-  getEquipment()
+  if (checkPermission()) getEquipment()
 })
 </script>
 
