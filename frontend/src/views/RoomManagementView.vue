@@ -12,7 +12,12 @@
             </el-table-column>
             <el-table-column prop="roomType" label="类型">
                 <template #default="{ row }">
-                    {{ typeMap[row.roomType] || row.roomType }}
+                    <el-button v-if="row.roomId === editingRoom.roomId" @click="changeEditingRoomType" plain>
+                        {{ typeMap[editingRoom.roomType] || editingRoom.roomType }}
+                    </el-button>
+                    <span v-else>
+                        {{ typeMap[row.roomType] || row.roomType }}
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column prop="capacity" label="座位数">
@@ -29,7 +34,9 @@
             </el-table-column>
             <el-table-column prop="roomStatus" label="状态">
                 <template #default="{ row }">
-                    {{ statusMap(row.roomStatus) || row.roomStatus }}
+                    <el-tag :type="row.roomStatus ? 'success' : 'danger'">
+                        {{ statusMap(row.roomStatus) || row.roomStatus }}
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="160">
@@ -150,6 +157,10 @@ const save = async () => {
     } finally {
         loading.value = false
     }
+}
+
+const changeEditingRoomType = () => {
+    editingRoom.value.roomType = editingRoom.value.roomType === 'CLASSROOM' ? 'ROUND_TABLE' : 'CLASSROOM'
 }
 
 const resetEditingId = () => {
