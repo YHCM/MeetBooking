@@ -68,5 +68,17 @@
         GROUP BY mr.room_id, mr.base_price
     </select>
 
-    <!-- 根据日期和时间段，查看会议室是否可用 -->
+    <!-- 根据类型、日期和时间段，筛选会议室 -->
+    <select id="searchMeetingRoomIds" resultType="long">
+        SELECT mr.room_id
+        FROM meeting_rooms mr
+        LEFT JOIN room_availability ra ON mr.room_id = ra.room_id AND ra.schedule_date = #{date}
+        WHERE
+            mr.room_status = TRUE
+            AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
+            AND (
+                ra.room_id IS NULL
+                OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)
+            )
+    </select>
 </mapper>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.entity.Equipment;
 import com.example.entity.MeetingRoom;
 import com.example.mapper.MeetingRoomMapper;
+import com.example.model.SearchRoomRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -102,6 +103,14 @@ public class MeetingRoomService {
     }
 
     // 筛选会议室
+    public List<Long> searchAvailableRoomIds(SearchRoomRequest request) {
+        if (request.getStartTime() >= request.getEndTime()) {
+            return List.of();   // 空的列表
+        }
+
+        Integer timeMask = calculateTimeMask(request.getStartTime(), request.getEndTime());
+        return meetingRoomMapper.searchMeetingRoomIds(request.getRoomType(), request.getDate(), timeMask);
+    }
 
     // 查看会议室是否存在，通过 ID
     public boolean isMeetingRoomExistedById(Long roomId) {
@@ -117,5 +126,15 @@ public class MeetingRoomService {
     // 获取会议室拥有的所有设备
     public List<Equipment> getEquipmentByRoomId(Long roomId) {
         return roomEquipmentService.getEquipmentByRoomId(roomId);
+    }
+
+    // 计算时间掩码
+    private Integer calculateTimeMask(Integer startTime, Integer endTime) {
+        if (startTime >= endTime) {
+            return 0xFFFFFF;
+        }
+
+        int mask = (1 << (endTime - startTime)) - 1;
+        return mask << startTime;
     }
 }
