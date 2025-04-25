@@ -87,7 +87,7 @@ const newCards = ref([
   {
     title: '预订会议室',
     image: newCardImage2,
-    link: '/',
+    link: '/reserve',
   },
   {
     title: '会议室',

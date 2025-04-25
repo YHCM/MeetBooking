@@ -10,6 +10,7 @@ import RegistrationRequestsView from '@/views/RegistrationRequestsView.vue'
 import RoomManagementView from '@/views/RoomManagementView.vue'
 import EquipmentManagementView from '@/views/EquipmentManagementView.vue'
 import RoomView from '@/views/RoomView.vue'
+import ResreveRoomView from "@/views/ResreveRoomView.vue";
 
 const routes = [
   { path: '/', component: HomeView },
@@ -22,6 +23,7 @@ const routes = [
   { path: '/rooms/manage', component: RoomManagementView },
   { path: '/equipments', component: EquipmentManagementView },
   { path: '/rooms', component: RoomView },
+  { path: '/reserve', component: ResreveRoomView },
 ]
 
 const router = createRouter({
