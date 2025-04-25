@@ -22,23 +22,19 @@
       </el-table-column>
       <el-table-column prop="capacity" label="座位数">
         <template #default="{ row }">
-          <el-input-number
-            v-if="row.roomId === editingRoom.roomId"
-            v-model="editingRoom.capacity"
-            :min="0"
-            controls-position="right"
-          />
+          <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.capacity" :min="0"
+            controls-position="right" />
         </template>
       </el-table-column>
       <el-table-column prop="basePrice" label="基础价格">
         <template #default="{ row }">
-          <el-input-number
-            v-if="row.roomId === editingRoom.roomId"
-            v-model="editingRoom.basePrice"
-            :min="0"
-            :precision="2"
-            controls-position="right"
-          />
+          <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.basePrice" :min="0"
+            :precision="2" controls-position="right" />
+        </template>
+      </el-table-column>
+      <el-table-column label="设备">
+        <template #default="{ row }">
+          <el-button @click="showEquipment(row)" plain>查看</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="roomStatus" label="状态">
@@ -60,12 +56,7 @@
             <el-button size="small" type="warning" @click="editingRoom = { ...row }">
               修改
             </el-button>
-            <el-button
-              size="small"
-              type="danger"
-              :loading="loading"
-              @click="deleteRoom(row.roomId)"
-            >
+            <el-button size="small" type="danger" :loading="loading" @click="deleteRoom(row.roomId)">
               删除
             </el-button>
           </span>
@@ -86,28 +77,21 @@
         <el-input-number v-model="newRoom.capacity" :min="0" controls-position="right" />
       </el-table-column>
       <el-table-column prop="basePrice" label="基础价格">
-        <el-input-number
-          v-model="newRoom.basePrice"
-          :min="0"
-          :precision="2"
-          controls-position="right"
-        />
+        <el-input-number v-model="newRoom.basePrice" :min="0" :precision="2" controls-position="right" />
       </el-table-column>
       <el-table-column label="操作" width="120">
         <el-button type="success" :loading="loading" @click="addRoom">添加</el-button>
       </el-table-column>
     </el-table>
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="pagination.currentPage"
-      :page-sizes="[10, 15, 20, 25]"
-      :page-size="pagination.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="pagination.total"
-      style="margin-top: 20px; justify-content: flex-end"
-    />
+    <el-dialog v-model="showDialog" :title="currentRoom.roomName + ' 的设备'" @close="showDialog = false">
+      <RoomEquipment ref="roomEquipmentRef" :room="currentRoom" />
+    </el-dialog>
+
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="pagination.currentPage" :page-sizes="[10, 15, 20, 25]" :page-size="pagination.pageSize"
+      layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+      style="margin-top: 20px; justify-content: flex-end" />
   </div>
 </template>
 
@@ -117,6 +101,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { handleResponse } from '@/utils/responseHandler'
 import { usePagination } from '@/composables/usePagination'
+import RoomEquipment from '@/components/RoomEquipment.vue'
 
 const http = useApi()
 const router = useRouter()
@@ -131,6 +116,10 @@ const defaultNewRoom = {
 }
 const newRoom = ref({ ...defaultNewRoom })
 const loading = ref(false)
+
+const roomEquipmentRef = ref(null)
+const currentRoom = ref({})
+const showDialog = ref(true)
 
 const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } =
   usePagination()
@@ -228,7 +217,13 @@ const deleteRoom = (roomId) => {
         ElMessage.error('服务器异常')
       }
     })
-    .catch(() => {})
+    .catch(() => { })
+}
+
+const showEquipment = (room) => {
+  currentRoom.value = room
+  roomEquipmentRef.value.getEquipments(currentRoom.value)
+  showDialog.value = true
 }
 
 const checkPermission = () => {
@@ -241,6 +236,7 @@ const checkPermission = () => {
 }
 
 onMounted(() => {
+  showDialog.value = false
   if (checkPermission()) getRooms()
 })
 </script>
