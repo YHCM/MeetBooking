@@ -56,8 +56,8 @@ public class EquipmentService {
         boolean exist = getEquipmentById(equipment.getEquipmentId()) != null;
         if (!exist)
             return HttpStatus.NOT_FOUND;
-        
-        if (!isEquipmentExistedByName(equipment.getEquipmentName())) {
+
+        if (isEquipmentExistedByName(equipment.getEquipmentName())) {
             return HttpStatus.CONFLICT;
         }
 
@@ -74,5 +74,12 @@ public class EquipmentService {
         Equipment equipment = equipmentMapper.selectEquipmentByName(equipmentName);
 
         return equipment != null;
+    }
+
+    // 根据设备名称查看设备是否存在（排除某个ID）
+    public boolean isEquipmentExistedByName(String equipmentName, Long exclude) {
+        Equipment equipment = equipmentMapper.selectEquipmentByName(equipmentName);
+        if (equipment == null) return false;
+        return !equipment.getEquipmentId().equals(exclude);
     }
 }

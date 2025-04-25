@@ -65,7 +65,7 @@ public class MeetingRoomService {
         }
 
         // 查看会议室名称是否存在
-        boolean isNameExisted = isMeetingRoomExistedByName(meetingRoom.getRoomName());
+        boolean isNameExisted = isMeetingRoomExistedByName(meetingRoom.getRoomName(), meetingRoom.getRoomId());
 
         if (isNameExisted) {
             return HttpStatus.CONFLICT;
@@ -128,6 +128,13 @@ public class MeetingRoomService {
     // 查看会议室是否存在，通过会议室名称
     public boolean isMeetingRoomExistedByName(String roomName) {
         return getMeetingRoomByName(roomName) != null;
+    }
+
+    // 查看会议室是否存在，通过会议室名称（排除某个ID的）
+    public boolean isMeetingRoomExistedByName(String roomName, Long exclude) {
+        var room0 = getMeetingRoomByName(roomName);
+        if (room0 == null) return false;
+        return !room0.getRoomId().equals(exclude);
     }
 
     // 获取会议室拥有的所有设备
