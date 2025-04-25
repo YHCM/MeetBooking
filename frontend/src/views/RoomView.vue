@@ -97,7 +97,7 @@ onMounted(() => {
 }
 
 .room-status {
-  flex: 0 0 calc(20% - 20px);   /* 每行 5 个 */
+  flex: 0 0 calc(20% - 20px); /* 每行 5 个 */
   display: flex;
   flex-direction: column;
   align-items: center;

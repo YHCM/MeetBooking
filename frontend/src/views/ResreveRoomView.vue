@@ -7,18 +7,18 @@
       <el-form :model="searchRequest" label-width="120px">
         <el-form-item label="开始时间">
           <el-date-picker
-              v-model="searchRequest.startTime"
-              type="datetime"
-              placeholder="选择开始时间"
-              :disabled-date="disabledStartDate"
+            v-model="searchRequest.startTime"
+            type="datetime"
+            placeholder="选择开始时间"
+            :disabled-date="disabledStartDate"
           />
         </el-form-item>
         <el-form-item label="结束时间">
           <el-date-picker
-              v-model="searchRequest.endTime"
-              type="datetime"
-              placeholder="选择结束时间"
-              :disabled-date="disabledEndDate"
+            v-model="searchRequest.endTime"
+            type="datetime"
+            placeholder="选择结束时间"
+            :disabled-date="disabledEndDate"
           />
         </el-form-item>
       </el-form>
@@ -33,9 +33,9 @@
       <el-form :model="searchRequest" label-width="120px">
         <el-form-item label="参会人数">
           <el-input-number
-              v-model="searchRequest.attendance"
-              :min="1"
-              placeholder="请输入参会人数"
+            v-model="searchRequest.attendance"
+            :min="1"
+            placeholder="请输入参会人数"
           />
         </el-form-item>
       </el-form>
@@ -46,7 +46,6 @@
     </el-dialog>
 
     <!-- 第三个弹窗：选择所需设备 -->
-
   </div>
 </template>
 

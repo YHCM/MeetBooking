@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RoomAvailabilityMapper">
+    <!-- 对应字段映射 -->
+    <resultMap id="RoomAvailabilityResultMap" type="com.example.entity.RoomAvailability">
+        <result property="roomId" column="roomId" />
+        <result property="scheduleDate" column="schedule_date" />
+        <result property="hourStatus" column="hour_status" />
+    </resultMap>
+
+    <!-- 添加会议可用记录 -->
+    <insert id="insertRoomAvailability">
+        INSERT INTO room_availability (room_id, schedule_date)
+        VALUES (#{roomId}, #{scheduleDate})
+    </insert>
+
+    <!-- 批量添加可用记录 -->
+    <insert id="batchInsertRoomAvailability">
+        INSERT INTO room_availability (room_id, schedule_date)
+        VALUES
+        <foreach collection="scheduleDateList" item="scheduleDate" separator=",">
+            (#{roomId}, #{scheduleDate})
+        </foreach>
+    </insert>
+
+    <!-- 删除会议可用记录 -->
+    <delete id="deleteRoomAvailability">
+        DELETE FROM room_availability
+        WHERE room_id = #{roomId} AND schedule_date = #{scheduleDate}
+    </delete>
+</mapper>

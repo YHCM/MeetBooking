@@ -1,7 +1,10 @@
 package com.example.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.example.entity.RoomEquipment;
 import com.example.model.MeetingRoomInfo;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class MeetingRoomService {
     private final MeetingRoomMapper meetingRoomMapper;
     private final RoomEquipmentService roomEquipmentService;
+    private final RoomAvailabilityService roomAvailabilityService;
 
     // 获取所有会议室
     public List<MeetingRoom> getAllMeetingRooms() {
@@ -58,8 +62,14 @@ public class MeetingRoomService {
         int rowsAffected = meetingRoomMapper.insertMeetingRoom(meetingRoom);
         if (rowsAffected <= 0) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
-        } else {
+        }
+
+        // 添加可用状态
+        boolean addStatus = addRoomAvailability(meetingRoom.getRoomId());
+        if (addStatus) {
             return HttpStatus.CREATED;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
 
@@ -167,5 +177,15 @@ public class MeetingRoomService {
 
         int mask = (1 << (endTime - startTime)) - 1;
         return mask << startTime;
+    }
+
+    // 添加 60 天可用数据
+    private boolean addRoomAvailability(Long roomId) {
+        LocalDate today = LocalDate.now();
+        List<LocalDate> scheduleDateList = IntStream.range(0, 60)
+                .mapToObj(today::plusDays)
+                .collect(Collectors.toList());
+        
+        return roomAvailabilityService.batchaddRoomAvailability(roomId, scheduleDateList);
     }
 }

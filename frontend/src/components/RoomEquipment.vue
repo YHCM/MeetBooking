@@ -12,7 +12,12 @@
   <el-table v-if="allEquipments" :data="[1]">
     <el-table-column label="新设备名称">
       <el-select v-model="newEquipmentId" filterable>
-        <el-option v-for="e in allEquipments" :key="e.equipmentId" :label="e.equipmentName" :value="e.equipmentId" />
+        <el-option
+          v-for="e in allEquipments"
+          :key="e.equipmentId"
+          :label="e.equipmentName"
+          :value="e.equipmentId"
+        />
       </el-select>
     </el-table-column>
     <el-table-column label="操作">
@@ -39,8 +44,7 @@ const getAllEquipment = async () => {
   try {
     const response = await http.get('/equipment')
     allEquipments.value = response.data || []
-    if (response.data)
-      newEquipmentId.value = response.data[0].equipmentId
+    if (response.data) newEquipmentId.value = response.data[0].equipmentId
   } catch (error) {
     console.error('获取设备数据失败：', error)
     ElMessage.error('获取设备列表失败')
@@ -68,7 +72,7 @@ const addEquipment = async () => {
     handleResponse(response, {
       onSuccess: () => {
         getEquipments(props.room)
-      }
+      },
     })
   } catch (error) {
     console.error('服务器异常：', error)
@@ -89,13 +93,14 @@ const deleteEquipment = async (equipment) => {
         handleResponse(response, {
           onSuccess: () => {
             getEquipments(props.room)
-          }
+          },
         })
       } catch (error) {
         console.error('服务器异常：', error)
         ElMessage.error('删除设备失败')
       }
-    }).catch(() => { })
+    })
+    .catch(() => {})
 }
 
 onMounted(() => {
@@ -103,7 +108,6 @@ onMounted(() => {
 })
 
 defineExpose({
-  getEquipments
-});
-
+  getEquipments,
+})
 </script>
