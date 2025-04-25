@@ -2,9 +2,9 @@
   <div>
     <h3>会议室</h3>
 
-    <!-- 会议室状态显示 -->
+    <!-- 会议室状态显示-->
     <div class="room-status-container">
-      <div class="room-status" v-for="(room, index) in rooms" :key="room.roomId">
+      <div class="room-status" v-for="(room, index) in currentPageData" :key="room.roomId">
         <div class="room-name">{{ room.roomName }}</div>
         <div class="room-state">
           <el-tag :type="room.roomStatus ? 'success' : 'danger'">
@@ -37,17 +37,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watchEffect } from 'vue'
 import { usePagination } from '@/composables/usePagination'
 
 const http = useApi()
 const rooms = ref([])
 const loading = ref(false)
 
-const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, updateTotal } =
-    usePagination()
-
-const currentPageData = computed(() => getCurrentPageData(rooms.value))
+const { pagination, handleCurrentChange, handleSizeChange, updateTotal, getCurrentPageData } = usePagination()
 
 // 获取会议室列表
 const getRooms = async () => {
@@ -63,6 +60,8 @@ const getRooms = async () => {
     loading.value = false
   }
 }
+
+const currentPageData = computed(() => getCurrentPageData(rooms.value))
 
 // 切换会议室状态
 const toggleRoomStatus = async (roomId, currentStatus) => {
@@ -84,9 +83,14 @@ const toggleRoomStatus = async (roomId, currentStatus) => {
   }
 }
 
-// 初始化时获取会议室数据
 onMounted(() => {
   getRooms()
+})
+
+watchEffect(() => {
+  if (rooms.value.length) {
+    updateTotal(rooms.value.length) // 更新分页的总数据量
+  }
 })
 </script>
 
@@ -95,7 +99,7 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .room-status {
@@ -103,7 +107,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 150px;
+  width: 160px;
   padding: 10px;
   border: 1px solid #2f2d2d;
   border-radius: 5px;
@@ -123,4 +127,3 @@ onMounted(() => {
   margin-top: 10px;
 }
 </style>
-
