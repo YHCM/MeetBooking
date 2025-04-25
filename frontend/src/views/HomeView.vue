@@ -86,9 +86,9 @@ const newCards = ref([
     link: "/"
   },
   {
-    title: "管理会议室",
+    title: "会议室",
     image: newCardImage3,
-    link: "/"
+    link: "/rooms"
   }
 ])
 
