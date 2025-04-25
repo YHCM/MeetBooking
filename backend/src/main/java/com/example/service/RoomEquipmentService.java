@@ -65,16 +65,16 @@ public class RoomEquipmentService {
 
     // 根据会议室 ID 获取此会议室拥有的所有设备 ID
     public List<Long> getEquipmentIdsByRoomId(Long roomId) {
-        return roomEquipmentMapper.selecEquipmentIdsByRoomId(roomId);
+        return roomEquipmentMapper.selectEquipmentIdsByRoomId(roomId);
     }
 
     // 根据设备 ID 获取所有拥有此设备的会议室
     public List<MeetingRoom> getRoomsByEquipmentId(Long equipmentId) {
-        return roomEquipmentMapper.selecRoomsByEquipmentId(equipmentId);
+        return roomEquipmentMapper.selectRoomsByEquipmentId(equipmentId);
     }
 
     // 根据会议室 ID 获取此会议室拥有的所有设备
     public List<Equipment> getEquipmentByRoomId(Long roomId) {
-        return roomEquipmentMapper.selecEquipmentByRoomId(roomId);
+        return roomEquipmentMapper.selectEquipmentByRoomId(roomId);
     }
 }

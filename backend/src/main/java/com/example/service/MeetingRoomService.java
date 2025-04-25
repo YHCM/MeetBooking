@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.example.entity.RoomEquipment;
+import com.example.model.MeetingRoomInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,11 @@ public class MeetingRoomService {
     // 根据 name 获取会议室
     public MeetingRoom getMeetingRoomByName(String roomName) {
         return meetingRoomMapper.selectMeetingRoomByName(roomName);
+    }
+
+    // 获取所有会议室详细信息
+    public List<MeetingRoomInfo> getAllMeetingRoomInfos() {
+        return meetingRoomMapper.selectAllMeetingRoomInfos();
     }
 
     // 添加一个会议室

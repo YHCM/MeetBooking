@@ -50,14 +50,14 @@
     </select>
 
     <!-- 根据会议室 ID 获取此会议室拥有的所有设备 ID -->
-    <select id="selecEquipmentIdsByRoomId" resultType="long">
+    <select id="selectEquipmentIdsByRoomId" resultType="long">
         SELECT equipment_id
         FROM room_equipment
         WHERE equipment_id = #{roomId}
     </select>
 
     <!-- 根据设备 ID 获取所有拥有此设备的会议室 -->
-    <select id="selecRoomsByEquipmentId" resultMap="MeetingRoomResultMap">
+    <select id="selectRoomsByEquipmentId" resultMap="MeetingRoomResultMap">
         SELECT mr.*
         FROM meeting_rooms mr
         JOIN room_equipment re ON mr.room_id = re.room_id
@@ -65,7 +65,7 @@
     </select>
 
     <!-- 根据会议室 ID 获取此会议室拥有的所有设备 -->
-    <select id="selecEquipmentByRoomId" resultMap="EquipmentResultMap">
+    <select id="selectEquipmentByRoomId" resultMap="EquipmentResultMap">
         SELECT e.*
         FROM equipment e
         JOIN room_equipment re ON e.equipment_id = re.equipment_id

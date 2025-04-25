@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.entity.MeetingRoom;
 import com.example.entity.RoomType;
+import com.example.model.MeetingRoomInfo;
 
 public interface MeetingRoomMapper {
     // 获取所有的会议室
@@ -16,6 +17,9 @@ public interface MeetingRoomMapper {
 
     // 根据 ID 获取会议室
     MeetingRoom selectMeetingRoomById(Long roomId);
+
+    // 获取所有会议室详细信息
+    List<MeetingRoomInfo> selectAllMeetingRoomInfos();
 
     // 根据会议室名称获取会议室
     MeetingRoom selectMeetingRoomByName(String roomName);

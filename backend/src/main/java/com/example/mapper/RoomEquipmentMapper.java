@@ -20,13 +20,13 @@ public interface RoomEquipmentMapper {
     List<Long> selectRoomIdsByEquipmentId(Long equipmentId);
 
     // 根据会议室 ID 获取此会议室拥有的所有设备 ID
-    List<Long> selecEquipmentIdsByRoomId(Long roomId);
+    List<Long> selectEquipmentIdsByRoomId(Long roomId);
 
     // 根据设备 ID 获取所有拥有此设备的会议室
-    List<MeetingRoom> selecRoomsByEquipmentId(Long equipmentId);
+    List<MeetingRoom> selectRoomsByEquipmentId(Long equipmentId);
 
     // 根据会议室 ID 获取此会议室拥有的所有设备
-    List<Equipment> selecEquipmentByRoomId(Long roomId);
+    List<Equipment> selectEquipmentByRoomId(Long roomId);
 
     // 查看关联是否存在
     boolean isRoomEquipmentExisted(Long roomId, Long equipmentId);

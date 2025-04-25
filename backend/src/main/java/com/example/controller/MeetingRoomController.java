@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.example.constants.messages.EquipmentMessage;
 import com.example.entity.RoomEquipment;
+import com.example.model.MeetingRoomInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,12 @@ public class MeetingRoomController {
         List<MeetingRoom> meetingRoomList = meetingRoomService.getAllMeetingRooms();
 
         return Result.ok("所有会议室信息", meetingRoomList);
+    }
+
+    @Operation(summary = "获取所有会议室详细信息")
+    @GetMapping("/info")
+    public Result<List<MeetingRoomInfo>> getAllMeetingRoomInfos() {
+        return Result.ok("所有会议室信息", meetingRoomService.getAllMeetingRoomInfos());
     }
 
     @Operation(summary = "获取所有可用会议室")
