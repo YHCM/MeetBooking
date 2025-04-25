@@ -3,7 +3,9 @@
     <el-table-column prop="equipmentName" label="设备名称" />
     <el-table-column prop="additionalPrice" label="额外价格" />
     <el-table-column label="操作">
-      <el-button type="danger" @click="deleteEquipment">删除</el-button>
+      <template #default="{ row }">
+        <el-button type="danger" @click="deleteEquipment(row)">删除</el-button>
+      </template>
     </el-table-column>
   </el-table>
 
@@ -21,6 +23,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { handleResponse } from '@/utils/responseHandler'
 
 const http = useApi()
 
@@ -28,7 +31,7 @@ const loading = ref(false)
 const equipments = ref([])
 const allEquipments = ref([])
 const newEquipmentId = ref(0)
-const { currentRoom } = defineProps({
+const props = defineProps({
   room: Object,
 })
 
@@ -58,11 +61,41 @@ const getEquipments = async (room) => {
 }
 
 const addEquipment = async () => {
-
+  try {
+    const body = { roomId: props.room.roomId, equipmentId: newEquipmentId.value }
+    console.log(body)
+    const response = await http.post(`/rooms/equipment`, body)
+    handleResponse(response, {
+      onSuccess: () => {
+        getEquipments(props.room)
+      }
+    })
+  } catch (error) {
+    console.error('服务器异常：', error)
+    ElMessage.error('添加设备失败')
+  }
 }
 
 const deleteEquipment = async (equipment) => {
-
+  ElMessageBox.confirm('确定要删除该会议室吗？', '', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      try {
+        const body = { roomId: props.room.roomId, equipmentId: equipment.equipmentId }
+        const response = await http.delete(`/rooms/equipment`, { data: body })
+        handleResponse(response, {
+          onSuccess: () => {
+            getEquipments(props.room)
+          }
+        })
+      } catch (error) {
+        console.error('服务器异常：', error)
+        ElMessage.error('删除设备失败')
+      }
+    }).catch(() => { })
 }
 
 onMounted(() => {

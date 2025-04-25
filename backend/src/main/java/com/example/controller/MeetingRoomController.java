@@ -4,15 +4,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.example.constants.messages.EquipmentMessage;
+import com.example.entity.RoomEquipment;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.constants.messages.MeetingRoomMessage;
 import com.example.entity.Equipment;
@@ -111,6 +106,26 @@ public class MeetingRoomController {
         List<Equipment> equipmentList = meetingRoomService.getEquipmentByRoomId(roomId);
 
         return Result.ok("会议室拥有的设备", equipmentList);
+    }
+
+    @Operation(summary = "会议室添加一个设备")
+    @PostMapping("/equipment")
+    public Result<Boolean> addEquipment(@RequestBody RoomEquipment roomEquipment) {
+        var addStatus = meetingRoomService.addEquipment(roomEquipment);
+        var statusMessages = EquipmentMessage.CREATE_MESSAGES;
+        var message = statusMessages.getOrDefault(addStatus, "设备添加失败");
+
+        return Result.create(addStatus, message, addStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "会议室删除一个设备")
+    @DeleteMapping("/equipment")
+    public Result<Boolean> deleteEquipment(@RequestBody RoomEquipment roomEquipment) {
+        var deleteStatus = meetingRoomService.deleteEquipment(roomEquipment);
+        var statusMessages = EquipmentMessage.DELETE_MESSAGES;
+        var message = statusMessages.getOrDefault(deleteStatus, "设备删除失败");
+
+        return Result.create(deleteStatus, message, deleteStatus.is2xxSuccessful());
     }
 
     @Operation(summary = "搜索会议室，类型，日期，时间段")

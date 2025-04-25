@@ -3,6 +3,7 @@ package com.example.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.example.entity.RoomEquipment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -140,6 +141,16 @@ public class MeetingRoomService {
     // 获取会议室拥有的所有设备
     public List<Equipment> getEquipmentByRoomId(Long roomId) {
         return roomEquipmentService.getEquipmentByRoomId(roomId);
+    }
+
+    // 为会议室添加一个设备
+    public HttpStatus addEquipment(RoomEquipment roomEquipment) {
+        return roomEquipmentService.addRoomEquipment(roomEquipment);
+    }
+
+    // 为会议室删除一个设备
+    public HttpStatus deleteEquipment(RoomEquipment roomEquipment) {
+        return roomEquipmentService.deleteRoomEquipment(roomEquipment);
     }
 
     // 计算时间掩码
