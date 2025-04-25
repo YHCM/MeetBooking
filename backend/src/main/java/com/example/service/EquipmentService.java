@@ -57,7 +57,7 @@ public class EquipmentService {
         if (!exist)
             return HttpStatus.NOT_FOUND;
 
-        if (isEquipmentExistedByName(equipment.getEquipmentName())) {
+        if (isEquipmentExistedByName(equipment.getEquipmentName(), equipment.getEquipmentId())) {
             return HttpStatus.CONFLICT;
         }
 
