@@ -26,7 +26,12 @@
     <div class="new-cards">
       <h2>请选择服务</h2>
       <div class="card-container">
-        <el-card v-for="(card, index) in newCards" :key="index" class="new-card" @click="goToPage(card.link)">
+        <el-card
+          v-for="(card, index) in newCards"
+          :key="index"
+          class="new-card"
+          @click="goToPage(card.link)"
+        >
           <div class="new-card-content">
             <img :src="card.image" alt="card" class="new-card-image" />
             <div class="new-card-text">
@@ -49,7 +54,6 @@ import authImage3 from '@/assets/images/auth-3.png'
 import newCardImage1 from '@/assets/images/auth-1.png'
 import newCardImage2 from '@/assets/images/auth-1.png'
 import newCardImage3 from '@/assets/images/auth-1.png'
-
 
 // 轮播项的数据
 const carouselItems = ref([
@@ -76,20 +80,20 @@ const carouselItems = ref([
 // 功能卡片,后续再改
 const newCards = ref([
   {
-    title: "设备管理",
+    title: '设备管理',
     image: newCardImage1,
-    link: "/equipments"
+    link: '/equipments',
   },
   {
-    title: "预订会议室",
+    title: '预订会议室',
     image: newCardImage2,
-    link: "/"
+    link: '/',
   },
   {
-    title: "会议室",
+    title: '会议室',
     image: newCardImage3,
-    link: "/rooms"
-  }
+    link: '/rooms',
+  },
 ])
 
 const router = useRouter()

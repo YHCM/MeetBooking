@@ -149,6 +149,9 @@ public class UserService {
 
     // 更新用户信息
     public HttpStatus updateUserInfo(UserInfo userInfo) {
+        // 原来的用户信息
+        UserInfo oldInfo = getUserInfoByUserId(userInfo.getUserId());
+
         if (userInfo.getUserId() == null) {
             // 没有传入 ID
             return HttpStatus.BAD_REQUEST;
@@ -159,8 +162,8 @@ public class UserService {
             return HttpStatus.NOT_FOUND;
         }
 
-        if (isUsernameExisted(userInfo.getUsername())) {
-            // 用户名已存在
+        if (isUsernameExisted(userInfo.getUsername()) && !userInfo.getUsername().equals(oldInfo.getUsername())) {
+            // 新的用户名已存在，且和当前的不一致
             return HttpStatus.CONFLICT;
         }
 

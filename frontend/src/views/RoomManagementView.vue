@@ -22,14 +22,23 @@
       </el-table-column>
       <el-table-column prop="capacity" label="座位数">
         <template #default="{ row }">
-          <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.capacity" :min="0"
-            controls-position="right" />
+          <el-input-number
+            v-if="row.roomId === editingRoom.roomId"
+            v-model="editingRoom.capacity"
+            :min="0"
+            controls-position="right"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="basePrice" label="基础价格">
         <template #default="{ row }">
-          <el-input-number v-if="row.roomId === editingRoom.roomId" v-model="editingRoom.basePrice" :min="0"
-            :precision="2" controls-position="right" />
+          <el-input-number
+            v-if="row.roomId === editingRoom.roomId"
+            v-model="editingRoom.basePrice"
+            :min="0"
+            :precision="2"
+            controls-position="right"
+          />
         </template>
       </el-table-column>
       <el-table-column label="设备">
@@ -56,7 +65,12 @@
             <el-button size="small" type="warning" @click="editingRoom = { ...row }">
               修改
             </el-button>
-            <el-button size="small" type="danger" :loading="loading" @click="deleteRoom(row.roomId)">
+            <el-button
+              size="small"
+              type="danger"
+              :loading="loading"
+              @click="deleteRoom(row.roomId)"
+            >
               删除
             </el-button>
           </span>
@@ -77,21 +91,36 @@
         <el-input-number v-model="newRoom.capacity" :min="0" controls-position="right" />
       </el-table-column>
       <el-table-column prop="basePrice" label="基础价格">
-        <el-input-number v-model="newRoom.basePrice" :min="0" :precision="2" controls-position="right" />
+        <el-input-number
+          v-model="newRoom.basePrice"
+          :min="0"
+          :precision="2"
+          controls-position="right"
+        />
       </el-table-column>
       <el-table-column label="操作" width="120">
         <el-button type="success" :loading="loading" @click="addRoom">添加</el-button>
       </el-table-column>
     </el-table>
 
-    <el-dialog v-model="showDialog" :title="currentRoom.roomName + ' 的设备'" @close="showDialog = false">
+    <el-dialog
+      v-model="showDialog"
+      :title="currentRoom.roomName + ' 的设备'"
+      @close="showDialog = false"
+    >
       <RoomEquipment ref="roomEquipmentRef" :room="currentRoom" />
     </el-dialog>
 
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-      :current-page="pagination.currentPage" :page-sizes="[10, 15, 20, 25]" :page-size="pagination.pageSize"
-      layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
-      style="margin-top: 20px; justify-content: flex-end" />
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="[10, 15, 20, 25]"
+      :page-size="pagination.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      style="margin-top: 20px; justify-content: flex-end"
+    />
   </div>
 </template>
 
@@ -217,7 +246,7 @@ const deleteRoom = (roomId) => {
         ElMessage.error('服务器异常')
       }
     })
-    .catch(() => { })
+    .catch(() => {})
 }
 
 const showEquipment = (room) => {

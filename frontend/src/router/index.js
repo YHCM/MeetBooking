@@ -9,7 +9,7 @@ import UserManagementView from '@/views/UserManagementView.vue'
 import RegistrationRequestsView from '@/views/RegistrationRequestsView.vue'
 import RoomManagementView from '@/views/RoomManagementView.vue'
 import EquipmentManagementView from '@/views/EquipmentManagementView.vue'
-import RoomView from "@/views/RoomView.vue"
+import RoomView from '@/views/RoomView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
