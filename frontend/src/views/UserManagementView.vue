@@ -2,6 +2,10 @@
   <div>
     <h3>用户管理</h3>
   </div>
+  <div style="margin-bottom: 20px">
+    <el-button type="primary" @click="showAddDialog('STAFF')">添加员工</el-button>
+    <el-button type="primary" @click="showAddDialog('CLIENT')">添加客户</el-button>
+  </div>
   <div>
     <el-table :data="currentPageData" v-loading="loading" style="width: 100%" border stripe>
       <el-table-column prop="userId" label="用户 ID" />
@@ -56,6 +60,24 @@
       style="margin-top: 20px; justify-content: flex-end"
     />
   </div>
+  <!-- 添加用户对话框 -->
+  <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
+    <el-form :model="newUserForm" :rules="rules" ref="userFormRef" label-width="100px">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="newUserForm.username" />
+      </el-form-item>
+      <el-form-item label="公司名称" prop="companyName" v-if="newUserForm.role === 'CLIENT'">
+        <el-input v-model="newUserForm.companyName" />
+      </el-form-item>
+      <el-form-item label="电话号码" prop="phoneNumber">
+        <el-input v-model="newUserForm.phoneNumber" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="addUser" :loading="addingUser">确认</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -71,6 +93,9 @@ const router = useRouter()
 const userStore = useUserStore()
 const userList = ref([])
 const loading = ref(false)
+const addingUser = ref(false)
+const dialogVisible = ref(false)
+const userFormRef = ref(null)
 
 // 用户信息
 const userInfo = computed(() => userStore.userInfo)
@@ -81,6 +106,83 @@ const { pagination, handleCurrentChange, handleSizeChange, getCurrentPageData, u
   usePagination()
 
 const currentPageData = computed(() => getCurrentPageData(userList.value))
+
+// 新增用户的表单
+const newUserForm = ref({
+  username: '',
+  password: '',
+  role: '',
+  companyName: '',
+  phoneNumber: '',
+})
+
+// 表单验证规则
+const rules = ref({
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' },
+  ],
+  companyName: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
+  phoneNumber: [
+    { required: false, message: '请输入电话号码', trigger: 'blur' },
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' },
+  ],
+})
+
+// 对话框标题
+const dialogTitle = computed(() => {
+  return newUserForm.value.role === 'STAFF' ? '添加员工' : '添加客户'
+})
+
+// 显示添加用户对话框
+const showAddDialog = (role) => {
+  // 重置表单
+  newUserForm.value = {
+    username: '',
+    password: '123456',
+    role: role,
+    companyName: '',
+    phoneNumber: '',
+  }
+
+  dialogVisible.value = true
+}
+
+// 添加用户
+const addUser = async () => {
+  try {
+    // 表单验证
+    await userFormRef.value.validate()
+    addingUser.value = true
+
+    const payload = {
+      username: newUserForm.value.username,
+      password: newUserForm.value.password,
+      role: newUserForm.value.role,
+      phoneNumber: newUserForm.value.phoneNumber,
+    }
+
+    // 如果是客户，添加公司名称
+    if (newUserForm.value.role === 'CLIENT') {
+      payload.companyName = newUserForm.value.companyName
+    }
+
+    const response = await http.post(`/users/${payload.role}`, payload)
+    handleResponse(response)
+
+    // 添加成功，刷新列表
+    if (response.data) {
+      getUserList()
+      // 关闭对话框
+      dialogVisible.value = false
+    }
+  } catch (error) {
+    console.error('添加用户失败：', error)
+    ElMessage.error('添加用户失败')
+  } finally {
+    addingUser.value = false
+  }
+}
 
 // 获取用户数据
 const getUserList = async () => {
