@@ -57,6 +57,23 @@
         FROM meeting_rooms
     </select>
 
+    <!-- 根据 ID 获取会议室详细信息 -->
+    <select id="selectMeetingRoomInfoById" resultMap="MeetingRoomInfoMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+        WHERE room_id = #{roomId}
+    </select>
+
+    <!-- 根据 ID 列表获取会议室详细信息列表 -->
+    <select id="selectMeetingRoomInfosByIds" resultMap="MeetingRoomInfoMap">
+        SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at
+        FROM meeting_rooms
+        WHERE room_id IN
+        <foreach collection="roomIds" item="roomId" open="(" separator="," close=")">
+            #{roomId}
+        </foreach>
+    </select>
+
     <!-- 添加一个会议室 -->
     <insert id="insertMeetingRoom" useGeneratedKeys="true" keyProperty="roomId">
         INSERT INTO meeting_rooms (room_id, room_name, room_type, capacity, base_price)
@@ -93,12 +110,12 @@
         FROM meeting_rooms mr
         LEFT JOIN room_availability ra ON mr.room_id = ra.room_id AND ra.schedule_date = #{date}
         WHERE
-        mr.room_status = TRUE
-        AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
-        AND (#{attendance} IS NULL OR mr.capacity >= #{attendance})
-        AND (
-        ra.room_id IS NULL
-        OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)
-        )
+            mr.room_status = TRUE
+            AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
+            AND (#{attendance} IS NULL OR mr.capacity >= #{attendance})
+            AND (
+                ra.room_id IS NULL
+                OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)
+            )
     </select>
 </mapper>

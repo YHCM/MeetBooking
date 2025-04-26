@@ -40,6 +40,28 @@ public class MeetingRoomController {
         return Result.ok("所有会议室信息", meetingRoomService.getAllMeetingRoomInfos());
     }
 
+    @Operation(summary = "根据 ID 获取会议室详细信息")
+    @GetMapping("/{roomId}/info")
+    public Result<MeetingRoomInfo> getMeetingRoomInfoById(@PathVariable Long roomId) {
+        MeetingRoomInfo meetingRoomInfo = meetingRoomService.getMeetingRoomInfoById(roomId);
+
+        if (meetingRoomInfo == null) {
+            return Result.create(HttpStatus.NOT_FOUND, "会议室不存在", null);
+        } else {
+            return Result.ok("会议室详细信息", meetingRoomInfo);
+        }
+    }
+
+    @Operation(summary = "根据 ID 列表获取会议室详细信息列表")
+    @PostMapping("/info/batch")
+    public Result<List<MeetingRoomInfo>> getMeetingRoomInfosByIds(@RequestBody Map<String, List<Long>> request) {
+        // 这里用 Map 是为了不出现 json 反序列化失败的警告
+        List<Long> roomIds = request.get("roomIds");
+        List<MeetingRoomInfo> meetingRoomInfos = meetingRoomService.getMeetingRoomInfosByIds(roomIds);
+        
+        return Result.ok("批量查询会议室详细信息", meetingRoomInfos);
+    }
+
     @Operation(summary = "获取所有可用会议室")
     @GetMapping("/available")
     public Result<List<MeetingRoom>> getAvailableMeetingRooms() {

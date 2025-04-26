@@ -21,6 +21,12 @@ public interface MeetingRoomMapper {
     // 获取所有会议室详细信息
     List<MeetingRoomInfo> selectAllMeetingRoomInfos();
 
+    // 根据 ID 获取会议室详细信息
+    MeetingRoomInfo selectMeetingRoomInfoById(Long roomId);
+
+    // 根据 ID 列表获取会议室详细信息列表
+    List<MeetingRoomInfo> selectMeetingRoomInfosByIds(List<Long> roomIds);
+
     // 根据会议室名称获取会议室
     MeetingRoom selectMeetingRoomByName(String roomName);
 

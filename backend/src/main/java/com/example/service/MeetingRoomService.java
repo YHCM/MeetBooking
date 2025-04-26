@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,6 +49,21 @@ public class MeetingRoomService {
     // 获取所有会议室详细信息
     public List<MeetingRoomInfo> getAllMeetingRoomInfos() {
         return meetingRoomMapper.selectAllMeetingRoomInfos();
+    }
+
+    // 根据 ID 获取会议室详细信息
+    public MeetingRoomInfo getMeetingRoomInfoById(Long roomId) {
+        return meetingRoomMapper.selectMeetingRoomInfoById(roomId);
+    }
+
+    // 根据 ID 列表获取会议室详细信息列表
+    public List<MeetingRoomInfo> getMeetingRoomInfosByIds(List<Long> roomIds) {
+        if (roomIds == null || roomIds.isEmpty()) {
+            // 如果没有传，直接返回空列表，不去查询数据库
+            return Collections.emptyList();
+        }
+
+        return meetingRoomMapper.selectMeetingRoomInfosByIds(roomIds);
     }
 
     // 添加一个会议室
