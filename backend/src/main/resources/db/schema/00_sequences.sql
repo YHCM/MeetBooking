@@ -19,7 +19,7 @@ CREATE SEQUENCE request_seq START WITH 10001;   -- 客户注册的申请 ID 序�
 CREATE SEQUENCE room_seq START WITH 10001;      -- 会议室 ID 序列，从 10001 开始
 
 -- 设备类型 ID 序列
-CREATE SEQUENCE equipment_seq START WITH 10001; -- 设备类型 ID 序列，从 10001 开始
+CREATE SEQUENCE equipment_seq START WITH 10001; -- 设备 ID 序列，从 10001 开始
 
 -- 订单 ID 序列
-CREATE SEQUENCE order_seq START WITH 10001; -- 设备类型 ID 序列，从 10001 开始
+CREATE SEQUENCE order_seq START WITH 10001; -- 订单 ID 序列，从 10001 开始

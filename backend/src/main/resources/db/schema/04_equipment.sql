@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS equipment;
 
--- 设备类型表，会议室用
+-- 设备表，会议室用
 CREATE TABLE equipment (
     equipment_id BIGINT COMMENT '主键，设备类型 ID',
     equipment_name VARCHAR(127) UNIQUE NOT NULL COMMENT '设备名称',

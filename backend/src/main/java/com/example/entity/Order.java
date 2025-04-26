@@ -7,10 +7,12 @@ import java.time.LocalDate;
 
 @Data
 public class Order {
-    private Long orderId;
-    private Long userId;
-    private Long roomId;
-    private LocalDate scheduleDate;
-    private Integer hours;
-    private BigDecimal price;
+    private Long orderId;       // 订单 ID
+    private Long userId;        // 用户 ID
+    private Long roomId;        // 会议室 ID
+    private LocalDate bookingDate;   // 预定日期
+    private BigDecimal totalPrice;   // 总金额
+    private Byte startHour;     // 开始时间
+    private Byte endHour;       // 结束时间
+    private OrderStatus status; // 订单状态
 }
