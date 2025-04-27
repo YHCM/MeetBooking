@@ -3,25 +3,25 @@
 <mapper namespace="com.example.mapper.RoomEquipmentMapper">
     <!-- 对应字段映射 -->
     <resultMap id="RoomEquipmentResultMap" type="com.example.entity.RoomEquipment">
-        <result property="roomId" column="room_id" />
-        <result property="equipmentId" column="equipment_id" />
+        <result property="roomId" column="room_id"/>
+        <result property="equipmentId" column="equipment_id"/>
     </resultMap>
 
     <resultMap id="MeetingRoomResultMap" type="com.example.entity.MeetingRoom">
-        <result property="roomId" column="room_id" />
-        <result property="roomName" column="room_name" />
-        <result property="roomType" column="room_type" />
-        <result property="capacity" column="capacity" />
-        <result property="basePrice" column="base_price" />
-        <result property="roomStatus" column="room_status" />
-        <result property="createdAt" column="created_at" />
+        <result property="roomId" column="room_id"/>
+        <result property="roomName" column="room_name"/>
+        <result property="roomType" column="room_type"/>
+        <result property="capacity" column="capacity"/>
+        <result property="basePrice" column="base_price"/>
+        <result property="roomStatus" column="room_status"/>
+        <result property="createdAt" column="created_at"/>
     </resultMap>
 
     <resultMap id="EquipmentResultMap" type="com.example.entity.Equipment">
-        <result property="equipmentId" column="equipment_id" />
-        <result property="equipmentName" column="equipment_name" />
-        <result property="additionalPrice" column="additional_price" />
-        <result property="description" column="description" />
+        <result property="equipmentId" column="equipment_id"/>
+        <result property="equipmentName" column="equipment_name"/>
+        <result property="additionalPrice" column="additional_price"/>
+        <result property="description" column="description"/>
     </resultMap>
 
     <!-- 获取所有的关联 -->
@@ -67,6 +67,14 @@
     <!-- 根据会议室 ID 获取此会议室拥有的所有设备 -->
     <select id="selectEquipmentByRoomId" resultMap="EquipmentResultMap">
         SELECT e.*
+        FROM equipment e
+        JOIN room_equipment re ON e.equipment_id = re.equipment_id
+        WHERE re.room_id = #{roomId}
+    </select>
+
+    <!-- 根据会议室 ID 获取此会议室拥有的所有设备，不获取设备描述 -->
+    <select id="selectEquipmentByRoomIdWithoutDescription" resultMap="EquipmentResultMap">
+        SELECT e.equipment_id, e.equipment_name, e.additional_price
         FROM equipment e
         JOIN room_equipment re ON e.equipment_id = re.equipment_id
         WHERE re.room_id = #{roomId}

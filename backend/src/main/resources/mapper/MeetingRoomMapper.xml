@@ -21,7 +21,8 @@
         <result property="roomStatus" column="room_status"/>
         <result property="createdAt" column="created_at"/>
         <association property="price" select="com.example.mapper.MeetingRoomMapper.getTotalPriceById" column="room_id"/>
-        <collection property="equipments" select="com.example.mapper.RoomEquipmentMapper.selectEquipmentByRoomId"
+        <collection property="equipments"
+                    select="com.example.mapper.RoomEquipmentMapper.selectEquipmentByRoomIdWithoutDescription"
                     column="room_id"/>
     </resultMap>
 
@@ -110,12 +111,12 @@
         FROM meeting_rooms mr
         LEFT JOIN room_availability ra ON mr.room_id = ra.room_id AND ra.schedule_date = #{date}
         WHERE
-            mr.room_status = TRUE
-            AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
-            AND (#{attendance} IS NULL OR mr.capacity >= #{attendance})
-            AND (
-                ra.room_id IS NULL
-                OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)
-            )
+        mr.room_status = TRUE
+        AND (#{roomType} IS NULL OR mr.room_type = #{roomType})
+        AND (#{attendance} IS NULL OR mr.capacity >= #{attendance})
+        AND (
+        ra.room_id IS NULL
+        OR (BITAND(ra.hour_status, CAST(#{timeMask} AS INTEGER)) = 0)
+        )
     </select>
 </mapper>
