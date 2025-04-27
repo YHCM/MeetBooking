@@ -12,6 +12,7 @@
           </el-tag>
         </div>
         <el-button
+          v-if="isStaff"
           size="small"
           :type="room.roomStatus ? 'danger' : 'success'"
           :loading="loading"
@@ -40,13 +41,17 @@
 import { ref, computed, onMounted } from 'vue'
 import { usePagination } from '@/composables/usePagination'
 import { handleResponse } from '@/utils/responseHandler'
+import { useUserStore } from '@/stores/user'
 
 const http = useApi()
 const rooms = ref([])
 const loading = ref(false)
-
+const userStore = useUserStore()
 const { pagination, handleCurrentChange, handleSizeChange, updateTotal, getCurrentPageData } =
   usePagination()
+
+// 是否是员工
+const isStaff = computed(() => ['ADMIN','STAFF'].includes(userStore.userInfo.role))
 
 // 获取会议室列表
 const getRooms = async () => {

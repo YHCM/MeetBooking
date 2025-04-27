@@ -20,21 +20,23 @@
                 <el-menu-item index="3-3" @click="router.push('/rooms/manage')">
                   会议室管理
                 </el-menu-item>
-                <el-menu-item index="3-4" @click="router.push('/equipments')">
+                <el-menu-item index="3-4" @click="router.push('/rooms/manage')">
+                  会议室状态管理
+                </el-menu-item>
+                <el-menu-item index="3-5" @click="router.push('/equipments')">
                   设备管理
                 </el-menu-item>
               </el-sub-menu>
-
+              <el-sub-menu index="5"  popper-class="manage-submenu">
+                <template #title>会议室</template>
+                <el-menu-item index="5-1" @click="router.push('/rooms')"> 查看会议室 </el-menu-item>
+                <el-menu-item index="5-2" @click="router.push('/reserve')"> 预订 </el-menu-item>
+              </el-sub-menu>
               <el-menu-item index="4" @click="goToHome"> 其他 </el-menu-item>
             </el-menu>
 
             <!-- 点击头像，弹出卡片 -->
-            <el-popover
-              placement="bottom-end"
-              :width="200"
-              popper-class="user-card-popover"
-              :show-arrow="false"
-            >
+            <el-popover placement="bottom-end" :width="200" popper-class="user-card-popover" :show-arrow="false">
               <template #reference>
                 <el-avatar :size="48" :src="avatar" class="cursor-pointer avatar-hover" />
               </template>
@@ -131,9 +133,11 @@ onMounted(() => {
   width: 100%;
   overflow: hidden;
 }
+
 .el-container {
   min-height: 98vh;
 }
+
 .header-container {
   position: fixed;
   top: 0;
@@ -143,11 +147,13 @@ onMounted(() => {
   background: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 .header-wrapper {
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
 }
+
 .header-content {
   display: flex;
   align-items: center;
@@ -157,78 +163,95 @@ onMounted(() => {
   margin: 0 auto;
   gap: 30px;
 }
+
 .main-wrapper {
   padding: 80px 20px;
   width: 75%;
   min-width: 1200px;
   margin: 0 auto;
 }
+
 .flex-grow {
   flex-grow: 1;
 }
+
 /* 头像光标样式 */
 .cursor-pointer {
   cursor: pointer;
 }
+
 .avatar-hover:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
   transition: all 0.3s ease;
 }
+
 /* 用户卡片样式 */
 .user-card {
   padding: 1px 2px;
 }
+
 .not-logged-in {
   text-align: center;
 }
+
 .not-logged-in h3 {
   margin: 0;
   margin-bottom: 8px;
 }
+
 .button-group {
   display: flex;
   justify-content: center;
   gap: 8px;
 }
+
 .logged-in .user-info {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 4px;
 }
+
 .user-details h3 {
   margin: 0 0 8px 0;
 }
+
 .user-details p {
   margin: 4px 0;
   color: #666;
   font-size: 14px;
 }
+
 .user-actions {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .user-actions .el-button {
   width: 100%;
   margin: 0;
   margin-bottom: 6px;
   box-sizing: border-box;
 }
+
 /* 调整顶部导航栏的高度 */
 .el-menu--horizontal {
   --el-menu-horizontal-height: 50px;
 }
+
 /* 调整 logo 样式 */
 .logo {
   width: 75px;
   vertical-align: middle;
 }
+
 /* 取消头像背景颜色 */
 .el-avatar {
   --el-avatar-bg-color: none;
 }
+
 /* 弹出卡片样式 */
 .user-card-popover {
   padding: 0 !important;
