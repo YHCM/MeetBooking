@@ -3,34 +3,48 @@
     <h3>会议室预订</h3>
 
     <!-- ───── 信息卡片 ───── -->
-    <el-card v-if="criteriaFilled" class="condition-card" shadow="always">
+    <el-card class="condition-card" shadow="always">
       <template #header>
         <span>预订信息</span>
-        <el-button type="primary" size="small" style="float: right" @click="restart">重新选择</el-button>
+        <el-button
+            type="primary"
+            size="small"
+            style="float: right"
+            :disabled="!criteriaFilled"
+            @click="restart"
+        >
+          重新选择
+        </el-button>
       </template>
 
       <el-descriptions :column="2">
         <el-descriptions-item label="开始时间">{{ format(req.startTime) }}</el-descriptions-item>
         <el-descriptions-item label="结束时间">{{ format(req.endTime) }}</el-descriptions-item>
         <el-descriptions-item label="会议室类型">{{ typeMap[req.roomType] }}</el-descriptions-item>
-        <el-descriptions-item label="参会人数">{{ req.attendance }}</el-descriptions-item>
+        <el-descriptions-item label="参会人数">{{ req.attendance ?? '—' }}</el-descriptions-item>
         <el-descriptions-item label="所需设备">
           <template v-if="req.requiredDevices.length">
-            <el-tag v-for="id in req.requiredDevices" :key="id" size="small" type="info" class="mr">
+            <el-tag
+                v-for="id in req.requiredDevices"
+                :key="id"
+                size="small"
+                type="info"
+                class="mr"
+            >
               {{ id2Name[id] }}
             </el-tag>
           </template>
-          <span v-else>无</span>
+          <span v-else>—</span>
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
 
     <!-- 符合条件会议室 -->
     <el-table
-        v-if="criteriaFilled"
         :data="roomList"
         v-loading="loadingRooms"
-        border stripe
+        border
+        stripe
         style="width: 100%; margin-top: 20px;"
     >
       <el-table-column prop="roomId" label="ID" width="80" />
@@ -39,21 +53,36 @@
       <el-table-column prop="roomType" label="类型" />
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
-          <el-button type="success" size="small" @click="bookRoom(row)">预订</el-button>
+          <el-button
+              type="success"
+              size="small"
+              :disabled="!criteriaFilled"
+              @click="bookRoom(row)"
+          >
+            预订
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 时间 -->
-    <el-dialog v-model="dlgTime" title="选择使用时间" width="420px">
+    <el-dialog v-model="dlgTime" title="选择使用时间" width="420px" :top="dialogTop">
       <el-form :model="req" label-width="100px">
         <el-form-item label="开始时间">
-          <el-date-picker v-model="req.startTime" type="datetime"
-                          format="YYYY-MM-DD HH:mm" :disabled-date="dStart" />
+          <el-date-picker
+              v-model="req.startTime"
+              type="datetime"
+              format="YYYY-MM-DD HH:mm"
+              :disabled-date="dStart"
+          />
         </el-form-item>
         <el-form-item label="结束时间">
-          <el-date-picker v-model="req.endTime" type="datetime"
-                          format="YYYY-MM-DD HH:mm" :disabled-date="dEnd" />
+          <el-date-picker
+              v-model="req.endTime"
+              type="datetime"
+              format="YYYY-MM-DD HH:mm"
+              :disabled-date="dEnd"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -63,7 +92,7 @@
     </el-dialog>
 
     <!-- 类型 -->
-    <el-dialog v-model="dlgType" title="会议室类型" width="340px">
+    <el-dialog v-model="dlgType" title="会议室类型" width="340px" :top="dialogTop">
       <el-radio-group v-model="req.roomType">
         <el-radio-button label="CLASSROOM">教室型</el-radio-button>
         <el-radio-button label="ROUND_TABLE">圆桌型</el-radio-button>
@@ -75,7 +104,7 @@
     </el-dialog>
 
     <!-- 人数 -->
-    <el-dialog v-model="dlgAtt" title="参会人数" width="340px">
+    <el-dialog v-model="dlgAtt" title="参会人数" width="340px" :top="dialogTop">
       <el-form :model="req" label-width="100px">
         <el-form-item label="人数">
           <el-input-number v-model="req.attendance" :min="1" :max="500" />
@@ -88,7 +117,7 @@
     </el-dialog>
 
     <!-- 设备 -->
-    <el-dialog v-model="dlgDev" title="所需设备" width="420px">
+    <el-dialog v-model="dlgDev" title="所需设备" width="420px" :top="dialogTop">
       <el-form :model="req" label-width="100px">
         <el-form-item label="设备">
           <el-checkbox-group v-model="req.requiredDevices">
@@ -146,6 +175,7 @@ const criteriaFilled = ref(false)
 const roomList = ref([])
 const loadingRooms = ref(false)
 
+const dialogTop = '30vh'
 const dStart = d => d.getTime() < Date.now()
 const dEnd   = d => req.startTime && d.getTime() <= req.startTime.getTime()
 
@@ -167,7 +197,6 @@ function nextToDevice () {
   dlgDev.value = true
 }
 
-
 async function finish () {
   dlgDev.value = false
   criteriaFilled.value = true
@@ -188,25 +217,29 @@ async function fetchRooms () {
       deviceIds: req.requiredDevices,
       roomType: req.roomType
     }
-    const res = await http.post('/')
+    const res = await http.post('/', body) 
     roomList.value = res.data || []
   } catch (err) {
     console.error(err)
     ElMessage.error('获取会议室失败')
+    roomList.value = []
   } finally {
     loadingRooms.value = false
   }
 }
 
-const bookRoom = row =>
-    ElMessage.success(`已选择预订：${row.roomName}(ID:${row.roomId})`)
+const bookRoom = row => ElMessage.success(`已选择预订：${row.roomName}(ID:${row.roomId})`)
 
 // 重新选择
 function restart () {
   criteriaFilled.value = false
+  roomList.value = []
   Object.assign(req, {
-    startTime:null, endTime:null, roomType:'CLASSROOM',
-    attendance:null, requiredDevices:[]
+    startTime: null,
+    endTime: null,
+    roomType: 'CLASSROOM',
+    attendance: null,
+    requiredDevices: []
   })
   dlgTime.value = true
 }
@@ -218,7 +251,8 @@ onMounted(async () => {
     equipmentOptions.value = res.data || []
     equipmentOptions.value.forEach(e => { id2Name[e.equipmentId] = e.equipmentName })
   } catch (e) {
-    console.error(e); ElMessage.error('设备加载失败')
+    console.error(e)
+    ElMessage.error('设备加载失败')
   }
   dlgTime.value = true
 })
