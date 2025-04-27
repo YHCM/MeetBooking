@@ -214,10 +214,10 @@ async function fetchRooms () {
       startTime: s.getHours(),
       endTime: e.getHours(),
       attendance: req.attendance,
-      deviceIds: req.requiredDevices,
+      requiredEquipments: req.requiredDevices,
       roomType: req.roomType
     }
-    const res = await http.post('/', body) 
+    const res = await http.post('/rooms/search', body) 
     roomList.value = res.data || []
   } catch (err) {
     console.error(err)
