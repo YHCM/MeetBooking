@@ -1,7 +1,9 @@
 package com.example.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.example.entity.Equipment;
 import com.example.entity.RoomType;
 
 import lombok.Data;
@@ -14,4 +16,5 @@ public class SearchRoomRequest {
     private Integer attendance;     // 参会人数
     private Integer startTime;      // 开始时间，整数
     private Integer endTime;        // 结束时间，整数
+    private List<Long> requiredEquipments;        // 所需使用的设备的ID
 }

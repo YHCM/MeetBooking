@@ -3,6 +3,7 @@ package com.example.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -143,13 +144,16 @@ public class MeetingRoomService {
     }
 
     // 筛选会议室
-    public List<Long> searchAvailableRoomIds(SearchRoomRequest request) {
+    public List<MeetingRoomInfo> searchAvailableRooms(SearchRoomRequest request) {
         if (request.getStartTime() >= request.getEndTime()) {
             return List.of();   // 空的列表
         }
 
         Integer timeMask = calculateTimeMask(request.getStartTime(), request.getEndTime());
-        return meetingRoomMapper.searchMeetingRoomIds(request.getRoomType(), request.getDate(), request.getAttendance(), timeMask);
+        return meetingRoomMapper.searchMeetingRooms(request.getRoomType(), request.getDate(), request.getAttendance(), timeMask)
+                .stream().filter(room ->
+                        new HashSet<>(room.getEquipmentIds()).containsAll(request.getRequiredEquipments()))
+                .toList();
     }
 
     // 查看会议室是否存在，通过 ID
@@ -201,7 +205,7 @@ public class MeetingRoomService {
         List<LocalDate> scheduleDateList = IntStream.range(0, 60)
                 .mapToObj(today::plusDays)
                 .collect(Collectors.toList());
-        
+
         return roomAvailabilityService.batchaddRoomAvailability(roomId, scheduleDateList);
     }
 }

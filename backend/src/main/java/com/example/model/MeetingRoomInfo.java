@@ -2,13 +2,16 @@ package com.example.model;
 
 import com.example.entity.Equipment;
 import com.example.entity.RoomType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
+@JsonIgnoreProperties(value = "equipmentIds")
 public class MeetingRoomInfo {
     private Long roomId;    // 会议室 ID
     private String roomName;    // 会议室名称
@@ -19,4 +22,8 @@ public class MeetingRoomInfo {
     private LocalDateTime createdAt;    // 创建时间
     private List<Equipment> equipments; //会议室配置的设备
     private BigDecimal price; // 每小时租赁价格
+
+    public List<Long> getEquipmentIds(){
+        return equipments.stream().map(Equipment::getEquipmentId).toList();
+    }
 }

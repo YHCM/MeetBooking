@@ -43,5 +43,5 @@ public interface MeetingRoomMapper {
     BigDecimal getTotalPriceById(Long roomId);
 
     // 筛选出符合条件的会议室 ID
-    List<Long> searchMeetingRoomIds(RoomType roomType, LocalDate date, Integer attendance, Integer timeMask);
+    List<MeetingRoomInfo> searchMeetingRooms(RoomType roomType, LocalDate date, Integer attendance, Integer timeMask);
 }

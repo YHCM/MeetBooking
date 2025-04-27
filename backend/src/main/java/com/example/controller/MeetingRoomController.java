@@ -58,7 +58,7 @@ public class MeetingRoomController {
         // 这里用 Map 是为了不出现 json 反序列化失败的警告
         List<Long> roomIds = request.get("roomIds");
         List<MeetingRoomInfo> meetingRoomInfos = meetingRoomService.getMeetingRoomInfosByIds(roomIds);
-        
+
         return Result.ok("批量查询会议室详细信息", meetingRoomInfos);
     }
 
@@ -157,10 +157,10 @@ public class MeetingRoomController {
         return Result.create(deleteStatus, message, deleteStatus.is2xxSuccessful());
     }
 
-    @Operation(summary = "搜索会议室，类型，日期，时间段")
+    @Operation(summary = "搜索会议室，类型，日期，时间段，设备")
     @PostMapping("/search")
-    public Result<List<Long>> searchMeetingRoomIds(@RequestBody SearchRoomRequest request) {
-        List<Long> idList = meetingRoomService.searchAvailableRoomIds(request);
-        return Result.ok("符合要求的会议室ID列表", idList);
+    public Result<List<MeetingRoomInfo>> searchMeetingRoomIds(@RequestBody SearchRoomRequest request) {
+        var idList = meetingRoomService.searchAvailableRooms(request);
+        return Result.ok("符合要求的会议室列表", idList);
     }
 }

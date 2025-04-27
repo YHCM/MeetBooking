@@ -106,8 +106,8 @@
     </select>
 
     <!-- 根据类型、日期和时间段，筛选会议室 -->
-    <select id="searchMeetingRoomIds" resultType="long">
-        SELECT mr.room_id
+    <select id="searchMeetingRooms" resultMap="MeetingRoomInfoMap">
+        SELECT mr.*
         FROM meeting_rooms mr
         LEFT JOIN room_availability ra ON mr.room_id = ra.room_id AND ra.schedule_date = #{date}
         WHERE
