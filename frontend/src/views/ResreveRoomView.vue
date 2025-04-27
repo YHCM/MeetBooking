@@ -217,7 +217,8 @@ async function fetchRooms () {
       requiredEquipments: req.requiredDevices,
       roomType: req.roomType
     }
-    const res = await http.post('/rooms/search', body) 
+
+    const res = await http.post('/rooms/search', body)
     roomList.value = res.data || []
   } catch (err) {
     console.error(err)
