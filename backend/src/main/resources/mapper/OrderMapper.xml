@@ -10,6 +10,7 @@
         <result property="price" column="price"/>
         <result property="startHour" column="start_hour"/>
         <result property="endHour" column="end_hour"/>
+        <result property="createAt" column="create_at"/>
         <result property="status" column="status"/>
     </resultMap>
 

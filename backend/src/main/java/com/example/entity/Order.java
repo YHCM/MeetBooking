@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class Order {
@@ -14,5 +15,6 @@ public class Order {
     private BigDecimal price;   // 价格
     private Byte startHour;     // 开始时间
     private Byte endHour;       // 结束时间
+    private LocalDateTime createdAt; // 创建时间
     private OrderStatus status; // 订单状态
 }
