@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 import com.example.entity.RoomEquipment;
 import com.example.model.MeetingRoomInfo;
+import com.example.util.Util;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class MeetingRoomService {
     private final MeetingRoomMapper meetingRoomMapper;
     private final RoomEquipmentService roomEquipmentService;
     private final RoomAvailabilityService roomAvailabilityService;
+    private final Util util;
 
     // 获取所有会议室
     public List<MeetingRoom> getAllMeetingRooms() {
@@ -149,7 +151,7 @@ public class MeetingRoomService {
             return List.of();   // 空的列表
         }
 
-        Integer timeMask = calculateTimeMask(request.getStartTime(), request.getEndTime());
+        Integer timeMask = util.calculateTimeMask(request.getStartTime(), request.getEndTime());
         return meetingRoomMapper.searchMeetingRooms(request.getRoomType(), request.getDate(), request.getAttendance(), timeMask)
                 .stream().filter(room ->
                         new HashSet<>(room.getEquipmentIds()).containsAll(request.getRequiredEquipments()))
@@ -187,16 +189,6 @@ public class MeetingRoomService {
     // 为会议室删除一个设备
     public HttpStatus deleteEquipment(RoomEquipment roomEquipment) {
         return roomEquipmentService.deleteRoomEquipment(roomEquipment);
-    }
-
-    // 计算时间掩码
-    private Integer calculateTimeMask(Integer startTime, Integer endTime) {
-        if (startTime >= endTime) {
-            return 0xFFFFFF;
-        }
-
-        int mask = (1 << (endTime - startTime)) - 1;
-        return mask << startTime;
     }
 
     // 添加 60 天可用数据

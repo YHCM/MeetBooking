@@ -8,6 +8,13 @@
         <result property="hourStatus" column="hour_status" />
     </resultMap>
 
+    <!-- 获取会议可用记录 -->
+    <select id="selectRoomAvailability" resultType="Integer">
+        SELECT hour_status
+        FROM room_availability
+        WHERE room_id = #{roomId} AND schedule_date = #{scheduleDate}
+    </select>
+
     <!-- 添加会议可用记录 -->
     <insert id="insertRoomAvailability">
         INSERT INTO room_availability (room_id, schedule_date)
@@ -28,4 +35,11 @@
         DELETE FROM room_availability
         WHERE room_id = #{roomId} AND schedule_date = #{scheduleDate}
     </delete>
+
+    <!-- 修改状态 -->
+    <update id="changeRoomAvailability">
+        UPDATE room_availability
+        SET hour_status = #{hourStatus}
+        WHERE room_id = #{roomId} AND schedule_date = #{scheduleDate}
+    </update>
 </mapper>

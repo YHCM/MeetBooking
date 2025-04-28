@@ -160,7 +160,7 @@ public class MeetingRoomController {
     @Operation(summary = "搜索会议室，类型，日期，时间段，设备")
     @PostMapping("/search")
     public Result<List<MeetingRoomInfo>> searchMeetingRoomIds(@RequestBody SearchRoomRequest request) {
-        var idList = meetingRoomService.searchAvailableRooms(request);
-        return Result.ok("符合要求的会议室列表", idList);
+        var list = meetingRoomService.searchAvailableRooms(request);
+        return Result.ok("符合要求的会议室列表", list);
     }
 }

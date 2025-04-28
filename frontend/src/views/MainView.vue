@@ -20,7 +20,7 @@
                 <el-menu-item index="3-3" @click="router.push('/rooms/manage')">
                   会议室管理
                 </el-menu-item>
-                <el-menu-item index="3-4" @click="router.push('/rooms/manage')">
+                <el-menu-item index="3-4" @click="router.push('/rooms')">
                   会议室状态管理
                 </el-menu-item>
                 <el-menu-item index="3-5" @click="router.push('/equipments')">
