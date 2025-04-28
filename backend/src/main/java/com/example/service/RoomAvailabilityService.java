@@ -16,6 +16,11 @@ public class RoomAvailabilityService {
     private final RoomAvailabilityMapper roomAvailabilityMapper;
     private final Util util;
 
+    // 获取可用状态
+    public Integer getRoomAvailability(Long roomId, LocalDate scheduleDate){
+        return roomAvailabilityMapper.selectRoomAvailability(roomId, scheduleDate);
+    }
+
     // 添加会议室可用记录
     public boolean addRoomAvailability(Long roomId, LocalDate scheduleDate) {
         return roomAvailabilityMapper.insertRoomAvailability(roomId, scheduleDate) > 0;
@@ -32,16 +37,16 @@ public class RoomAvailabilityService {
     }
 
     // 设置 start（包括）时到end（不包括）时 为不可用状态
-    public boolean setLocked(Long roomId, LocalDate scheduleDate, Integer start, Integer end) {
+    public boolean setLocked(Long roomId, LocalDate scheduleDate, Byte start, Byte end) {
         int mask = util.calculateTimeMask(start, end);
-        var oldStatus = roomAvailabilityMapper.selectRoomAvailability(roomId, scheduleDate);
+        int oldStatus = roomAvailabilityMapper.selectRoomAvailability(roomId, scheduleDate);
         return roomAvailabilityMapper.changeRoomAvailability(roomId, scheduleDate, oldStatus | mask) > 0;
     }
 
     // 设置 start（包括）时到end（不包括）时 为可用状态
-    public boolean setAvailable(Long roomId, LocalDate scheduleDate, Integer start, Integer end) {
+    public boolean setAvailable(Long roomId, LocalDate scheduleDate, Byte start, Byte end) {
         int mask = ~util.calculateTimeMask(start, end);
-        var oldStatus = roomAvailabilityMapper.selectRoomAvailability(roomId, scheduleDate);
+        int oldStatus = roomAvailabilityMapper.selectRoomAvailability(roomId, scheduleDate);
         return roomAvailabilityMapper.changeRoomAvailability(roomId, scheduleDate, oldStatus & mask) > 0;
     }
 }

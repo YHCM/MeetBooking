@@ -9,7 +9,7 @@ CREATE TABLE orders (
     start_hour TINYINT NOT NULL COMMENT '开始时间(8-20)',
     end_hour TINYINT NOT NULL COMMENT '结束时间(9-21)',
     price NUMERIC(10,2) NOT NULL COMMENT '价格',
-    order_status ENUM(
+    status ENUM(
         'PENDING',      -- 待处理(待支付，默认状态)
         'CANCELLED',    -- 已取消(超时未支付或主动取消)
         'COMPLETED',    -- 已完成(已支付并使用)

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Util {
     // 计算时间掩码
-    public Integer calculateTimeMask(Integer startTime, Integer endTime) {
+    public Integer calculateTimeMask(Byte startTime, Byte endTime) {
         if (startTime >= endTime) {
             return 0;
         }

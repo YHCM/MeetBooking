@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrderMapper">
+    <!-- 对应字段映射 -->
+    <resultMap id="OrderResultMap" type="com.example.entity.Order">
+        <id property="orderId" column="order_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="roomId" column="room_id"/>
+        <result property="bookingDate" column="booking_date"/>
+        <result property="price" column="price"/>
+        <result property="startHour" column="start_hour"/>
+        <result property="endHour" column="end_hour"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <!-- 获取所有订单 -->
+    <select id="selectAllOrders" resultMap="OrderResultMap">
+        SELECT * FROM orders
+    </select>
+
+    <!-- 根据ID获取订单 -->
+    <select id="selectOrderById" resultMap="OrderResultMap">
+        SELECT * FROM orders
+        WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 根据用户ID获取订单 -->
+    <select id="selectOrderByUserId" resultMap="OrderResultMap">
+        SELECT * FROM orders
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 添加订单 -->
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="roomId">
+        INSERT INTO orders (order_id, user_id, room_id, booking_date, price, start_hour, end_hour)
+        VALUES (NEXT VALUE FOR order_seq, #{userId}, #{roomId}, #{bookingDate}, #{price}, #{startHour}, #{endHour})
+    </insert>
+
+    <!-- 修改订单状态 -->
+    <update id="updateOrderStatus">
+        UPDATE orders
+        SET status=#{status}
+        WHERE order_id = #{orderId}
+    </update>
+
+</mapper>
