@@ -25,5 +25,6 @@ public class Order {
         order.setBookingDate(request.getBookingDate());
         order.setStartHour(request.getStartHour());
         order.setEndHour(request.getEndHour());
+        return order;
     }
 }
