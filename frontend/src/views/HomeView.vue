@@ -85,7 +85,7 @@ const carouselItems = ref([
     title: '会议室预订',
     subtitle: '',
     image: authImage1,
-    link: '/',
+    link: '/reserve',
   },
   {
     title: '会议室管理',
@@ -124,7 +124,7 @@ const guideLinks = ref([
   { title: '预订会议厅', link: '/reserve' },
   { title: '查看会议室', link: '/rooms' },
   { title: '设备管理', link: '/equipments' },
-  { title: '我的预订', link: '/' },
+  { title: '我的预订', link: '/orders' },
   { title: '个人中心', link: '/profile' },
   { title: '关于我们', link: '/' },
 ])
@@ -271,7 +271,7 @@ const goToPage = (link) => {
 }
 
 .guide-list li:hover .arrow {
-  transform: translateX(3px); 
+  transform: translateX(3px);
 }
 
 .title-with-line {
