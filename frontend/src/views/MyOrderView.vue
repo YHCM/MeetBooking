@@ -67,20 +67,38 @@
         style="margin-top: 20px; justify-content: flex-end"
     />
 
-    <!-- 订单详情弹框 -->
-    <el-dialog v-model="detailsDialogVisible" title="订单详情" @close="resetDetailsForm">
-      <el-form :model="orderDetails" ref="detailsForm" label-width="120px">
-        <el-form-item label="订单ID">{{ orderDetails.orderId }}</el-form-item>
-        <el-form-item label="会议室ID">{{ orderDetails.roomId }}</el-form-item>
-        <el-form-item label="预定日期">{{ orderDetails.bookingDate }}</el-form-item>
-        <el-form-item label="价格">{{ orderDetails.price }}</el-form-item>
-        <el-form-item label="开始时间">{{ formatHour(orderDetails.startHour) }}</el-form-item>
-        <el-form-item label="结束时间">{{ formatHour(orderDetails.endHour) }}</el-form-item>
-        <el-form-item label="订单状态">{{ formatStatus(orderDetails.status) }}</el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="resetDetailsForm">关闭</el-button>
-      </span>
+    <!-- 订单详情弹窗 -->
+    <el-dialog
+        v-model="detailsDialogVisible"
+        :title="`订单详情 #${orderDetails.orderId || ''}`"
+        width="480px"
+        @close="resetDetailsForm"
+        :top="'20vh'"
+    >
+      <el-descriptions
+          column="1"
+          border
+          :size="'default'"
+          style="margin-bottom: 12px;"
+      >
+        <el-descriptions-item label="会议室ID">{{ orderDetails.roomId }}</el-descriptions-item>
+        <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
+        <el-descriptions-item label="时间段">
+          {{ formatHour(orderDetails.startHour) }} - {{ formatHour(orderDetails.endHour) }}
+        </el-descriptions-item>
+        <el-descriptions-item label="价格">
+          <span style="color: #67C23A; font-weight: bold;">￥{{ orderDetails.price }}</span>
+        </el-descriptions-item>
+        <el-descriptions-item label="订单状态">
+          <el-tag :type="getStatusColor(orderDetails.status)">
+            {{ formatStatus(orderDetails.status) }}
+          </el-tag>
+        </el-descriptions-item>
+      </el-descriptions>
+
+      <template #footer>
+        <el-button @click="detailsDialogVisible = false">关闭</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
