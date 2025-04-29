@@ -27,7 +27,7 @@
           >
             支付
           </el-button>
-
+          
           <el-button
               v-if="row.status === 'PENDING'"
               size="small"
@@ -72,18 +72,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { handleResponse } from '@/utils/responseHandler'
-import { usePagination } from '@/composables/usePagination'
-
 const http = useApi()
-const router = useRouter()
-const userStore = useUserStore()
 
 // 用户信息
-const userInfo = computed(() => userStore.userInfo)
+const userInfo = computed(() => useUserStore().userInfo)
 
 // 订单数据
 const orderList = ref([]) // 订单列表
@@ -97,7 +91,7 @@ const pagination = ref({
 })
 const currentPageData = computed(() => orderList.value.slice((pagination.value.currentPage - 1) * pagination.value.pageSize, pagination.value.currentPage * pagination.value.pageSize))
 
-// 获取订单数据
+// 获取用户订单数据
 const getOrders = async () => {
   loading.value = true
   try {
@@ -122,13 +116,41 @@ const viewOrderDetails = (orderId) => {
 }
 
 // 支付订单
-const payOrder = (orderId) => {
-  console.log(`订单ID: ${orderId}`)
+const payOrder = async (orderId) => {
+  loading.value = true
+  try {
+    const response = await http.patch(`/orders/${orderId}/pay`)
+    if (response) {
+      ElMessage.success('订单支付成功')
+      getOrders() // 刷新订单列表
+    } else {
+      ElMessage.error('订单支付失败，请稍后重试')
+    }
+  } catch (error) {
+    console.error('支付订单失败', error)
+    ElMessage.error('支付订单失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 
 // 取消订单
-const cancelOrder = (orderId) => {
-  console.log(`订单ID: ${orderId}`)
+const cancelOrder = async (orderId) => {
+  loading.value = true
+  try {
+    const response = await http.patch(`/orders/${orderId}/cancel`)
+    if (response) {
+      ElMessage.success('订单取消成功')
+      getOrders() // 刷新订单列表
+    } else {
+      ElMessage.error('订单取消失败，请稍后重试')
+    }
+  } catch (error) {
+    console.error('取消订单失败', error)
+    ElMessage.error('取消订单失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 
 // 分页处理
