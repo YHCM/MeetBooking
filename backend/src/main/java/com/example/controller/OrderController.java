@@ -5,6 +5,7 @@ import com.example.entity.Order;
 import com.example.model.Result;
 import com.example.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +36,28 @@ public class OrderController {
 
     @Operation(summary = "提交订单")
     @PostMapping
-    public Result<Boolean> createOrder(@RequestBody Order order) {
-        HttpStatus createStatus = orderService.createOrder(order);
+    public Result<Boolean> createOrder(@RequestBody Order order, HttpSession httpSession) {
+        HttpStatus createStatus = orderService.createOrder(order, httpSession);
         var statusMessages = OrderMessage.CREATE_MESSAGES;
         var message = statusMessages.getOrDefault(createStatus, "订单提交失败");
         return Result.create(createStatus, message, createStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "支付订单")
+    @PatchMapping("/{orderId}/pay")
+    public Result<Boolean> payOrder(@PathVariable Long orderId, HttpSession httpSession) {
+        HttpStatus payStatus = orderService.pay(orderId, httpSession);
+        var statusMessages = OrderMessage.PAY_MESSAGES;
+        var message = statusMessages.getOrDefault(payStatus, "订单支付失败");
+        return Result.create(payStatus, message, payStatus.is2xxSuccessful());
+    }
+
+    @Operation(summary = "取消订单")
+    @PatchMapping("/{orderId}/cancel")
+    public Result<Boolean> cancelOrder(@PathVariable Long orderId, HttpSession httpSession) {
+        HttpStatus cancelStatus = orderService.cancel(orderId, httpSession);
+        var statusMessages = OrderMessage.CANCEL_MESSAGES;
+        var message = statusMessages.getOrDefault(cancelStatus, "订单取消失败");
+        return Result.create(cancelStatus, message, cancelStatus.is2xxSuccessful());
     }
 }

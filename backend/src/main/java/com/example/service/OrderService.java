@@ -5,6 +5,7 @@ import com.example.entity.OrderStatus;
 import com.example.mapper.MeetingRoomMapper;
 import com.example.mapper.OrderMapper;
 import com.example.util.Util;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final MeetingRoomMapper meetingRoomMapper;
     private final RoomAvailabilityService roomAvailabilityService;
+    private final UserService userService;
     private final Util util;
 
     public List<Order> getAllOrders() {
@@ -34,7 +36,10 @@ public class OrderService {
     }
 
     @Transactional
-    public HttpStatus createOrder(Order order) {
+    public HttpStatus createOrder(Order order, HttpSession httpSession) {
+        var user = userService.getUserBySession(httpSession);
+        order.setUserId(user.getUserId());
+
         var room = meetingRoomMapper.selectMeetingRoomInfoById(order.getRoomId());
         if (room == null)
             return HttpStatus.NOT_FOUND;
@@ -60,11 +65,56 @@ public class OrderService {
         return HttpStatus.CREATED;
     }
 
-    public HttpStatus pay(Order order) {
-        return HttpStatus.NOT_IMPLEMENTED;
+    // 支付订单
+    public HttpStatus pay(Long orderId, HttpSession httpSession) {
+        var order = orderMapper.selectOrderById(orderId);
+        if (order == null)
+            return HttpStatus.NOT_FOUND;
+
+        // 判断是不是支付自己的订单
+        var user = userService.getUserBySession(httpSession);
+        if (!user.getUserId().equals(order.getUserId()))
+            return HttpStatus.FORBIDDEN;
+
+        // 判断订单状态
+        if (order.getStatus() != OrderStatus.PENDING) // 不是待处理状态
+            return HttpStatus.BAD_REQUEST;
+
+        int rowsAffected = orderMapper.updateOrderStatus(orderId, OrderStatus.COMPLETED);
+        if (rowsAffected <= 0) return HttpStatus.INTERNAL_SERVER_ERROR;
+        return HttpStatus.OK;
     }
 
-    public boolean changeOrderStatus(Long orderId, OrderStatus status) {
-        return orderMapper.updateOrderStatus(orderId, status) > 0;
+    // 取消订单
+    @Transactional
+    public HttpStatus cancel(Long orderId, HttpSession httpSession) {
+        var order = orderMapper.selectOrderById(orderId);
+        if (order == null)
+            return HttpStatus.NOT_FOUND;
+
+        // 判断是不是取消自己的订单，或是由系统调用
+        if (httpSession != null) {
+            var user = userService.getUserBySession(httpSession);
+            if (!user.getUserId().equals(order.getUserId()))
+                return HttpStatus.FORBIDDEN;
+        }
+
+        // 判断订单状态
+        if (order.getStatus() != OrderStatus.PENDING) // 不是待处理状态
+            return HttpStatus.BAD_REQUEST;
+
+        // 设置订单状态
+        orderMapper.updateOrderStatus(orderId, OrderStatus.CANCELLED);
+        // 释放会议室
+        roomAvailabilityService.setAvailable(order.getRoomId(), order.getBookingDate(), order.getStartHour(), order.getEndHour());
+
+        return HttpStatus.OK;
     }
+
+    // 取消订单，系统调用
+    @Transactional
+    public HttpStatus cancel(Long orderId) {
+        return cancel(orderId, null);
+    }
+
 }
