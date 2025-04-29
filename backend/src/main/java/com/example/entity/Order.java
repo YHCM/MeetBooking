@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.model.NewOrderRequest;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -17,4 +18,12 @@ public class Order {
     private Byte endHour;       // 结束时间
     private LocalDateTime createdAt; // 创建时间
     private OrderStatus status; // 订单状态
+
+    public static Order fromOrderRequest(NewOrderRequest request) {
+        var order = new Order();
+        order.setRoomId(request.getRoomId());
+        order.setBookingDate(request.getBookingDate());
+        order.setStartHour(request.getStartHour());
+        order.setEndHour(request.getEndHour());
+    }
 }

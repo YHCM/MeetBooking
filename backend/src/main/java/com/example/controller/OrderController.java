@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.constants.messages.OrderMessage;
 import com.example.entity.Order;
+import com.example.model.NewOrderRequest;
 import com.example.model.Result;
 import com.example.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,8 +37,8 @@ public class OrderController {
 
     @Operation(summary = "提交订单")
     @PostMapping
-    public Result<Boolean> createOrder(@RequestBody Order order, HttpSession httpSession) {
-        HttpStatus createStatus = orderService.createOrder(order, httpSession);
+    public Result<Boolean> createOrder(@RequestBody NewOrderRequest request, HttpSession httpSession) {
+        HttpStatus createStatus = orderService.createOrder(Order.fromOrderRequest(request), httpSession);
         var statusMessages = OrderMessage.CREATE_MESSAGES;
         var message = statusMessages.getOrDefault(createStatus, "订单提交失败");
         return Result.create(createStatus, message, createStatus.is2xxSuccessful());
