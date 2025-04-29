@@ -141,7 +141,9 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 const http = useApi()
+const router = useRouter()
 
 // 格式化时间
 const pad2 = n => String(n).padStart(2, '0')
@@ -229,7 +231,43 @@ async function fetchRooms () {
   }
 }
 
-const bookRoom = row => ElMessage.success(`已选择预订：${row.roomName}(ID:${row.roomId})`)
+const bookRoom = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+        `是否确认预订该会议室：${row.roomName}（ID:${row.roomId}）？`,
+        '确认预订',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+    )
+
+    const s = new Date(req.startTime);
+    const e = new Date(req.endTime);
+
+    const orderRequest = {
+      roomId: row.roomId,
+      bookingDate: `${s.getFullYear()}-${pad2(s.getMonth() + 1)}-${pad2(s.getDate())}`,
+      startHour: s.getHours(),
+      endHour: e.getHours()
+    };
+
+    const res = await http.post('/orders', orderRequest);
+
+    if (res) {
+      ElMessage.success(`预订成功：${row.roomName}`);
+      router.push('/orders')
+    } else {
+      ElMessage.error(res.message || '预订失败');
+    }
+  } catch (err) {
+    if (err !== 'cancel') {
+      console.error(err)
+      ElMessage.error('请求失败，请稍后再试')
+    }
+  }
+}
 
 // 重新选择
 function restart () {

@@ -8,9 +8,23 @@
       <el-table-column prop="roomId" label="会议室ID" />
       <el-table-column prop="bookingDate" label="预定日期" />
       <el-table-column prop="price" label="价格" />
-      <el-table-column prop="startHour" label="开始时间" />
-      <el-table-column prop="endHour" label="结束时间" />
-      <el-table-column prop="status" label="订单状态" />
+      <el-table-column label="开始时间">
+        <template #default="{ row }">
+          {{ formatHour(row.startHour) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template #default="{ row }">
+          {{ formatHour(row.endHour) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态">
+        <template #default="{ row }">
+          <el-tag :type="getStatusColor(row.status)">
+            {{ formatStatus(row.status) }}
+          </el-tag>
+        </template>
+      </el-table-column>
 
       <el-table-column label="操作" width="220">
         <template #default="{ row }">
@@ -27,7 +41,7 @@
           >
             支付
           </el-button>
-          
+
           <el-button
               v-if="row.status === 'PENDING'"
               size="small"
@@ -60,9 +74,9 @@
         <el-form-item label="会议室ID">{{ orderDetails.roomId }}</el-form-item>
         <el-form-item label="预定日期">{{ orderDetails.bookingDate }}</el-form-item>
         <el-form-item label="价格">{{ orderDetails.price }}</el-form-item>
-        <el-form-item label="开始时间">{{ orderDetails.startHour }}</el-form-item>
-        <el-form-item label="结束时间">{{ orderDetails.endHour }}</el-form-item>
-        <el-form-item label="订单状态">{{ orderDetails.status }}</el-form-item>
+        <el-form-item label="开始时间">{{ formatHour(orderDetails.startHour) }}</el-form-item>
+        <el-form-item label="结束时间">{{ formatHour(orderDetails.endHour) }}</el-form-item>
+        <el-form-item label="订单状态">{{ formatStatus(orderDetails.status) }}</el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resetDetailsForm">关闭</el-button>
@@ -76,8 +90,36 @@ import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 const http = useApi()
 
+const statusMap = {
+  PENDING: '待支付',
+  COMPLETED: '已完成',
+  CANCELLED: '已取消',
+  REFUNDED: '已退款'
+}
+
+const statusColorMap = {
+  PENDING: 'warning',
+  COMPLETED: 'success',
+  CANCELLED: 'info',
+  REFUNDED: 'danger'
+}
+
 // 用户信息
 const userInfo = computed(() => useUserStore().userInfo)
+
+// 格式化展示的时间
+const formatHour = (hour) => {
+  return hour !== null && hour !== undefined ? `${hour}:00` : '-'
+}
+
+// 格式化订单状态
+const formatStatus = (status) => {
+  return statusMap[status] || status
+}
+
+const getStatusColor = (status) => {
+  return statusColorMap[status] || 'default'
+}
 
 // 订单数据
 const orderList = ref([]) // 订单列表
