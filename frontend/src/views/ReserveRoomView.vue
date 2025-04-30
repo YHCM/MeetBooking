@@ -99,10 +99,7 @@ const router = useRouter()
 // 格式化时间
 const pad2 = n => String(n).padStart(2, '0')
 const format = d =>
-    d
-        ? `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} `
-        + `${pad2(d.getHours())}:${pad2(d.getMinutes())}`
-        : '—'
+    `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
 
 const typeMap = { CLASSROOM: '教室型', ROUND_TABLE: '圆桌型' }
 
@@ -121,7 +118,7 @@ const req = reactive({
 // 弹窗控制
 const dlgDev  = ref(false)
 const criteriaFilled = computed(() =>
-  req.attendance && req.date && req.startTime && req.endTime && req.roomType
+  req.attendance && req.date && req.startTime >= 0 && req.endTime && req.roomType
 )
 
 // 房间列表
@@ -136,7 +133,7 @@ async function fetchRooms () {
   loadingRooms.value = true
   try {
     const body = {
-      date: req.date,
+      date: format(req.date),
       startTime: req.startTime,
       endTime: req.endTime,
       attendance: req.attendance,
@@ -169,14 +166,14 @@ const bookRoom = async (row) => {
 
     const orderRequest = {
       roomId: row.roomId,
-      bookingDate: `${req.date.getFullYear()}-${pad2(req.date.getMonth() + 1)}-${pad2(req.date.getDate())}`,
+      bookingDate: format(req.date),
       startHour: req.startTime,
       endHour: req.endTime
     };
 
     const res = await http.post('/orders', orderRequest);
 
-    if (res) {
+    if (res.data) {
       ElMessage.success(`预订成功：${row.roomName}`);
       router.push('/orders');
     } else {
