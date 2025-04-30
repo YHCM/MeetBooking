@@ -13,7 +13,7 @@
           <el-date-picker v-model="req.date" type="date" format="YYYY-MM-DD" :disabled-date="dStart" />
         </el-descriptions-item>
         <el-descriptions-item label="会议时间">
-          <el-input-number v-model="req.startTime" :min="0" :max="23">
+          <el-input-number v-model="req.startTime" :min="0" :max="req.endTime - 1">
             <template #suffix>时</template>
           </el-input-number>
           <span style="margin:0 5px">到</span>
@@ -49,7 +49,7 @@
 
     <!-- 符合条件会议室 -->
     <el-table :data="roomList" v-loading="loadingRooms" border stripe style="width: 100%; margin-top: 20px;">
-      <el-table-column prop="roomId" label="ID" width="80" />
+      <el-table-column prop="roomId" label="ID" width="80" sortable />
       <el-table-column prop="roomName" label="会议室名称" />
       <el-table-column prop="capacity" label="座位数" width="100" />
       <el-table-column prop="roomType" label="类型">
@@ -57,7 +57,7 @@
           {{ typeMap[row.roomType] }}
         </template>
       </el-table-column>
-      <el-table-column prop="price" label="预估价格">
+      <el-table-column prop="price" label="预估价格" sortable>
         <template #default="{ row }">
           {{ row.price * (req.endTime - req.startTime) }}
         </template>
