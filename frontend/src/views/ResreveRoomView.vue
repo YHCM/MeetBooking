@@ -165,30 +165,27 @@ const bookRoom = async (row) => {
           cancelButtonText: '取消',
           type: 'warning',
         }
-    )
-
-    const s = new Date(req.startTime);
-    const e = new Date(req.endTime);
+    );
 
     const orderRequest = {
       roomId: row.roomId,
-      bookingDate: `${s.getFullYear()}-${pad2(s.getMonth() + 1)}-${pad2(s.getDate())}`,
-      startHour: s.getHours(),
-      endHour: e.getHours()
+      bookingDate: `${req.date.getFullYear()}-${pad2(req.date.getMonth() + 1)}-${pad2(req.date.getDate())}`,
+      startHour: req.startTime,
+      endHour: req.endTime
     };
 
     const res = await http.post('/orders', orderRequest);
 
     if (res) {
       ElMessage.success(`预订成功：${row.roomName}`);
-      router.push('/orders')
+      router.push('/orders');
     } else {
       ElMessage.error(res.message || '预订失败');
     }
   } catch (err) {
     if (err !== 'cancel') {
-      console.error(err)
-      ElMessage.error('请求失败，请稍后再试')
+      console.error(err);
+      ElMessage.error('请求失败，请稍后再试');
     }
   }
 }
