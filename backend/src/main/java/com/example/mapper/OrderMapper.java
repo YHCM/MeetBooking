@@ -15,6 +15,9 @@ public interface OrderMapper {
     // 根据用户ID获取订单
     List<Order> selectOrderByUserId(Long userId);
 
+    // 获取已过期未支付订单的ID
+    List<Long> selectExpiredOrderIds();
+
     // 添加订单
     int insertOrder(Order order);
 

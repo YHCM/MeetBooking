@@ -35,6 +35,10 @@ public class OrderService {
         return orderMapper.selectOrderByUserId(userId);
     }
 
+    public List<Long> selectExpiredOrderIds(){
+        return orderMapper.selectExpiredOrderIds();
+    }
+
     @Transactional
     public HttpStatus createOrder(Order order, HttpSession httpSession) {
         var user = userService.getUserBySession(httpSession);

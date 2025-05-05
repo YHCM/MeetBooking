@@ -31,6 +31,12 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 获取已过期未支付订单的ID -->
+    <select id="selectExpiredOrderIds" resultMap="OrderResultMap">
+        SELECT order_id FROM orders
+        WHERE status='PENDING' AND created_at &lt; DATEADD(minute, -30, CURRENT_TIMESTAMP)
+    </select>
+
     <!-- 添加订单 -->
     <insert id="insertOrder" useGeneratedKeys="true" keyProperty="roomId">
         INSERT INTO orders (order_id, user_id, room_id, booking_date, price, start_hour, end_hour)
