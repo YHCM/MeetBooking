@@ -32,6 +32,10 @@
                 <el-menu-item index="5-1" @click="router.push('/rooms')"> 查看会议室 </el-menu-item>
                 <el-menu-item index="5-2" @click="router.push('/reserve')"> 预订 </el-menu-item>
               </el-sub-menu>
+              <el-sub-menu index="6"  popper-class="manage-submenu">
+                <template #title>我的</template>
+                <el-menu-item index="6-1" @click="router.push('/orders')"> 预订 </el-menu-item>
+              </el-sub-menu>
               <el-menu-item index="4" @click="goToHome"> 其他 </el-menu-item>
             </el-menu>
 
