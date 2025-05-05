@@ -32,7 +32,7 @@
     </select>
 
     <!-- 获取已过期未支付订单的ID -->
-    <select id="selectExpiredOrderIds" resultMap="OrderResultMap">
+    <select id="selectExpiredOrderIds" resultType="Long">
         SELECT order_id FROM orders
         WHERE status='PENDING' AND created_at &lt; DATEADD(minute, -30, CURRENT_TIMESTAMP)
     </select>
