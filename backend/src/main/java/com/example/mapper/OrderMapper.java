@@ -23,5 +23,4 @@ public interface OrderMapper {
 
     // 修改订单状态
     int updateOrderStatus(Long orderId, OrderStatus status);
-
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RefundRequestMapper">
+    <!-- 对应字段的映射 -->
+    <resultMap id="RefundRequestMap" type="com.example.entity.RefundRequest">
+        <result property="refundId" column="refund_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="requestStatus" column="request_status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="processedAt" column="processed_at"/>
+        <result property="processedBy" column="processed_by"/>
+        <result property="refundAmount" column="refund_amount"/>
+    </resultMap>
+
+    <!-- 获取所有退款请求 -->
+    <select id="selectAllRefundRequests" resultMap="RefundRequestMap">
+        SELECT refund_id, order_id, request_status, created_at, processed_at, processed_by, refund_amount
+        FROM refund_requests
+    </select>
+
+    <!-- 根据 ID 获取退款请求 -->
+    <select id="selectAllRefundRequests" resultMap="RefundRequestMap">
+        SELECT refund_id, order_id, request_status, created_at, processed_at, processed_by, refund_amount
+        FROM refund_requests
+        WHERE refund_id = #{refundId}
+    </select>
+
+    <!-- 添加一个退款请求 -->
+    <insert id="insertRefundRequest" useGeneratedKeys="true" keyProperty="refundId">
+        INSERT INTO refund_requests (refund_id, order_id, refund_amount)
+        VALUES (NEXT VALUE FOR refund_seq, #{orderId}, #{refundAmount})
+    </insert>
+</mapper>

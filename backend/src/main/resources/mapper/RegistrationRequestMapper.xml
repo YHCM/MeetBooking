@@ -62,8 +62,8 @@
 
     <!-- 添加一个注册请求 -->
     <insert id="insertRegistrationRequest" useGeneratedKeys="true" keyProperty="requestId">
-        INSERT INTO registration_requests (request_id, username, password, company_name, phone_number, created_at)
-        VALUES (NEXT VALUE FOR request_seq, #{username}, #{password}, #{companyName}, #{phoneNumber}, CURRENT_TIMESTAMP)
+        INSERT INTO registration_requests (request_id, username, password, company_name, phone_number)
+        VALUES (NEXT VALUE FOR request_seq, #{username}, #{password}, #{companyName}, #{phoneNumber})
     </insert>
 
     <!-- 处理一个注册请求 -->
