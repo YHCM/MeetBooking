@@ -11,3 +11,5 @@ CREATE TABLE meeting_rooms (
     created_at TIMESTAMP DEFAULT CURRENT_TIME COMMENT '会议室添加时间',
     PRIMARY KEY (room_id)
 );
+
+CREATE INDEX ON meeting_rooms(capacity);

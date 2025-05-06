@@ -23,3 +23,6 @@ CREATE TABLE orders (
     CHECK (end_hour >= 9 AND end_hour <= 21),
     CHECK (start_hour < end_hour)
 );
+
+CREATE INDEX ON orders(status);
+CREATE INDEX ON orders(created_at);

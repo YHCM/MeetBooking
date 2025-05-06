@@ -9,3 +9,5 @@ CREATE TABLE room_availability (
     FOREIGN KEY (room_id) REFERENCES meeting_rooms(room_id) ON DELETE CASCADE,
     CHECK (hour_status >= 0 AND hour_status <= 0xFFFFFF) -- 确保只使用24位 (2^24-1)
 );
+
+CREATE INDEX ON room_availability(schedule_date);
