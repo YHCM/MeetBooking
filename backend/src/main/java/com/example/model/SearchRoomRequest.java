@@ -3,7 +3,6 @@ package com.example.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.example.entity.Equipment;
 import com.example.entity.RoomType;
 
 import lombok.Data;

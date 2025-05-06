@@ -22,3 +22,6 @@ RUNSCRIPT FROM 'classpath:/db/schema/06_room_availability.sql';
 
 -- 订单表
 RUNSCRIPT FROM 'classpath:/db/schema/07_orders.sql';
+
+-- 退订申请表
+RUNSCRIPT FROM 'classpath:/db/schema/08_refund_requests.sql';

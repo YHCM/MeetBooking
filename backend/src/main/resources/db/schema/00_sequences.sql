@@ -23,3 +23,6 @@ CREATE SEQUENCE equipment_seq START WITH 10001; -- 设备 ID 序列，从 10001 
 
 -- 订单 ID 序列
 CREATE SEQUENCE order_seq START WITH 10001; -- 订单 ID 序列，从 10001 开始
+
+-- 退款请求 ID 序列
+CREATE SEQUENCE refund_seq START WITH 10001;    -- 退款请求 ID 序列，从 10001 开始

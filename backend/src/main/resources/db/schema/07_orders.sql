@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS orders;
 
 -- 订单表
 CREATE TABLE orders (
-    order_id BIGINT NOT NULL COMMENT '订单 ID',
+    order_id BIGINT COMMENT '订单 ID',
     user_id BIGINT NOT NULL COMMENT '用户 ID',
     room_id BIGINT NOT NULL COMMENT '会议室 ID',
     booking_date DATE NOT NULL COMMENT '预定日期',
