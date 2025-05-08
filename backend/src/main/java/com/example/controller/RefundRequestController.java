@@ -1,11 +1,12 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.constants.messages.RefundRequestMessage;
+import com.example.constants.messages.RegistrationRequestMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.RefundRequest;
 import com.example.model.Result;
@@ -32,5 +33,14 @@ public class RefundRequestController {
     public Result<RefundRequest> getRefundRequestById(@PathVariable Long refundId) {
         RefundRequest refundRequest = refundRequestService.getRefundRequestById(refundId);
         return Result.ok("退款请求信息", refundRequest);
+    }
+
+    @Operation(summary = "提交退款请求")
+    @PostMapping
+    public Result<Boolean> addRefundRequest(@RequestBody RefundRequest refundRequest) {
+        var createStatus = refundRequestService.addRefundRequest(refundRequest);
+        var statusMessages = RefundRequestMessage.CREATE_MESSAGES;
+        var message = statusMessages.getOrDefault(createStatus, "退款请求添加失败");
+        return Result.create(createStatus, message, createStatus.is2xxSuccessful());
     }
 }

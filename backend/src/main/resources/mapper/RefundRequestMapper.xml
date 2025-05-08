@@ -19,10 +19,17 @@
     </select>
 
     <!-- 根据 ID 获取退款请求 -->
-    <select id="selectAllRefundRequests" resultMap="RefundRequestMap">
+    <select id="selectRefundRequestById" resultMap="RefundRequestMap">
         SELECT refund_id, order_id, request_status, created_at, processed_at, processed_by, refund_amount
         FROM refund_requests
         WHERE refund_id = #{refundId}
+    </select>
+
+    <!-- 根据 订单ID 获取 处理中的 退款请求 -->
+    <select id="selectPendingRefundRequestByOrderId" resultMap="RefundRequestMap">
+        SELECT refund_id, order_id, request_status, created_at, processed_at, processed_by, refund_amount
+        FROM refund_requests
+        WHERE order_id = #{orderId} AND request_status = 'PENDING'
     </select>
 
     <!-- 添加一个退款请求 -->
@@ -30,4 +37,11 @@
         INSERT INTO refund_requests (refund_id, order_id, refund_amount)
         VALUES (NEXT VALUE FOR refund_seq, #{orderId}, #{refundAmount})
     </insert>
+
+    <!-- 处理一个退款请求 -->
+    <update id="updateRefundRequestStatus">
+        UPDATE refund_requests
+        SET request_status = #{requestStatus}, processed_at = CURRENT_TIMESTAMP, processed_by = #{processedBy}
+        WHERE refund_id = #{refundId}
+    </update>
 </mapper>
