@@ -141,8 +141,7 @@ public class MeetingRoomService {
         }
 
         // 获取总价格
-        BigDecimal totalPrice = meetingRoomMapper.getTotalPriceById(roomId);
-        return totalPrice;
+        return meetingRoomMapper.getTotalPriceById(roomId);
     }
 
     // 筛选会议室

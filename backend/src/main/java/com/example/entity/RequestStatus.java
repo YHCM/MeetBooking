@@ -4,5 +4,5 @@ package com.example.entity;
 public enum RequestStatus {
     PENDING,        // 待处理
     APPROVED,       // 已同意
-    REJECTED;       // 已拒绝
+    REJECTED       // 已拒绝
 }

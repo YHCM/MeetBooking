@@ -41,7 +41,7 @@ public class RefundRequestController {
 
     @Operation(summary = "提交退款请求")
     @PostMapping
-    public Result<Boolean> approveRefundRequest(@RequestBody RefundRequest refundRequest) {
+    public Result<Boolean> addRefundRequest(@RequestBody RefundRequest refundRequest) {
         var createStatus = refundRequestService.addRefundRequest(refundRequest);
         var statusMessages = RefundRequestMessage.CREATE_MESSAGES;
         var message = statusMessages.getOrDefault(createStatus, "退款请求添加失败");
