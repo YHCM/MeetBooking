@@ -25,6 +25,13 @@
         WHERE refund_id = #{refundId}
     </select>
 
+    <!-- 根据 用户ID 获取退款请求 -->
+    <select id="selectRefundRequestByUserId" resultMap="RefundRequestMap">
+        SELECT refund_id, r.order_id, request_status, r.created_at, processed_at, processed_by, refund_amount
+        FROM refund_requests r JOIN orders o ON r.order_id = o.order_id
+        WHERE user_id = #{userId}
+    </select>
+
     <!-- 根据 订单ID 获取 处理中的 退款请求 -->
     <select id="selectPendingRefundRequestByOrderId" resultMap="RefundRequestMap">
         SELECT refund_id, order_id, request_status, created_at, processed_at, processed_by, refund_amount
