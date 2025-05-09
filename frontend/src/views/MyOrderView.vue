@@ -20,13 +20,15 @@
       </el-table-column>
       <el-table-column label="订单状态">
         <template #default="{ row }">
-          <el-tag :type="getStatusColor(row.status)">
-            {{ formatStatus(row.status) }}
+          <el-tag
+              :type="pendingRefundOrderIds.has(row.orderId) ? 'info' : getStatusColor(row.status)"
+          >
+            {{ pendingRefundOrderIds.has(row.orderId) ? '退款中' : formatStatus(row.status) }}
           </el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="300">
         <template #default="{ row }">
           <el-button size="small" type="info" @click="viewOrderDetails(row.orderId)">
             查看详情
@@ -50,6 +52,15 @@
               :loading="loading"
           >
             取消
+          </el-button>
+
+          <el-button
+              v-if="canRefund(row)"
+              size="small"
+              type="warning"
+              @click="submitRefundRequest(row)"
+          >
+            退款
           </el-button>
         </template>
       </el-table-column>
@@ -75,12 +86,7 @@
         @close="resetDetailsForm"
         :top="'20vh'"
     >
-      <el-descriptions
-          column="1"
-          border
-          :size="'default'"
-          style="margin-bottom: 12px;"
-      >
+      <el-descriptions column="1" border size="default" style="margin-bottom: 12px;">
         <el-descriptions-item label="会议室ID">{{ orderDetails.roomId }}</el-descriptions-item>
         <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
         <el-descriptions-item label="时间段">
@@ -106,6 +112,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { ElMessageBox, ElMessage } from 'element-plus'
 const http = useApi()
 
 const statusMap = {
@@ -114,44 +121,34 @@ const statusMap = {
   CANCELLED: '已取消',
   REFUNDED: '已退款'
 }
-
 const statusColorMap = {
   PENDING: 'warning',
   COMPLETED: 'success',
   CANCELLED: 'info',
   REFUNDED: 'danger'
 }
+const formatStatus = (status) => statusMap[status] || status
+const getStatusColor = (status) => statusColorMap[status] || 'default'
 
-// 用户信息
+const formatHour = (hour) => hour !== null ? `${hour}:00` : '-'
 const userInfo = computed(() => useUserStore().userInfo)
 
-// 格式化展示的时间
-const formatHour = (hour) => {
-  return hour !== null && hour !== undefined ? `${hour}:00` : '-'
-}
+const orderList = ref([])
+const loading = ref(false)
+const orderDetails = ref({})
+const detailsDialogVisible = ref(false)
+const pagination = ref({ currentPage: 1, pageSize: 10, total: 0 })
+const currentPageData = computed(() =>
+    orderList.value.slice(
+        (pagination.value.currentPage - 1) * pagination.value.pageSize,
+        pagination.value.currentPage * pagination.value.pageSize
+    )
+)
 
-// 格式化订单状态
-const formatStatus = (status) => {
-  return statusMap[status] || status
-}
+// ⏳ 正在退款的订单ID集合
+const pendingRefundOrderIds = ref(new Set())
 
-const getStatusColor = (status) => {
-  return statusColorMap[status] || 'default'
-}
-
-// 订单数据
-const orderList = ref([]) // 订单列表
-const loading = ref(false) // 加载状态
-const orderDetails = ref({}) // 订单详情
-const detailsDialogVisible = ref(false) // 订单详情弹框显示
-const pagination = ref({
-  currentPage: 1,
-  pageSize: 10,
-  total: 0,
-})
-const currentPageData = computed(() => orderList.value.slice((pagination.value.currentPage - 1) * pagination.value.pageSize, pagination.value.currentPage * pagination.value.pageSize))
-
-// 获取用户订单数据
+// 获取订单
 const getOrders = async () => {
   loading.value = true
   try {
@@ -159,14 +156,25 @@ const getOrders = async () => {
     orderList.value = response.data || []
     pagination.value.total = orderList.value.length
   } catch (error) {
-    console.error('获取订单数据失败', error)
     ElMessage.error('获取订单列表失败')
   } finally {
     loading.value = false
   }
 }
 
-// 查看订单详情
+// 获取退款请求
+const getRefundRequests = async () => {
+  try {
+    const response = await http.get(`/refunds?userId=${userInfo.value.userId}`)
+    const refundList = response.data || []
+    const pending = refundList.filter(r => r.requestStatus === 'PENDING').map(r => r.orderId)
+    pendingRefundOrderIds.value = new Set(pending)
+  } catch (e) {
+    console.error('获取退款请求失败', e)
+  }
+}
+
+// 详情
 const viewOrderDetails = (orderId) => {
   const order = orderList.value.find(order => order.orderId === orderId)
   if (order) {
@@ -182,12 +190,11 @@ const payOrder = async (orderId) => {
     const response = await http.patch(`/orders/${orderId}/pay`)
     if (response) {
       ElMessage.success('订单支付成功')
-      getOrders() // 刷新订单列表
+      getOrders()
     } else {
       ElMessage.error('订单支付失败，请稍后重试')
     }
-  } catch (error) {
-    console.error('支付订单失败', error)
+  } catch {
     ElMessage.error('支付订单失败，请稍后重试')
   } finally {
     loading.value = false
@@ -201,30 +208,63 @@ const cancelOrder = async (orderId) => {
     const response = await http.patch(`/orders/${orderId}/cancel`)
     if (response) {
       ElMessage.success('订单取消成功')
-      getOrders() // 刷新订单列表
+      getOrders()
     } else {
       ElMessage.error('订单取消失败，请稍后重试')
     }
-  } catch (error) {
-    console.error('取消订单失败', error)
+  } catch {
     ElMessage.error('取消订单失败，请稍后重试')
   } finally {
     loading.value = false
   }
 }
 
-// 分页处理
-const handleCurrentChange = (page) => {
-  pagination.value.currentPage = page
+// 退款条件判断
+const canRefund = (order) => {
+  if (order.status !== 'COMPLETED') return false
+  const now = new Date()
+  const bookingDate = new Date(order.bookingDate)
+  bookingDate.setHours(order.startHour, 0, 0, 0)
+  const hoursUntilStart = (bookingDate.getTime() - now.getTime()) / 3600000
+  return hoursUntilStart >= 24 && !pendingRefundOrderIds.value.has(order.orderId)
 }
 
-const handleSizeChange = (size) => {
-  pagination.value.pageSize = size
+// 退款申请
+const submitRefundRequest = async (order) => {
+  try {
+    await ElMessageBox.confirm(
+        `是否申请取消订单 ID:${order.orderId}？\n\n【退费规则】\n提前72小时退全款\n提前48小时退75%\n提前24小时退25%\n不足24小时不支持退款`,
+        '申请退款确认',
+        {
+          confirmButtonText: '确认申请',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+    )
+
+    const res = await http.post('/refunds', { orderId: order.orderId })
+
+    if (res) {
+      ElMessage.success('退款申请已提交，等待审核')
+      await getRefundRequests()
+    } else {
+      ElMessage.error(res.message || '提交失败')
+    }
+  } catch (err) {
+    if (err !== 'cancel') {
+      ElMessage.error('请求失败')
+    }
+  }
 }
 
-// 初始化数据
-onMounted(() => {
-  getOrders()
+// 分页
+const handleCurrentChange = (page) => { pagination.value.currentPage = page }
+const handleSizeChange = (size) => { pagination.value.pageSize = size }
+
+// 初始化
+onMounted(async () => {
+  await getOrders()
+  await getRefundRequests()
 })
 </script>
 
