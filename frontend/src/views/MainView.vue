@@ -26,6 +26,9 @@
                 <el-menu-item index="3-5" @click="router.push('/equipments')">
                   设备管理
                 </el-menu-item>
+                <el-menu-item index="3-6" @click="router.push('/admin/refunds')">
+                  退款审批
+                </el-menu-item>
               </el-sub-menu>
               <el-sub-menu index="5"  popper-class="manage-submenu">
                 <template #title>会议室</template>

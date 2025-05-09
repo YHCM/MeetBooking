@@ -12,6 +12,7 @@ import EquipmentManagementView from '@/views/EquipmentManagementView.vue'
 import RoomView from '@/views/RoomView.vue'
 import ReserveRoomView from '@/views/ReserveRoomView.vue'
 import MyOrderView from "@/views/MyOrderView.vue"
+import RefundManagementView from "@/views/RefundManagementView.vue";
 
 const routes = [
   { path: '/', component: HomeView },
@@ -26,6 +27,7 @@ const routes = [
   { path: '/rooms', component: RoomView },
   { path: '/reserve', component: ReserveRoomView },
   { path: '/orders', component: MyOrderView },
+  { path: '/admin/refunds', component: RefundManagementView },
 ]
 
 const router = createRouter({

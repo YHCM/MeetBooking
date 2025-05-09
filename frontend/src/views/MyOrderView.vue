@@ -112,7 +112,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { ElMessageBox, ElMessage } from 'element-plus'
 const http = useApi()
 
 const statusMap = {
