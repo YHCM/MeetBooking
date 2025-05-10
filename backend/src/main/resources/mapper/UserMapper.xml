@@ -68,6 +68,13 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 根据用户ID获取用户名 -->
+    <select id="selectUserNameByUserId" resultType="String">
+        SELECT username
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
     <!-- 插入用户 -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO users (user_id, username, password, role, company_name, phone_number)

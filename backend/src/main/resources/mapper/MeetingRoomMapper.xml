@@ -38,6 +38,13 @@
         WHERE room_id = #{roomId}
     </select>
 
+    <!-- 根据 ID 获取会议室名称 -->
+    <select id="selectRoomNameById" resultType="String">
+        SELECT room_name
+        FROM meeting_rooms
+        WHERE room_id = #{roomId}
+    </select>
+
     <!-- 根据会议室名称获取会议室 -->
     <select id="selectMeetingRoomByName" resultMap="MeetingRoomResultMap">
         SELECT room_id, room_name, room_type, capacity, base_price, room_status, created_at

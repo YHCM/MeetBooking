@@ -12,6 +12,8 @@
         <result property="endHour" column="end_hour"/>
         <result property="createAt" column="create_at"/>
         <result property="status" column="status"/>
+        <association property="userName" select="com.example.mapper.UserMapper.selectUserNameByUserId" column="user_id" />
+        <association property="roomName" select="com.example.mapper.MeetingRoomMapper.selectRoomNameById" column="room_id" />
     </resultMap>
 
     <!-- 获取所有订单 -->

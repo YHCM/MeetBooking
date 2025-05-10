@@ -5,7 +5,7 @@
     <!-- 订单表格 -->
     <el-table :data="currentPageData" v-loading="loading" style="width: 100%" border stripe>
       <el-table-column prop="orderId" label="订单ID" />
-      <el-table-column prop="roomId" label="会议室ID" />
+      <el-table-column prop="roomName" label="会议室" />
       <el-table-column prop="bookingDate" label="预定日期" />
       <el-table-column prop="price" label="价格" />
       <el-table-column label="开始时间">
@@ -87,7 +87,7 @@
         :top="'20vh'"
     >
       <el-descriptions column="1" border size="default" style="margin-bottom: 12px;">
-        <el-descriptions-item label="会议室ID">{{ orderDetails.roomId }}</el-descriptions-item>
+        <el-descriptions-item label="会议室">{{ orderDetails.roomName }}</el-descriptions-item>
         <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
         <el-descriptions-item label="时间段">
           {{ formatHour(orderDetails.startHour) }} - {{ formatHour(orderDetails.endHour) }}
