@@ -10,6 +10,7 @@
         <result property="processedAt" column="processed_at"/>
         <result property="processedBy" column="processed_by"/>
         <result property="refundAmount" column="refund_amount"/>
+        <association property="order" select="com.example.mapper.OrderMapper.selectOrderById" column="order_id"/>
     </resultMap>
 
     <!-- 获取所有退款请求 -->

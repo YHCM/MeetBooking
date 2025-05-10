@@ -4,7 +4,14 @@
 
     <el-table :data="refundList" v-loading="loading" style="width: 100%" border stripe>
       <el-table-column prop="refundId" label="退款ID" width="100" />
-      <el-table-column prop="orderId" label="订单ID" />
+      <el-table-column prop="orderId" label="订单（点击查看详情）" >
+        <template #default="{ row }">
+          <el-button
+              @click="viewOrderDetails(row.order)"
+              plain
+          >{{ row.orderId }}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column prop="refundAmount" label="退款金额">
         <template #default="{ row }">￥{{ row.refundAmount }}</template>
       </el-table-column>
@@ -37,6 +44,31 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 订单详情弹窗 -->
+    <el-dialog
+        v-model="detailsDialogVisible"
+        :title="`订单详情 #${orderDetails.orderId || ''}`"
+        @close="detailsDialogVisible = false"
+        width="480px"
+        :top="'20vh'"
+    >
+      <el-descriptions column="1" border size="default" style="margin-bottom: 12px;">
+        <el-descriptions-item label="提交者">{{ orderDetails.userName }}</el-descriptions-item>
+        <el-descriptions-item label="会议室">{{ orderDetails.roomName }}</el-descriptions-item>
+        <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
+        <el-descriptions-item label="时间段">
+          {{ formatHour(orderDetails.startHour) }} - {{ formatHour(orderDetails.endHour) }}
+        </el-descriptions-item>
+        <el-descriptions-item label="价格">
+          <span style="color: #67C23A; font-weight: bold;">￥{{ orderDetails.price }}</span>
+        </el-descriptions-item>
+      </el-descriptions>
+
+      <template #footer>
+        <el-button @click="detailsDialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,6 +78,9 @@ const http = useApi()
 
 const refundList = ref([])
 const loading = ref(false)
+
+const detailsDialogVisible = ref(false)
+const orderDetails = ref({})
 
 const statusMap = {
   PENDING: '待审批',
@@ -115,6 +150,15 @@ const formatDateTimeShort = (str) => {
   const date = new Date(str)
   const pad = (n) => String(n).padStart(2, '0')
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+const formatHour = (hour) => hour !== null ? `${hour}:00` : '-'
+
+const viewOrderDetails = (order) => {
+  if (order) {
+    orderDetails.value = { ...order }
+    detailsDialogVisible.value = true
+  }
 }
 
 onMounted(() => {

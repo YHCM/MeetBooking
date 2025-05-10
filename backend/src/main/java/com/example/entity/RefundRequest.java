@@ -14,4 +14,5 @@ public class RefundRequest {
     private LocalDateTime processedAt;      // 退款请求处理时间
     private Long processedBy;   // 处理请求的员工或管理员
     private BigDecimal refundAmount;    // 实际的退款金额（根据原价和时间计算）
+    private Order order;    // 订单
 }

@@ -57,7 +57,7 @@ public class RefundRequestService {
         var requests = refundRequestMapper.selectPendingRefundRequestByOrderId(refundRequest.getOrderId());
         if (!requests.isEmpty()) return HttpStatus.CONFLICT;
 
-        // 计算价格
+        // 计算退款金额
         var bookingTime = LocalDateTime.of(order.getBookingDate(), LocalTime.of(order.getStartHour(), 0));
         var duration = Duration.between(LocalDateTime.now(), bookingTime).toHours();
 
