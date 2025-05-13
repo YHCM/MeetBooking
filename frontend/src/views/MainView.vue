@@ -10,7 +10,7 @@
                 <img class="logo" src="/logo.png" alt="logo" />
               </el-menu-item>
               <el-menu-item index="1" @click="goToHome"> 首页 </el-menu-item>
-              <el-menu-item index="2" @click="router.push('/about')"> 关于 </el-menu-item>
+              <!-- <el-menu-item index="2" @click="router.push('/about')"> 关于 </el-menu-item> -->
               <el-sub-menu v-if="isAdmin" index="3" popper-class="manage-submenu">
                 <template #title>管理</template>
                 <el-menu-item index="3-1" @click="router.push('/users')"> 用户管理 </el-menu-item>
@@ -30,12 +30,12 @@
                   退款审批
                 </el-menu-item>
               </el-sub-menu>
-              <el-sub-menu index="5"  popper-class="manage-submenu">
+              <el-sub-menu index="5" popper-class="manage-submenu">
                 <template #title>会议室</template>
                 <el-menu-item index="5-1" @click="router.push('/rooms')"> 查看会议室 </el-menu-item>
                 <el-menu-item index="5-2" @click="router.push('/reserve')"> 预订 </el-menu-item>
               </el-sub-menu>
-              <el-sub-menu index="6"  popper-class="manage-submenu">
+              <el-sub-menu index="6" popper-class="manage-submenu">
                 <template #title>我的</template>
                 <el-menu-item index="6-1" @click="router.push('/orders')"> 预订 </el-menu-item>
               </el-sub-menu>
@@ -43,7 +43,12 @@
             </el-menu>
 
             <!-- 点击头像，弹出卡片 -->
-            <el-popover placement="bottom-end" :width="200" popper-class="user-card-popover" :show-arrow="false">
+            <el-popover
+              placement="bottom-end"
+              :width="200"
+              popper-class="user-card-popover"
+              :show-arrow="false"
+            >
               <template #reference>
                 <el-avatar :size="48" :src="avatar" class="cursor-pointer avatar-hover" />
               </template>

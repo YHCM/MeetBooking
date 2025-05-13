@@ -4,12 +4,9 @@
 
     <el-table :data="refundList" v-loading="loading" style="width: 100%" border stripe>
       <el-table-column prop="refundId" label="退款ID" width="100" />
-      <el-table-column prop="orderId" label="订单（点击查看详情）" >
+      <el-table-column prop="orderId" label="订单（点击查看详情）">
         <template #default="{ row }">
-          <el-button
-              @click="viewOrderDetails(row.order)"
-              plain
-          >{{ row.orderId }}</el-button>
+          <el-button @click="viewOrderDetails(row.order)" plain>{{ row.orderId }}</el-button>
         </template>
       </el-table-column>
       <el-table-column prop="refundAmount" label="退款金额">
@@ -30,30 +27,32 @@
       <el-table-column label="操作" width="200">
         <template #default="{ row }">
           <el-button
-              size="small"
-              type="success"
-              :disabled="row.requestStatus !== 'PENDING'"
-              @click="handleApprove(row.refundId)"
-          >批准</el-button>
+            size="small"
+            type="success"
+            :disabled="row.requestStatus !== 'PENDING'"
+            @click="handleApprove(row.refundId)"
+            >批准</el-button
+          >
           <el-button
-              size="small"
-              type="danger"
-              :disabled="row.requestStatus !== 'PENDING'"
-              @click="handleReject(row.refundId)"
-          >拒绝</el-button>
+            size="small"
+            type="danger"
+            :disabled="row.requestStatus !== 'PENDING'"
+            @click="handleReject(row.refundId)"
+            >拒绝</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <!-- 订单详情弹窗 -->
     <el-dialog
-        v-model="detailsDialogVisible"
-        :title="`订单详情 #${orderDetails.orderId || ''}`"
-        @close="detailsDialogVisible = false"
-        width="480px"
-        :top="'20vh'"
+      v-model="detailsDialogVisible"
+      :title="`订单详情 #${orderDetails.orderId || ''}`"
+      @close="detailsDialogVisible = false"
+      width="480px"
+      :top="'20vh'"
     >
-      <el-descriptions column="1" border size="default" style="margin-bottom: 12px;">
+      <el-descriptions column="1" border size="default" style="margin-bottom: 12px">
         <el-descriptions-item label="提交者">{{ orderDetails.userName }}</el-descriptions-item>
         <el-descriptions-item label="会议室">{{ orderDetails.roomName }}</el-descriptions-item>
         <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
@@ -61,7 +60,7 @@
           {{ formatHour(orderDetails.startHour) }} - {{ formatHour(orderDetails.endHour) }}
         </el-descriptions-item>
         <el-descriptions-item label="价格">
-          <span style="color: #67C23A; font-weight: bold;">￥{{ orderDetails.price }}</span>
+          <span style="color: #67c23a; font-weight: bold">￥{{ orderDetails.price }}</span>
         </el-descriptions-item>
       </el-descriptions>
 
@@ -85,12 +84,12 @@ const orderDetails = ref({})
 const statusMap = {
   PENDING: '待审批',
   APPROVED: '已批准',
-  REJECTED: '已拒绝'
+  REJECTED: '已拒绝',
 }
 const statusColorMap = {
   PENDING: 'warning',
   APPROVED: 'success',
-  REJECTED: 'danger'
+  REJECTED: 'danger',
 }
 
 // 加载数据
@@ -152,7 +151,7 @@ const formatDateTimeShort = (str) => {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
-const formatHour = (hour) => hour !== null ? `${hour}:00` : '-'
+const formatHour = (hour) => (hour !== null ? `${hour}:00` : '-')
 
 const viewOrderDetails = (order) => {
   if (order) {

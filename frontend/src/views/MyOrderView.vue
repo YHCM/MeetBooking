@@ -21,7 +21,7 @@
       <el-table-column label="订单状态">
         <template #default="{ row }">
           <el-tag
-              :type="pendingRefundOrderIds.has(row.orderId) ? 'info' : getStatusColor(row.status)"
+            :type="pendingRefundOrderIds.has(row.orderId) ? 'info' : getStatusColor(row.status)"
           >
             {{ pendingRefundOrderIds.has(row.orderId) ? '退款中' : formatStatus(row.status) }}
           </el-tag>
@@ -35,30 +35,30 @@
           </el-button>
 
           <el-button
-              v-if="row.status === 'PENDING'"
-              size="small"
-              type="success"
-              @click="payOrder(row.orderId)"
-              :loading="loading"
+            v-if="row.status === 'PENDING'"
+            size="small"
+            type="success"
+            @click="payOrder(row.orderId)"
+            :loading="loading"
           >
             支付
           </el-button>
 
           <el-button
-              v-if="row.status === 'PENDING'"
-              size="small"
-              type="danger"
-              @click="cancelOrder(row.orderId)"
-              :loading="loading"
+            v-if="row.status === 'PENDING'"
+            size="small"
+            type="danger"
+            @click="cancelOrder(row.orderId)"
+            :loading="loading"
           >
             取消
           </el-button>
 
           <el-button
-              v-if="canRefund(row)"
-              size="small"
-              type="warning"
-              @click="submitRefundRequest(row)"
+            v-if="canRefund(row)"
+            size="small"
+            type="warning"
+            @click="submitRefundRequest(row)"
           >
             退款
           </el-button>
@@ -68,32 +68,32 @@
 
     <!-- 分页 -->
     <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagination.currentPage"
-        :page-sizes="[10, 15, 20, 25]"
-        :page-size="pagination.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pagination.total"
-        style="margin-top: 20px; justify-content: flex-end"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="[10, 15, 20, 25]"
+      :page-size="pagination.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      style="margin-top: 20px; justify-content: flex-end"
     />
 
     <!-- 订单详情弹窗 -->
     <el-dialog
-        v-model="detailsDialogVisible"
-        :title="`订单详情 #${orderDetails.orderId || ''}`"
-        width="480px"
-        @close="resetDetailsForm"
-        :top="'20vh'"
+      v-model="detailsDialogVisible"
+      :title="`订单详情 #${orderDetails.orderId || ''}`"
+      width="480px"
+      @close="resetDetailsForm"
+      :top="'20vh'"
     >
-      <el-descriptions column="1" border size="default" style="margin-bottom: 12px;">
+      <el-descriptions column="1" border size="default" style="margin-bottom: 12px">
         <el-descriptions-item label="会议室">{{ orderDetails.roomName }}</el-descriptions-item>
         <el-descriptions-item label="预定日期">{{ orderDetails.bookingDate }}</el-descriptions-item>
         <el-descriptions-item label="时间段">
           {{ formatHour(orderDetails.startHour) }} - {{ formatHour(orderDetails.endHour) }}
         </el-descriptions-item>
         <el-descriptions-item label="价格">
-          <span style="color: #67C23A; font-weight: bold;">￥{{ orderDetails.price }}</span>
+          <span style="color: #67c23a; font-weight: bold">￥{{ orderDetails.price }}</span>
         </el-descriptions-item>
         <el-descriptions-item label="订单状态">
           <el-tag :type="getStatusColor(orderDetails.status)">
@@ -118,18 +118,18 @@ const statusMap = {
   PENDING: '待支付',
   COMPLETED: '已完成',
   CANCELLED: '已取消',
-  REFUNDED: '已退款'
+  REFUNDED: '已退款',
 }
 const statusColorMap = {
   PENDING: 'warning',
   COMPLETED: 'success',
   CANCELLED: 'info',
-  REFUNDED: 'danger'
+  REFUNDED: 'danger',
 }
 const formatStatus = (status) => statusMap[status] || status
 const getStatusColor = (status) => statusColorMap[status] || 'default'
 
-const formatHour = (hour) => hour !== null ? `${hour}:00` : '-'
+const formatHour = (hour) => (hour !== null ? `${hour}:00` : '-')
 const userInfo = computed(() => useUserStore().userInfo)
 
 const orderList = ref([])
@@ -138,10 +138,10 @@ const orderDetails = ref({})
 const detailsDialogVisible = ref(false)
 const pagination = ref({ currentPage: 1, pageSize: 10, total: 0 })
 const currentPageData = computed(() =>
-    orderList.value.slice(
-        (pagination.value.currentPage - 1) * pagination.value.pageSize,
-        pagination.value.currentPage * pagination.value.pageSize
-    )
+  orderList.value.slice(
+    (pagination.value.currentPage - 1) * pagination.value.pageSize,
+    pagination.value.currentPage * pagination.value.pageSize,
+  ),
 )
 
 // ⏳ 正在退款的订单ID集合
@@ -166,7 +166,7 @@ const getRefundRequests = async () => {
   try {
     const response = await http.get(`/refunds?userId=${userInfo.value.userId}`)
     const refundList = response.data || []
-    const pending = refundList.filter(r => r.requestStatus === 'PENDING').map(r => r.orderId)
+    const pending = refundList.filter((r) => r.requestStatus === 'PENDING').map((r) => r.orderId)
     pendingRefundOrderIds.value = new Set(pending)
   } catch (e) {
     console.error('获取退款请求失败', e)
@@ -175,7 +175,7 @@ const getRefundRequests = async () => {
 
 // 详情
 const viewOrderDetails = (orderId) => {
-  const order = orderList.value.find(order => order.orderId === orderId)
+  const order = orderList.value.find((order) => order.orderId === orderId)
   if (order) {
     orderDetails.value = { ...order }
     detailsDialogVisible.value = true
@@ -232,13 +232,13 @@ const canRefund = (order) => {
 const submitRefundRequest = async (order) => {
   try {
     await ElMessageBox.confirm(
-        `是否申请取消订单 ID:${order.orderId}？\n\n【退费规则】\n提前72小时退全款\n提前48小时退75%\n提前24小时退25%\n不足24小时不支持退款`,
-        '申请退款确认',
-        {
-          confirmButtonText: '确认申请',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
+      `是否申请取消订单 ID:${order.orderId}？\n\n【退费规则】\n提前72小时退全款\n提前48小时退75%\n提前24小时退25%\n不足24小时不支持退款`,
+      '申请退款确认',
+      {
+        confirmButtonText: '确认申请',
+        cancelButtonText: '取消',
+        type: 'warning',
+      },
     )
 
     const res = await http.post('/refunds', { orderId: order.orderId })
@@ -257,8 +257,12 @@ const submitRefundRequest = async (order) => {
 }
 
 // 分页
-const handleCurrentChange = (page) => { pagination.value.currentPage = page }
-const handleSizeChange = (size) => { pagination.value.pageSize = size }
+const handleCurrentChange = (page) => {
+  pagination.value.currentPage = page
+}
+const handleSizeChange = (size) => {
+  pagination.value.pageSize = size
+}
 
 // 初始化
 onMounted(async () => {

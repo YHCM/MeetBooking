@@ -12,30 +12,44 @@
           </el-tag>
         </div>
         <div class="info">
-          <span>每小时租赁价格：{{ room.price }}</span><br />
+          <span>每小时租赁价格：{{ room.price }}</span
+          ><br />
           <span class="ellipsis-single" :title="room.equipments">配置：{{ room.equipments }}</span>
         </div>
-        <el-button v-if="isStaff" size="small" :type="room.roomStatus ? 'danger' : 'success'" :loading="loading"
-          @click="toggleRoomStatus(room.roomId)">
+        <el-button
+          v-if="isStaff"
+          size="small"
+          :type="room.roomStatus ? 'danger' : 'success'"
+          :loading="loading"
+          @click="toggleRoomStatus(room.roomId)"
+        >
           {{ room.roomStatus ? '设为不可用' : '设为可用' }}
         </el-button>
       </div>
     </div>
 
     <!-- 分页组件 -->
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-      :current-page="pagination.currentPage" :page-sizes="[10, 15, 20, 25]" :page-size="pagination.pageSize"
-      layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
-      style="margin-top: 20px; justify-content: flex-end" />
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="[10, 15, 20, 25]"
+      :page-size="pagination.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pagination.total"
+      style="margin-top: 20px; justify-content: flex-end"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { usePagination } from '@/composables/usePagination'
 import { handleResponse } from '@/utils/responseHandler'
 import { useUserStore } from '@/stores/user'
 
+const router = useRouter()
 const http = useApi()
 const rooms = ref([])
 const loading = ref(false)
@@ -43,6 +57,8 @@ const userStore = useUserStore()
 const { pagination, handleCurrentChange, handleSizeChange, updateTotal, getCurrentPageData } =
   usePagination()
 
+// 是否登陆
+const isLogin = computed(() => userStore.userInfo.userId !== 0)
 // 是否是员工
 const isStaff = computed(() => ['ADMIN', 'STAFF'].includes(userStore.userInfo.role))
 
@@ -85,11 +101,17 @@ const toggleRoomStatus = async (roomId) => {
 }
 
 const formatEquipments = (equipments) => {
-  return equipments.map(e => e.equipmentName).join('/')
+  return equipments.map((e) => e.equipmentName).join('/')
 }
 
 onMounted(() => {
-  getRooms()
+  if (isLogin.value) {
+    getRooms()
+  } else {
+    // 登陆页面
+    ElMessage.warning('请登录')
+    router.replace('/login')
+  }
 })
 </script>
 

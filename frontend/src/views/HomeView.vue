@@ -1,12 +1,11 @@
 <template>
   <div class="home-view">
     <div class="carousel-section">
-
       <!-- 左侧公告卡片 -->
       <el-card class="notice-card">
         <div class="title-with-line">公告</div>
         <ul>
-          <li> 欢迎！</li>
+          <li>欢迎！</li>
           <li>本次对主页进行了一点修改。</li>
         </ul>
       </el-card>
@@ -14,13 +13,13 @@
       <!-- 中间轮播浮窗 -->
       <el-carousel trigger="click" :interval="5000" arrow="always" class="carousel-wrapper">
         <el-carousel-item
-            v-for="(item, index) in carouselItems"
-            :key="index"
-            @click="goToPage(item.link)"
+          v-for="(item, index) in carouselItems"
+          :key="index"
+          @click="goToPage(item.link)"
         >
           <el-card
-              class="carousel-card"
-              :body-style="{ padding: '20px', width: '70%', height: '300px' }"
+            class="carousel-card"
+            :body-style="{ padding: '20px', width: '70%', height: '300px' }"
           >
             <div class="carousel-card-content">
               <div class="carousel-card-text">
@@ -43,7 +42,6 @@
           </li>
         </ul>
       </el-card>
-
     </div>
 
     <!-- 功能展示区 -->
@@ -51,10 +49,10 @@
       <h2>请选择服务</h2>
       <div class="card-container">
         <el-card
-            v-for="(card, index) in newCards"
-            :key="index"
-            class="new-card"
-            @click="goToPage(card.link)"
+          v-for="(card, index) in newCards"
+          :key="index"
+          class="new-card"
+          @click="goToPage(card.link)"
         >
           <div class="new-card-content">
             <img :src="card.image" alt="card" class="new-card-image" />
@@ -286,7 +284,7 @@ const goToPage = (link) => {
 
 .title-with-line::before,
 .title-with-line::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   width: 30%;

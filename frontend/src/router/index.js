@@ -11,8 +11,8 @@ import RoomManagementView from '@/views/RoomManagementView.vue'
 import EquipmentManagementView from '@/views/EquipmentManagementView.vue'
 import RoomView from '@/views/RoomView.vue'
 import ReserveRoomView from '@/views/ReserveRoomView.vue'
-import MyOrderView from "@/views/MyOrderView.vue"
-import RefundManagementView from "@/views/RefundManagementView.vue";
+import MyOrderView from '@/views/MyOrderView.vue'
+import RefundManagementView from '@/views/RefundManagementView.vue'
 
 const routes = [
   { path: '/', component: HomeView },

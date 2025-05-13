@@ -10,13 +10,18 @@
 
       <el-descriptions :column="2">
         <el-descriptions-item label="日期">
-          <el-date-picker v-model="req.date" type="date" format="YYYY-MM-DD" :disabled-date="dStart" />
+          <el-date-picker
+            v-model="req.date"
+            type="date"
+            format="YYYY-MM-DD"
+            :disabled-date="dStart"
+          />
         </el-descriptions-item>
         <el-descriptions-item label="会议时间">
           <el-input-number v-model="req.startTime" :min="0" :max="req.endTime - 1">
             <template #suffix>时</template>
           </el-input-number>
-          <span style="margin:0 5px">到</span>
+          <span style="margin: 0 5px">到</span>
           <el-input-number v-model="req.endTime" :min="req.startTime + 1" :max="24">
             <template #suffix>时</template>
           </el-input-number>
@@ -37,7 +42,7 @@
             </el-tag>
           </template>
           <span v-else>—</span>
-          <el-button type="primary" size="small" style="margin-left: 7px;" @click="dlgDev = true">
+          <el-button type="primary" size="small" style="margin-left: 7px" @click="dlgDev = true">
             选择
           </el-button>
         </el-descriptions-item>
@@ -48,7 +53,13 @@
     </el-card>
 
     <!-- 符合条件会议室 -->
-    <el-table :data="roomList" v-loading="loadingRooms" border stripe style="width: 100%; margin-top: 20px;">
+    <el-table
+      :data="roomList"
+      v-loading="loadingRooms"
+      border
+      stripe
+      style="width: 100%; margin-top: 20px"
+    >
       <el-table-column prop="roomId" label="ID" width="80" sortable />
       <el-table-column prop="roomName" label="会议室名称" />
       <el-table-column prop="capacity" label="座位数" width="100" />
@@ -76,7 +87,11 @@
       <el-form :model="req" label-width="100px">
         <el-form-item label="设备">
           <el-checkbox-group v-model="req.requiredDevices">
-            <el-checkbox v-for="opt in equipmentOptions" :key="opt.equipmentId" :label="opt.equipmentId">
+            <el-checkbox
+              v-for="opt in equipmentOptions"
+              :key="opt.equipmentId"
+              :label="opt.equipmentId"
+            >
               {{ opt.equipmentName }}
             </el-checkbox>
           </el-checkbox-group>
@@ -97,9 +112,8 @@ const http = useApi()
 const router = useRouter()
 
 // 格式化时间
-const pad2 = n => String(n).padStart(2, '0')
-const format = d =>
-    `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
+const pad2 = (n) => String(n).padStart(2, '0')
+const format = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`
 
 const typeMap = { CLASSROOM: '教室型', ROUND_TABLE: '圆桌型' }
 
@@ -112,13 +126,13 @@ const req = reactive({
   endTime: 9,
   roomType: 'CLASSROOM',
   attendance: 1,
-  requiredDevices: []
+  requiredDevices: [],
 })
 
 // 弹窗控制
-const dlgDev  = ref(false)
-const criteriaFilled = computed(() =>
-  req.attendance && req.date && req.startTime >= 0 && req.endTime && req.roomType
+const dlgDev = ref(false)
+const criteriaFilled = computed(
+  () => req.attendance && req.date && req.startTime >= 0 && req.endTime && req.roomType,
 )
 
 // 房间列表
@@ -126,10 +140,10 @@ const roomList = ref([])
 const loadingRooms = ref(false)
 
 const dialogTop = '30vh'
-const dStart = d => d.getTime() < Date.now()
+const dStart = (d) => d.getTime() < Date.now()
 
 // 筛选房间
-async function fetchRooms () {
+async function fetchRooms() {
   loadingRooms.value = true
   try {
     const body = {
@@ -138,7 +152,7 @@ async function fetchRooms () {
       endTime: req.endTime,
       attendance: req.attendance,
       requiredEquipments: req.requiredDevices,
-      roomType: req.roomType
+      roomType: req.roomType,
     }
 
     const res = await http.post('/rooms/search', body)
@@ -155,40 +169,40 @@ async function fetchRooms () {
 const bookRoom = async (row) => {
   try {
     await ElMessageBox.confirm(
-        `是否确认预订该会议室：${row.roomName}（ID:${row.roomId}）？`,
-        '确认预订',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-    );
+      `是否确认预订该会议室：${row.roomName}（ID:${row.roomId}）？`,
+      '确认预订',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      },
+    )
 
     const orderRequest = {
       roomId: row.roomId,
       bookingDate: format(req.date),
       startHour: req.startTime,
-      endHour: req.endTime
-    };
+      endHour: req.endTime,
+    }
 
-    const res = await http.post('/orders', orderRequest);
+    const res = await http.post('/orders', orderRequest)
 
     if (res.data) {
-      ElMessage.success(`预订成功：${row.roomName}`);
-      router.push('/orders');
+      ElMessage.success(`预订成功：${row.roomName}`)
+      router.push('/orders')
     } else {
-      ElMessage.error(res.message || '预订失败');
+      ElMessage.error(res.message || '预订失败')
     }
   } catch (err) {
     if (err !== 'cancel') {
-      console.error(err);
-      ElMessage.error('请求失败，请稍后再试');
+      console.error(err)
+      ElMessage.error('请求失败，请稍后再试')
     }
   }
 }
 
 // 选择
-async function start () {
+async function start() {
   dlgDev.value = false
   await fetchRooms()
 }
@@ -198,7 +212,9 @@ onMounted(async () => {
   try {
     const res = await http.get('/equipment')
     equipmentOptions.value = res.data || []
-    equipmentOptions.value.forEach(e => { id2Name[e.equipmentId] = e.equipmentName })
+    equipmentOptions.value.forEach((e) => {
+      id2Name[e.equipmentId] = e.equipmentName
+    })
   } catch (e) {
     console.error(e)
     ElMessage.error('设备加载失败')
@@ -207,7 +223,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.condition-card { margin-bottom: 20px; }
-.mr { margin-right: 4px; }
-.el-dialog .dialog-footer { text-align: right; }
+.condition-card {
+  margin-bottom: 20px;
+}
+.mr {
+  margin-right: 4px;
+}
+.el-dialog .dialog-footer {
+  text-align: right;
+}
 </style>
