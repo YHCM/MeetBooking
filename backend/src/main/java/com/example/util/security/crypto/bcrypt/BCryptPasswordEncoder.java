@@ -19,7 +19,8 @@ package com.example.util.security.crypto.bcrypt;
 import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
- 
+
+import lombok.Getter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ import com.example.util.security.crypto.password.PasswordEncoder;
 @Component
 public class BCryptPasswordEncoder implements PasswordEncoder {
 
-    private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
+    private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
 
     private final Log logger = LogFactory.getLog(getClass());
 
@@ -154,6 +155,7 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
      *
      * @author Lin Feng
      */
+    @Getter
     public enum BCryptVersion {
 
         $2A("$2a"),
@@ -166,10 +168,6 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
 
         BCryptVersion(String version) {
             this.version = version;
-        }
-
-        public String getVersion() {
-            return this.version;
         }
 
     }

@@ -240,12 +240,13 @@ const canRefund = (order) => {
 const submitRefundRequest = async (order) => {
   try {
     await ElMessageBox.confirm(
-      `是否申请取消订单 ID:${order.orderId}？\n\n【退费规则】\n提前72小时退全款\n提前48小时退75%\n提前24小时退25%\n不足24小时不支持退款`,
+      `是否申请取消订单 ID:${order.orderId}？<br><br>【退费规则】<br>提前72小时退全款<br>提前48小时退75%<br>提前24小时退25%<br>不足24小时不支持退款`,
       '申请退款确认',
       {
         confirmButtonText: '确认申请',
         cancelButtonText: '取消',
         type: 'warning',
+        dangerouslyUseHTMLString: true
       },
     )
 
