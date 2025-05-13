@@ -156,7 +156,7 @@ const goToPage = (link) => {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  //justify-content: center;
+  /* justify-content: center; */
 }
 
 .notice-card h3 {
@@ -239,7 +239,7 @@ const goToPage = (link) => {
   font-size: 20px;
   font-weight: bold;
   margin-top: 0;
-  //text-align: center;
+  /* text-align: center; */
 }
 
 .guide-list {

@@ -111,8 +111,16 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+
+const router = useRouter()
 const http = useApi()
+
+const userStore = useUserStore()
+
+// 是否登陆
+const isLogin = computed(() => userStore.userInfo.userId !== 0)
 
 const statusMap = {
   PENDING: '待支付',
@@ -130,7 +138,7 @@ const formatStatus = (status) => statusMap[status] || status
 const getStatusColor = (status) => statusColorMap[status] || 'default'
 
 const formatHour = (hour) => (hour !== null ? `${hour}:00` : '-')
-const userInfo = computed(() => useUserStore().userInfo)
+const userInfo = computed(() => userStore.userInfo)
 
 const orderList = ref([])
 const loading = ref(false)
@@ -265,9 +273,14 @@ const handleSizeChange = (size) => {
 }
 
 // 初始化
-onMounted(async () => {
-  await getOrders()
-  await getRefundRequests()
+onMounted(() => {
+  if (isLogin.value) {
+    getOrders()
+    getRefundRequests()
+  } else {
+    ElMessage.warning('请登录')
+    router.replace('/login')
+  }
 })
 </script>
 
