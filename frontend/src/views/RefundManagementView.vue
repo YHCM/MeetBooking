@@ -72,14 +72,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 const http = useApi()
+const router = useRouter()
+const userStore = useUserStore()
 
 const refundList = ref([])
 const loading = ref(false)
 
 const detailsDialogVisible = ref(false)
 const orderDetails = ref({})
+
+// 是否是员工
+const isStaff = computed(() => ['ADMIN', 'STAFF'].includes(userStore.userInfo.role))
 
 const statusMap = {
   PENDING: '待审批',
@@ -160,8 +167,19 @@ const viewOrderDetails = (order) => {
   }
 }
 
+// 检查权限并重定向
+const checkPermission = () => {
+  if (!isStaff.value) {
+    ElMessage.warning('您没有权限访问此页面')
+    router.replace('/') // 重定向到首页或其他有权限的页面
+    return false
+  }
+  return true
+}
+
 onMounted(() => {
-  fetchRefunds()
+  if (checkPermission())
+    fetchRefunds()
 })
 </script>
 
