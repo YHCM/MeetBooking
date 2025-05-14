@@ -87,7 +87,7 @@ const statusColorMap = {
 const fetchRefunds = async () => {
   loading.value = true
   try {
-    const res = await http.get(`/refunds/?userId=${userInfo.value.userId}`)
+    const res = await http.get(`/refunds?userId=${userInfo.value.userId}`)
     refundList.value = res.data || []
   } catch (e) {
     ElMessage.error('获取退款申请失败')
