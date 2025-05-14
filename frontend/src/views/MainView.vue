@@ -40,6 +40,7 @@
               <el-sub-menu index="6" popper-class="manage-submenu">
                 <template #title>我的</template>
                 <el-menu-item index="6-1" @click="router.push('/orders')"> 预订 </el-menu-item>
+                <el-menu-item index="6-2" @click="router.push('/refunds')"> 退款申请 </el-menu-item>
               </el-sub-menu>
             </el-menu>
 
