@@ -81,7 +81,7 @@ const addEquipment = async () => {
 }
 
 const deleteEquipment = async (equipment) => {
-  ElMessageBox.confirm('确定要删除该会议室吗？', '', {
+  ElMessageBox.confirm('确定要删除该设备吗？', '', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
