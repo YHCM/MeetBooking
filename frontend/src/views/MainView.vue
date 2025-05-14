@@ -11,7 +11,7 @@
               </el-menu-item>
               <el-menu-item index="1" @click="goToHome"> 首页 </el-menu-item>
               <!-- <el-menu-item index="2" @click="router.push('/about')"> 关于 </el-menu-item> -->
-              <el-sub-menu v-if="isStaff" index="3" popper-class="manage-submenu">
+              <el-sub-menu v-if="isStaff || isAdmin" index="3" popper-class="manage-submenu">
                 <template #title>管理</template>
                 <span v-if="isAdmin">
                   <el-menu-item index="3-1" @click="router.push('/users')"> 用户管理 </el-menu-item>
