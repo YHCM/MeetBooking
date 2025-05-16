@@ -43,7 +43,7 @@ pnpm dev
 
 如果访问不了后端接口
 
-修改 `/meetBooking/frontend/src/utils/useApi.js` 中的 `baseURL` 值为 `http://localhost:8080`
+修改 `/meetBooking/frontend/src/composables/useApi.js` 中的 `baseURL` 值为 `http://localhost:8080`
 
 ### 代码格式化
 
@@ -78,7 +78,7 @@ pnpm format
 
 3. 修改前端 API 配置:
 
-   编辑 `/meetBooking/frontend/src/utils/useApi.js`，将 `baseURL` 的值改为 `/api`
+   编辑 `/meetBooking/frontend/src/composables/useApi.js`，将 `baseURL` 的值改为 `/api`
 
 4. 访问应用: http://localhost:3000
 
