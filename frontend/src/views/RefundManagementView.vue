@@ -178,8 +178,7 @@ const checkPermission = () => {
 }
 
 onMounted(() => {
-  if (checkPermission())
-    fetchRefunds()
+  if (checkPermission()) fetchRefunds()
 })
 </script>
 

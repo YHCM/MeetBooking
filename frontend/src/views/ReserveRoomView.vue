@@ -140,7 +140,16 @@ const roomList = ref([])
 const loadingRooms = ref(false)
 
 const dialogTop = '30vh'
-const dStart = (d) => d.getTime() < Date.now()
+const dStart = (d) => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0) // 清除时间部分，只比较日期
+
+  const sixtyDaysLater = new Date(today)
+  sixtyDaysLater.setDate(today.getDate() + 60 - 1) // 获取 今天 + 59 天，总共 60 天
+
+  // 禁用今天之前 或 60 - 1天之后的日期
+  return d.getTime() < today.getTime() || d.getTime() > sixtyDaysLater.getTime()
+}
 
 // 筛选房间
 async function fetchRooms() {
