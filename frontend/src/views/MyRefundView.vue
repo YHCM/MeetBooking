@@ -60,10 +60,16 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { formatDate } from '@/utils/date'
 import { useUserStore } from '@/stores/user'
+
+const router = useRouter()
 const http = useApi()
 const userStore = useUserStore()
+
+// 是否登陆
+const isLogin = computed(() => userStore.userInfo.userId !== 0)
 
 const refundList = ref([])
 const loading = ref(false)
@@ -113,7 +119,12 @@ const viewOrderDetails = (order) => {
 }
 
 onMounted(() => {
-  fetchRefunds()
+  if (isLogin.value) {
+    fetchRefunds()
+  } else {
+    ElMessage.warning('请登录')
+    router.replace('/login')
+  }
 })
 </script>
 

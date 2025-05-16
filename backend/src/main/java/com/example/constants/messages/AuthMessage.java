@@ -16,7 +16,7 @@ public final class AuthMessage {
 
     // 注册的信息
     public static final Map<HttpStatus, String> REGISTER_MESSAGES = Map.of(
-        HttpStatus.OK, "注册请求成功",
+        HttpStatus.CREATED, "注册请求成功",
         HttpStatus.CONFLICT, "用户名已存在",
         HttpStatus.SERVICE_UNAVAILABLE, "注册失败"
     );
