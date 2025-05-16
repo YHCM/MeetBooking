@@ -12,8 +12,10 @@
           </el-tag>
         </div>
         <div class="info">
-          <span>每小时租赁价格：{{ room.price }}</span
-          ><br />
+          <span>可容纳人数：{{ room.capacity }}</span>
+          <br />
+          <span>每小时租赁价格：{{ room.price }}</span>
+          <br />
           <span class="ellipsis-single" :title="room.equipments">配置：{{ room.equipments }}</span>
         </div>
         <el-button
@@ -44,12 +46,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { usePagination } from '@/composables/usePagination'
 import { handleResponse } from '@/utils/responseHandler'
 import { useUserStore } from '@/stores/user'
 
-const router = useRouter()
 const http = useApi()
 const rooms = ref([])
 const loading = ref(false)
@@ -57,8 +57,6 @@ const userStore = useUserStore()
 const { pagination, handleCurrentChange, handleSizeChange, updateTotal, getCurrentPageData } =
   usePagination()
 
-// 是否登陆
-const isLogin = computed(() => userStore.userInfo.userId !== 0)
 // 是否是员工
 const isStaff = computed(() => ['ADMIN', 'STAFF'].includes(userStore.userInfo.role))
 
@@ -105,13 +103,7 @@ const formatEquipments = (equipments) => {
 }
 
 onMounted(() => {
-  if (isLogin.value) {
-    getRooms()
-  } else {
-    // 登陆页面
-    ElMessage.warning('请登录')
-    router.replace('/login')
-  }
+  getRooms()
 })
 </script>
 

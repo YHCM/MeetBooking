@@ -108,8 +108,14 @@
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
 const http = useApi()
 const router = useRouter()
+const userStore = useUserStore()
+
+// 是否登陆
+const isLogin = computed(() => userStore.userInfo.userId !== 0)
 
 // 格式化时间
 const pad2 = (n) => String(n).padStart(2, '0')
@@ -176,6 +182,12 @@ async function fetchRooms() {
 }
 
 const bookRoom = async (row) => {
+  if (!isLogin.value) {
+    // 如果没有登陆
+    ElMessage.warning('未登录，只可以查看')
+    return
+  }
+
   try {
     await ElMessageBox.confirm(
       `是否确认预订该会议室：${row.roomName}（ID:${row.roomId}）？`,
