@@ -90,20 +90,30 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { formatDate } from '@/utils/date'
 import { handleResponse } from '@/utils/responseHandler'
 
+const router = useRouter()
 const http = useApi()
 const userStore = useUserStore()
 
 // 获取用户信息
 onMounted(() => {
-  userStore.getUserInfo()
+  if (isLogin.value) {
+    userStore.getUserInfo()
+  } else {
+    ElMessage.warning('请登录')
+    router.replace('/login')
+  }
 })
 
 const userInfo = computed(() => userStore.userInfo)
 const isClient = computed(() => userStore.userInfo.role === 'CLIENT')
+
+// 是否登陆
+const isLogin = computed(() => userStore.userInfo.userId !== 0)
 
 // 修改信息的对话框相关
 const editDialogVisible = ref(false)
