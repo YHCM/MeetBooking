@@ -11,11 +11,11 @@ public class OpenAPIConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Spring Boot API")
+                .info(new Info().title("会议室预定 API")
                         .version("1.0.0")
-                        .description("Spring Boot API"))
+                        .description("后端接口"))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Spring Boot API")
+                        .description("前端页面")
                         .url("/"));
     }
 }
