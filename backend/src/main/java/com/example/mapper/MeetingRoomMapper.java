@@ -33,6 +33,9 @@ public interface MeetingRoomMapper {
     // 添加一个会议室
     int insertMeetingRoom(MeetingRoom meetingRoom);
 
+    // 删除会议室
+    int deleteMeetingRoom(Long roomId);
+
     // 更新会议室信息
     int updateMeetingRoom(MeetingRoom meetingRoom);
 

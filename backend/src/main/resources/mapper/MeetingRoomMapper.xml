@@ -81,6 +81,12 @@
         VALUES (NEXT VALUE FOR room_seq, #{roomName}, #{roomType}, #{capacity}, #{basePrice})
     </insert>
 
+    <!-- 删除一个会议室 -->
+    <delete id="deleteMeetingRoom">
+        DELETE FROM meeting_rooms
+        WHERE room_id = #{roomId}
+    </delete>
+
     <!-- 更新一个会议室 -->
     <update id="updateMeetingRoom">
         UPDATE meeting_rooms

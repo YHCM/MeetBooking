@@ -93,6 +93,18 @@ public class MeetingRoomController {
         return Result.create(createStatus, message, createStatus.is2xxSuccessful());
     }
 
+    @Operation(summary = "删除一个会议室")
+    @DeleteMapping("/{roomId}")
+    public Result<Boolean> deleteMeetingRoom(@PathVariable Long roomId) {
+        HttpStatus deleteStatus = meetingRoomService.deleteMeetingRoom(roomId);
+
+        Map<HttpStatus, String> statusMessages = MeetingRoomMessage.DELETE_MESSAGES;
+
+        String message = statusMessages.getOrDefault(deleteStatus, "会议室删除失败");
+
+        return Result.create(deleteStatus, message, deleteStatus.is2xxSuccessful());
+    }
+
     @Operation(summary = "更新一个会议室")
     @PutMapping
     public Result<Boolean> updateMeetingRoom(@RequestBody MeetingRoom meetingRoom) {

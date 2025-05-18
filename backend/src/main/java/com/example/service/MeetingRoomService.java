@@ -92,6 +92,22 @@ public class MeetingRoomService {
         }
     }
 
+    // 删除一个会议室
+    public HttpStatus deleteMeetingRoom(Long roomId) {
+        boolean isExisted = isMeetingRoomExistedById(roomId);
+
+        if (!isExisted) {
+            return HttpStatus.NOT_FOUND;
+        }
+
+        int rowsAffected = meetingRoomMapper.deleteMeetingRoom(roomId);
+        if (rowsAffected <= 0) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        } else {
+            return HttpStatus.NO_CONTENT;
+        }
+    }
+
     // 更新一个会议室
     public HttpStatus updateMeetingRoom(MeetingRoom meetingRoom) {
         boolean isExisted = isMeetingRoomExistedById(meetingRoom.getRoomId());
